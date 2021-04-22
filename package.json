@@ -1,0 +1,24 @@
+{
+  "name": "ksdp",
+  "version": "1.0.0",
+  "description": "Ksike Design Patterns",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ameksike/ksdp.git"
+  },
+  "keywords": [
+    "Design",
+    "Patterns",
+    "Ksike"
+  ],
+  "author": "Antonio Membrides Espinosa",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ameksike/ksdp/issues"
+  },
+  "homepage": "https://github.com/ameksike/ksdp#readme"
+}
