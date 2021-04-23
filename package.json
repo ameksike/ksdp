@@ -1,5 +1,5 @@
 {
-  "name": "ksdp",
+  "name": "@ksile/ksdp",
   "version": "1.0.0",
   "description": "Ksike Design Patterns",
   "main": "index.js",
@@ -13,6 +13,12 @@
   "keywords": [
     "Design",
     "Patterns",
+    "IoC",
+    "DI",
+    "Inversion of Control",
+    "Dependency Inversion",
+    "Object Oriented Programming",
+    "Dependency Injection",
     "Ksike"
   ],
   "author": {
