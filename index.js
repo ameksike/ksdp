@@ -1,8 +1,9 @@
-const Strategy = require('./behavioral/Strategy');
-const IoC = require('./integration/IoC');
+const Strategy = require('./src/behavioral/Strategy');
+const Observer = require('./src/behavioral/Observer');
+const IoC = require('./src/integration/IoC');
 
 module.exports = {
     creational: {},
-    behavioral: { Strategy },
+    behavioral: { Strategy, Observer },
     integration: { IoC }
 }

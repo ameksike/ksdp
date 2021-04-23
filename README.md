@@ -64,7 +64,6 @@ helper.set(new Logger(), {
 });
 ```
 
-
 ### Common use that allow loading targets by id from config:
 ```Js
 const cripto = helper.get('Crypto');
@@ -84,7 +83,6 @@ class DefaultController extends Controller {
     constructor(opt) {
         this.path = opt.path;
     }
-
     getPath(){
         return this.sec.encode( this.path );
     }
@@ -128,7 +126,7 @@ class LocalController extends Controller {
 const KsDp = require('ksdp');
 const loader = new KsDp.integration.IoC({ name: 'loader' });
 const service = this.helper.get({
-    "DefaultController",
+    name: 'DefaultController',
     type: 'instance',
     path: 'controllers',
     options: {
@@ -139,3 +137,4 @@ const service = this.helper.get({
 
 const data = service.getPath();
 ```
+
