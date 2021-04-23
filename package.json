@@ -1,5 +1,5 @@
 {
-  "name": "ksdp",
+  "name": "@ksike/ksdp",
   "version": "1.0.0",
   "description": "Ksike Design Patterns",
   "main": "index.js",
@@ -15,10 +15,18 @@
     "Patterns",
     "Ksike"
   ],
-  "author": "Antonio Membrides Espinosa",
+  "author": {
+    "name": "Antonio Membrides Espinosa",
+    "email": "tonykssa@gmail.com",
+    "url": "https://github.com/ameksike"
+  },
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/ameksike/ksdp/issues"
   },
-  "homepage": "https://github.com/ameksike/ksdp#readme"
+  "homepage": "https://github.com/ameksike/ksdp#readme",
+  "engines": {
+    "node": ">= 10.14.2"
+  },
+  "_development": true
 }
