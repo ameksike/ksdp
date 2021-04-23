@@ -1,7 +1,9 @@
 # KsDp library 
+
+### Description
 Design Patterns Library: contains a group elements of reusable Object Oriented Software. It is an attempt to combine implementations of: Gang of Four (GoF), GRASP, IoC. 
 
-# Install from [npm package](https://www.npmjs.com/package/ksdp)
+### Install from [npm package](https://www.npmjs.com/package/ksdp)
 ```
 npm install ksdp
 ```
