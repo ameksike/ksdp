@@ -14,10 +14,22 @@ helper.configure({
         "Crypto": {
             "module": "app",
             "path": "service"
+        },
+        "Security": {
+            "type": "alias",
+            "source": "Crypto"
+        }
+        "Demo": {
+            "type": "raw",
+            "options": "service"
         }
     }
 });
 
 const cripto = helper.get('Crypto');
 const data = cripto.encode("this is a demo");
+
+const cripto = helper.get('Security');
+const data = cripto.encode("this is a demo");
+
 ```
