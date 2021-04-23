@@ -1,5 +1,5 @@
 {
-  "name": "@ksike/ksdp",
+  "name": "ksdp",
   "version": "1.0.0",
   "description": "Ksike Design Patterns",
   "main": "index.js",
