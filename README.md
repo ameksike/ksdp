@@ -133,7 +133,7 @@ class DefaultController extends Controller {
     }
 }
 // .............................. FILE MAIN ..................
-const service = this.helper.get({
+const controller = this.helper.get({
     "DefaultController",
     type: 'instance',
     path: 'controllers',
@@ -143,7 +143,7 @@ const service = this.helper.get({
     dependency: { 'sec': 'Crypto' }
 });
 
-const data = service.getPath();
+const data = controller.getPath();
 ```
 
 ### The IoC can be specified as a dependency also from the name or alias defined in its configuration: 
@@ -167,10 +167,9 @@ class LocalController extends Controller {
     }
 }
 // .............................. FILE MAIN ..................
-
 const KsDp = require('ksdp');
 const loader = new KsDp.integration.IoC({ name: 'loader' });
-const service = this.helper.get({
+const controller = loader.get({
     name: 'DefaultController',
     type: 'instance',
     path: 'controllers',
@@ -180,6 +179,6 @@ const service = this.helper.get({
     dependency: { 'ioc': 'loader', 'sec': 'Crypto' }
 });
 
-const data = service.getPath();
+const data = controller.getPath();
 ```
 
