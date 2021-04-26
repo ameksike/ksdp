@@ -11,40 +11,58 @@ class Strategy {
 
     constructor(payload) {
         this.ctrl = {};
+        this.params = [];
+        this.path = '.';
+        this.default = 'default';
         this.configure(payload);
     }
 
     /**
      * @description Get strategy
-     * @param default String {Strategy Key Path}
-     * @param path String {Strategy Path}
-     * @return this
+     * @param {String} type Strategy Key Path
+     * @param {String} name Strategy Key Name
+     * @param {Any} params  
+     * @return {Object} This
      */
     configure(payload = {}) {
-        this.default = payload.default || 'default';
-        this.path = payload.path || '.';
-        this.param = payload.param || {};
+        this.default = payload.default || this.default;
+        this.path = payload.path || this.path;
+        this.params = !payload.params ? this.params : this.asArray(payload.params);
         return this;
     }
 
     /**
+     * @description Get as array
+     * @param {Any} payload value 
+     * @return {Array} 
+     */
+    asArray(payload) {
+        return (payload instanceof Array ? payload : [payload]);
+    }
+
+    /**
      * @description Get strategy
-     * @param type String {Strategy Key Path}
-     * @param name String {Strategy Key Name}
-     * @return Object {Strategy Instance}
+     * @param {String} type Strategy Key Path
+     * @param {String} name Strategy Key Name
+     * @param {Any} params Single param for Strategy constructor
+     * @return {Object} Strategy Instance
      */
     get(payload = {}) {
         try {
+            payload = typeof (payload) === 'string' ? { name: payload } : payload;
             const type = payload.type || this.default;
             const path = payload.path || this.path;
             const name = payload.name || 'Default';
-            const param = payload.param || this.param;
+            const params = !payload.params ? this.params : this.asArray(payload.params);
             this.ctrl[type] = this.ctrl[type] || {};
 
             if (!this.ctrl[type][name]) {
-                const Stg = type.charAt(0).toUpperCase() + type.slice(1);
-                const Cls = require(path + '/' + type + '/' + Stg + name.toUpperCase());
-                this.ctrl[type][name] = new Cls(param);
+                const Stg = name.charAt(0).toUpperCase() + name.slice(1);
+                const Imp = require(path + '/' + type + '/' + Stg);
+                const Cls = Imp[Stg] || Imp;
+
+                this.ctrl[type][name] = new Cls(...params);
+                //this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
             }
             return this.ctrl[type][name];
         }
