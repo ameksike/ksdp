@@ -1,12 +1,15 @@
 /*
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
- * @description Factory Strategy Patters
+ * @description Strategy pattern
  * @date		07/10/2019
  * @copyright  	Copyright (c) 2020-2030
+ * @dependency  Factory
  * @license    	CPL
  * @version    	1.0
  * */
+const Factory = require('../creational/Factory');
+
 class Strategy {
 
     constructor(payload) {
@@ -14,6 +17,7 @@ class Strategy {
         this.params = [];
         this.path = '.';
         this.default = 'default';
+        this.factory = new Factory();
         this.configure(payload);
     }
 
@@ -32,15 +36,6 @@ class Strategy {
     }
 
     /**
-     * @description Get as array
-     * @param {Any} payload value 
-     * @return {Array} 
-     */
-    asArray(payload) {
-        return (payload instanceof Array ? payload : [payload]);
-    }
-
-    /**
      * @description Get strategy
      * @param {String} type Strategy Key Path
      * @param {String} name Strategy Key Name
@@ -53,16 +48,15 @@ class Strategy {
             const type = payload.type || this.default;
             const path = payload.path || this.path;
             const name = payload.name || 'Default';
-            const params = !payload.params ? this.params : this.asArray(payload.params);
             this.ctrl[type] = this.ctrl[type] || {};
 
             if (!this.ctrl[type][name]) {
                 const Stg = name.charAt(0).toUpperCase() + name.slice(1);
-                const Imp = require(path + '/' + type + '/' + Stg);
-                const Cls = Imp[Stg] || Imp;
-
-                this.ctrl[type][name] = new Cls(...params);
-                //this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
+                this.ctrl[type][name] = this.factory.get({
+                    name: Stg,
+                    file: path + '/' + type + '/' + Stg,
+                    params: payload.params
+                });
             }
             return this.ctrl[type][name];
         }

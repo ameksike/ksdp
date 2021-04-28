@@ -3,15 +3,20 @@
  * @email		tonykssa@gmail.com
  * @date		09/11/2019
  * @copyright  	Copyright (c) 2020-2030
+ * @description Inversion of Control (IoC)
+ * @dependency  Factory
  * @license    	GPL
  * @version    	1.0
  * */
+const Factory = require('../../creational/Factory');
+
 class IoC {
 
     constructor(opt = null) {
         this.opt = {};
         this.ctrls = {};
         this.error = null;
+        this.factory = new Factory();
         this.configure(opt);
     }
 
@@ -119,29 +124,15 @@ class IoC {
                 path = opt.module ? path + opt.module + '/' : path;
                 path = opt.path ? path + opt.path + '/' : path;
 
-                opt.file = opt.file || this.validPath([
+                opt.file = opt.file || [
                     path + opt.name + '.js',
                     path + opt.name + '/' + opt.name + '.js',
                     path + opt.name + '/index.js'
-                ]);
+                ];
                 out = this[opt.type] ? this[opt.type](opt) : null;
                 break;
         }
         return out;
-    }
-
-    /**
-     * @description get valid path from path list
-     * @param {array[string]} list 
-     */
-    validPath(list) {
-        const fs = require('fs');
-        for (let i in list) {
-            if (fs.existsSync(list[i])) {
-                return list[i];
-            }
-        }
-        return false;
     }
 
     /**
@@ -151,8 +142,7 @@ class IoC {
      */
     type(opt) {
         try {
-            const Ctrt = require(opt.file);
-            return Ctrt[opt.name] || Ctrt;
+            return this.factory.load(opt);
         }
         catch (error) {
             if (this.error) {
@@ -169,8 +159,7 @@ class IoC {
      */
     instance(opt) {
         try {
-            const target = this.type(opt);
-            let obj = (target instanceof Function) ? new target(opt.options) : target;
+            let obj = this.factory.get({ name: opt.name, file: opt.file, params: opt.options });
             obj = this.setDI(obj, opt);
             if (obj.init) {
                 obj.init();
@@ -212,4 +201,5 @@ class IoC {
         return obj;
     }
 }
+
 module.exports = IoC;

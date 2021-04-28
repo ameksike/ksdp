@@ -4,7 +4,8 @@
   "description": "Ksike Design Patterns",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "publish": "npm login && npm publish"
   },
   "repository": {
     "type": "git",
