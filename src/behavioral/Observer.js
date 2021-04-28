@@ -2,7 +2,7 @@
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
  * @date		07/10/2019
- * @description Observer Patters
+ * @description Observer pattern
  * @copyright  	Copyright (c) 2020-2030
  * @license    	GPL
  * @version    	1.0
@@ -72,10 +72,7 @@ class Observer {
      * @param {string} params 
      */
     process(subscriber, event, params = []) {
-        if (!this.helper) {
-            return null;
-        }
-        const obj = this.helper.get(subscriber);
+        const obj = this.helper ? this.helper.get(subscriber) : subscriber;
         if (obj && typeof (obj[event]) === 'function') {
             return obj[event].applay(obj, params);
         }

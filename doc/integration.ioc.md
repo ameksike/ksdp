@@ -74,7 +74,7 @@ const data = cripto.encode("this is a demo");
 
 ### It is possible to define the dependencies that must be specified to a specific service:
 ```Js
-// .............................. FILE DefaultController .....
+// .............................. FILE project/controllers/DefaultController.js .....
 class DefaultController extends Controller {
     constructor(opt) {
         this.path = opt.path;
@@ -83,7 +83,7 @@ class DefaultController extends Controller {
         return this.sec.encode( this.path );
     }
 }
-// .............................. FILE MAIN ..................
+// .............................. FILE project/main.js ..................
 const controller = this.helper.get({
     "DefaultController",
     type: 'instance',
@@ -99,7 +99,7 @@ const data = controller.getPath();
 
 ### The IoC can be specified as a dependency also from the name or alias defined in its configuration: 
 ```Js
-// .............................. FILE DefaultController .....
+// .............................. FILE project/controllers/DefaultController.js .....
 class DefaultController extends Controller {
     constructor(opt) {
         this.path = opt.path;
@@ -111,13 +111,13 @@ class DefaultController extends Controller {
         return srvLocal.show(data);
     }
 }
-// .............................. FILE LocalController ........
+// .............................. FILE project/controllers/LocalController.js ........
 class LocalController extends Controller {
     show(data){
         return data + '-->';
     }
 }
-// .............................. FILE MAIN ..................
+// .............................. FILE project/main.js ..................
 const KsDp = require('ksdp');
 const loader = new KsDp.integration.IoC({ name: 'loader' });
 const controller = loader.get({
