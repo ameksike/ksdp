@@ -51,13 +51,31 @@ class IoC {
      * @returns Object
      */
     fill(opt) {
-        const cfg = opt instanceof Object ? opt : (this.opt.src[opt] || { name: opt });
+        const cfg = opt instanceof Object ? opt : (this.opt.src[opt] || {
+            name: opt
+        });
         cfg.name = cfg.name || (typeof (opt) === 'string' ? opt : 'DefaultService');
         cfg.type = cfg.type || 'instance';
         cfg.source = cfg.source || 'default';
-        cfg.module = cfg.module || (cfg.type === 'module' ? cfg.name : 'app');
-        cfg.path = cfg.path || (cfg.type === 'module' ? '' : 'service');
-        cfg.id = cfg.id || (cfg.type != 'module' ? cfg.module + ':' + cfg.path + ':' + cfg.name : cfg.name);
+        cfg.namespace = cfg.namespace || '';
+        switch (cfg.type) {
+            case 'module':
+                cfg.module = cfg.module || cfg.name;
+                cfg.id = cfg.id || cfg.name;
+                break;
+
+            case 'package':
+            case 'lib':
+                cfg.id = cfg.id || (cfg.type + ':' + cfg.name + (cfg.namespace ? '.' + cfg.namespace : ''));
+                cfg.params = opt.options || cfg.params;
+                break;
+
+            default:
+                cfg.module = cfg.module || 'app';
+                cfg.path = cfg.path || 'service';
+                cfg.id = cfg.id || (cfg.module + ':' + cfg.path + ':' + cfg.name);
+                break;
+        }
         return cfg;
     }
 
@@ -71,7 +89,8 @@ class IoC {
     /**
      * @description Inversion of Control Pattern (IoC)
      * @param {string} opt.name [OPTIONAL] DEFAULT['DefaultService']  
-     * @param {string} opt.type [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib']
+     * @param {string} opt.namespace [OPTIONAL]   
+     * @param {string} opt.type [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib', 'package']
      * @param {string} opt.module [OPTIONAL] DEFAULT['app']  
      * @param {string} opt.dependency [OPTIONAL] DEFAULT[null]  
      * @param {any}    opt.options [OPTIONAL] DEFAULT[null] only for opt.type ['instance', 'action', 'raw']    
@@ -111,8 +130,19 @@ class IoC {
                 out = opt.options;
                 break;
 
+            case 'package':
+                out = require(opt.name);
+                out = this.factory.namespace(out, opt.namespace || opt.name);
+                break;
+
             case 'lib':
                 out = require(opt.name);
+                out = this.factory.namespace(out, opt.namespace || opt.name);
+                out = this.factory.build({ cls: out,  ...opt });
+                out = this.setDI(out, opt);
+                if (out.init) {
+                    out.init();
+                }
                 break;
 
             case 'alias':
@@ -143,8 +173,7 @@ class IoC {
     type(opt) {
         try {
             return this.factory.load(opt);
-        }
-        catch (error) {
+        } catch (error) {
             if (this.error) {
                 this.error.on(error);
             }
@@ -159,14 +188,17 @@ class IoC {
      */
     instance(opt) {
         try {
-            let obj = this.factory.get({ name: opt.name, file: opt.file, params: opt.options });
+            let obj = this.factory.get({
+                name: opt.name,
+                file: opt.file,
+                params: opt.options
+            });
             obj = this.setDI(obj, opt);
             if (obj.init) {
                 obj.init();
             }
             return obj;
-        }
-        catch (error) {
+        } catch (error) {
             if (this.error) {
                 this.error.on(error);
             }
@@ -192,7 +224,7 @@ class IoC {
      * @returns Object
      */
     setDI(obj, opt) {
-        if (!opt && !opt.dependency) {
+        if (!opt || !opt.dependency) {
             return obj;
         }
         for (let i in opt.dependency) {

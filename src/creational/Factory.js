@@ -39,6 +39,21 @@ class Factory {
     }
 
     /**
+     * @description Namespace resolution 
+     * @param {Any} src 
+     * @param {String} name 
+     */
+    namespace(src, name = null) {
+        if (!name) return src;
+        const ns = typeof (name) == 'string' ? name.split(".") : name;
+        let target = src[ns[0]];
+        for (let i = 1; i < ns.length; i++) {
+            target = target[ns[i]];
+        }
+        return target || src;
+    }
+
+    /**
      * @description Load Class
      * @param {String} payload.name taget name
      * @param {String} payload.file taget file path
@@ -49,9 +64,29 @@ class Factory {
             const file = this.validPath(payload.file);
             if (!file) return null;
             const Src = require(file);
-            return Src[payload.name] || Src;
+            return this.namespace(Src, payload.namespace || payload.name);
+        } catch (error) {
+            console.log(error);
+            return null;
         }
-        catch (error) {
+    }
+
+
+    /**
+     * @description Get Instance
+     * @param {Class} payload.cls taget Class
+     * @param {Any} payload.params params for taget constructor
+     * @return {Object} Instance
+     */
+    build(payload = null) {
+        if (!payload) return null;
+        try {
+            const Cls = payload.cls;
+            const Prm = this.asList(payload.params);
+            const Obj = (Cls instanceof Function) ? new Cls(...Prm) : Cls;
+            //this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
+            return Obj;
+        } catch (error) {
             console.log(error);
             return null;
         }
@@ -66,17 +101,8 @@ class Factory {
      */
     get(payload = null) {
         if (!payload) return null;
-        try {
-            const Cls = this.load(payload);
-            const Prm = this.asList(payload.params);
-            const Obj = (Cls instanceof Function) ? new Cls(...Prm) : Cls;
-            //this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
-            return Obj;
-        }
-        catch (error) {
-            console.log(error);
-            return null;
-        }
+        payload.cls = this.load(payload);
+        return this.build(payload);
     }
 }
 
