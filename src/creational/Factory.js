@@ -64,7 +64,28 @@ class Factory {
             const file = this.validPath(payload.file);
             if (!file) return null;
             const Src = require(file);
-            return this.namespace(Src, payload.name);
+            return this.namespace(Src, payload.namespace || payload.name);
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
+
+    /**
+     * @description Get Instance
+     * @param {Class} payload.cls taget Class
+     * @param {Any} payload.params params for taget constructor
+     * @return {Object} Instance
+     */
+    build(payload = null) {
+        if (!payload) return null;
+        try {
+            const Cls = payload.cls;
+            const Prm = this.asList(payload.params);
+            const Obj = (Cls instanceof Function) ? new Cls(...Prm) : Cls;
+            //this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
+            return Obj;
         } catch (error) {
             console.log(error);
             return null;
@@ -80,16 +101,8 @@ class Factory {
      */
     get(payload = null) {
         if (!payload) return null;
-        try {
-            const Cls = this.load(payload);
-            const Prm = this.asList(payload.params);
-            const Obj = (Cls instanceof Function) ? new Cls(...Prm) : Cls;
-            //this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
-            return Obj;
-        } catch (error) {
-            console.log(error);
-            return null;
-        }
+        payload.cls = this.load(payload);
+        return this.build(payload);
     }
 }
 
