@@ -57,9 +57,25 @@ class IoC {
         cfg.name = cfg.name || (typeof (opt) === 'string' ? opt : 'DefaultService');
         cfg.type = cfg.type || 'instance';
         cfg.source = cfg.source || 'default';
-        cfg.module = cfg.module || (cfg.type === 'module' ? cfg.name : 'app');
-        cfg.path = cfg.path || (cfg.type === 'module' ? '' : 'service');
-        cfg.id = cfg.id || (cfg.type != 'module' ? cfg.module + ':' + cfg.path + ':' + cfg.name : cfg.name);
+        cfg.namespace = cfg.namespace || '';
+        switch (cfg.type) {
+            case 'module':
+                cfg.module = cfg.module || cfg.name;
+                cfg.id = cfg.id || cfg.name;
+                break;
+
+            case 'package':
+            case 'lib':
+                cfg.id = cfg.id || (cfg.type + ':' + cfg.name + (cfg.namespace ? '.' + cfg.namespace : ''));
+                cfg.params = opt.options || cfg.params;
+                break;
+
+            default:
+                cfg.module = cfg.module || 'app';
+                cfg.path = cfg.path || 'service';
+                cfg.id = cfg.id || (cfg.module + ':' + cfg.path + ':' + cfg.name);
+                break;
+        }
         return cfg;
     }
 
@@ -122,7 +138,11 @@ class IoC {
             case 'lib':
                 out = require(opt.name);
                 out = this.factory.namespace(out, opt.namespace || opt.name);
-                out = this.factory.build({ cls: out, ...opt });
+                out = this.factory.build({ cls: out,  ...opt });
+                out = this.setDI(out, opt);
+                if (out.init) {
+                    out.init();
+                }
                 break;
 
             case 'alias':
