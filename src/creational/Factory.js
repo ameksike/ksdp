@@ -39,6 +39,21 @@ class Factory {
     }
 
     /**
+     * @description Namespace resolution 
+     * @param {Any} src 
+     * @param {String} name 
+     */
+    namespace(src, name = null) {
+        if (!name) return src;
+        const ns = typeof (name) == 'string' ? name.split(".") : name;
+        let target = src[ns[0]];
+        for (let i = 1; i < ns.length; i++) {
+            target = target[ns[i]];
+        }
+        return target || src;
+    }
+
+    /**
      * @description Load Class
      * @param {String} payload.name taget name
      * @param {String} payload.file taget file path
@@ -49,9 +64,8 @@ class Factory {
             const file = this.validPath(payload.file);
             if (!file) return null;
             const Src = require(file);
-            return Src[payload.name] || Src;
-        }
-        catch (error) {
+            return this.namespace(Src, payload.name);
+        } catch (error) {
             console.log(error);
             return null;
         }
@@ -72,8 +86,7 @@ class Factory {
             const Obj = (Cls instanceof Function) ? new Cls(...Prm) : Cls;
             //this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
             return Obj;
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
             return null;
         }
