@@ -9,9 +9,13 @@
  * */
 class Command {
 
-    constructor() { }
+    constructor(opt) {
+        this.configure(opt);
+    }
 
-    configure(opt = false) { }
+    configure(opt = false) {
+        this.factory = (opt && opt.factory instanceof Function) ? opt.factory : null;
+    }
 
     /**
      * @description run action with params on scope
@@ -21,7 +25,7 @@ class Command {
      * @return {Any}
      */
     run(action, params, scope) {
-        scope = scope || this;
+        scope = this.getScope(scope);
         const behavior = scope[action];
         if (behavior instanceof Function) {
             return behavior.apply(scope, this.asList(params));
@@ -36,6 +40,14 @@ class Command {
      */
     asList(payload) {
         return (payload instanceof Array ? payload : [payload]);
+    }
+
+    /**
+     * @description resolve scope
+     * @param {Any} scope 
+     */
+    getScope(scope) {
+        return this.factory ? this.factory(scope) : (scope || this);
     }
 }
 
