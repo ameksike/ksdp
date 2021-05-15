@@ -11,7 +11,9 @@ class Observer {
 
     constructor() {
         this.sts = {};
-        this.evs = { "default": {} };
+        this.evs = {
+            "default": {}
+        };
         this.helper = null;
     }
 
@@ -72,11 +74,13 @@ class Observer {
      * @param {string} params 
      */
     process(subscriber, event, params = []) {
-        const obj = this.helper ? this.helper.get(subscriber) : subscriber;
-        if (obj && typeof (obj[event]) === 'function') {
-            return obj[event].applay(obj, params);
+        const target = this.helper ? this.helper.get(subscriber) : subscriber;
+        const action = (target instanceof Function) ? target : target[event];
+        const scope = (target instanceof Function) ? {} : target;
+        if (target && typeof (action) === 'function') {
+            return action.apply(scope, params);
         }
-        return obj;
+        return target;
     }
 }
 
