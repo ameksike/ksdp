@@ -3,7 +3,7 @@
 ### Description
 Design Patterns Library: contains a group elements of reusable Object Oriented Software. It is an attempt to combine implementations of: Gang of Four (GoF), GRASP, IoC. 
 
-### Install from [npm package](https://www.npmjs.com/package/ksdp)
+### Install from [npm package](https://www.npmjs.com/package/ksdp) [![Rate on Openbase](https://badges.openbase.com/js/rating/ksmf.svg)](https://openbase.com/js/ksmf?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 ```
 npm install ksdp
 ```
@@ -48,4 +48,4 @@ npm install ksdp
 * Template method defines the skeleton of an algorithm as an abstract class, allowing its subclasses to provide concrete behavior.
 * Visitor separates an algorithm from an object structure by moving the hierarchy of methods into one object.
 
-[![Rate on Openbase](https://badges.openbase.com/js/rating/ksmf.svg)](https://openbase.com/js/ksmf?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
+
