@@ -3,10 +3,12 @@
 ### Description
 Design Patterns Library: contains a group elements of reusable Object Oriented Software. It is an attempt to combine implementations of: Gang of Four (GoF), GRASP, IoC. 
 
-### Install from [npm package](https://www.npmjs.com/package/ksdp) [![Rate on Openbase](https://badges.openbase.com/js/rating/ksmf.svg)](https://openbase.com/js/ksmf?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
+### Install from [npm package](https://www.npmjs.com/package/ksdp)
 ```
 npm install ksdp
 ```
+
+[![Rate on Openbase](https://badges.openbase.com/js/rating/ksmf.svg)](https://openbase.com/js/ksmf?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 
 ### This library is divided into four main categories, which are described below 
 
