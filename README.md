@@ -8,7 +8,7 @@ Design Patterns Library: contains a group elements of reusable Object Oriented S
 npm install ksdp
 ```
 
-[![Rate on Openbase](https://badges.openbase.com/js/rating/ksmf.svg)](https://openbase.com/js/ksmf?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
+[![Rate on Openbase](https://badges.openbase.com/js/rating/ksdp.svg)](https://openbase.com/js/ksdp?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 
 ### This library is divided into four main categories, which are described below 
 
