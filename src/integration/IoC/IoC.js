@@ -138,7 +138,7 @@ class IoC {
             case 'lib':
                 out = require(opt.name);
                 out = this.factory.namespace(out, opt.namespace || opt.name);
-                out = this.factory.build({ cls: out,  ...opt });
+                out = this.factory.build({ cls: out, ...opt });
                 out = this.setDI(out, opt);
                 if (out.init) {
                     out.init();
@@ -193,6 +193,7 @@ class IoC {
                 file: opt.file,
                 params: opt.options
             });
+            if (!obj) return null;
             obj = this.setDI(obj, opt);
             if (obj.init) {
                 obj.init();
@@ -224,7 +225,7 @@ class IoC {
      * @returns Object
      */
     setDI(obj, opt) {
-        if (!opt || !opt.dependency) {
+        if (!obj || !opt || !opt.dependency) {
             return obj;
         }
         for (let i in opt.dependency) {
