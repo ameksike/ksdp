@@ -1,6 +1,6 @@
 {
   "name": "ksdp",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Ksike Design Patterns",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   "bugs": {
     "url": "https://github.com/ameksike/ksdp/issues"
   },
-  "homepage": "https://github.com/ameksike/ksdp#readme",
+  "homepage": "https://github.com/ameksike/ksdp/wiki",
   "engines": {
     "node": ">= 10.14.2"
   },
