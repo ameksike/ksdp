@@ -70,6 +70,10 @@ class IoC {
                 cfg.params = opt.options || cfg.params;
                 break;
 
+            case 'dependency':
+                cfg.id = cfg.id || (cfg.module + ':' + cfg.path + ':' + cfg.name);
+                break;
+
             default:
                 cfg.module = cfg.module || 'app';
                 cfg.path = cfg.path || 'service';
@@ -127,7 +131,7 @@ class IoC {
                 break;
 
             case 'raw':
-                out = opt.options;
+                out = opt.options || opt.data;
                 break;
 
             case 'package':
@@ -191,7 +195,7 @@ class IoC {
             let obj = this.factory.get({
                 name: opt.name,
                 file: opt.file,
-                params: opt.options
+                params: opt.options || opt.params
             });
             if (!obj) return null;
             obj = this.setDI(obj, opt);
@@ -216,6 +220,15 @@ class IoC {
         const object = this.instance(opt);
         const action = object[opt.action];
         return (action instanceof Function) ? action.apply(object, opt.params || []) : null;
+    }
+
+    /**
+     * @description get dependency 
+     * @param {OBJECT} opt 
+     * @returns {OBJECT}
+     */
+    dependency(opt) {
+        return this.factory.load(opt);
     }
 
     /**
