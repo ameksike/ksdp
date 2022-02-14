@@ -1,10 +1,11 @@
 {
   "name": "ksdp",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Ksike Design Patterns",
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
     "publish": "npm login && npm publish"
   },
   "repository": {
