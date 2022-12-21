@@ -9,6 +9,7 @@
  * @version    	1.0
  * */
 const Factory = require('../creational/Factory');
+const _path = require("path");
 
 class Strategy {
 
@@ -54,7 +55,7 @@ class Strategy {
                 const Stg = name.charAt(0).toUpperCase() + name.slice(1);
                 this.ctrl[type][name] = this.factory.get({
                     name: Stg,
-                    file: path + '/' + type + '/' + Stg,
+                    file: _path.join(path, type, Stg + ".js"),
                     params: payload.params
                 });
             }

@@ -1,6 +1,6 @@
 {
   "name": "ksdp",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Ksike Design Patterns",
   "main": "index.js",
   "scripts": {
