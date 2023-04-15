@@ -10,9 +10,53 @@ const KsDp = require('ksdp');
 const KsProxy = new KsDp.structural.Proxy();
 ```
 
+### Simple use example, isolating methods and properties
+```Js
+class MyEx extends KsProxy {
+
+   constructor(options) {
+        super();
+        this.configure(options);
+    }
+
+    configure(options) {
+        this.methods = {};
+        this.attributes = {};
+    }
+
+    get(target, key) {
+        if(key in target.attributes) {
+            return Reflect.get(target.attributes, key);
+        }
+        if(key in target.methods) {
+            return Reflect.get(target.methods, key).bind(target);
+        }
+        return null;
+    }
+
+    set(target, key, value) {
+        if(typeof(value) !== "function" ) {
+            this.attributes[key] = value.toUpperCase();
+        }else{
+            this.methods[key] = value;
+        }
+    }
+}
+```
+```Js
+const obj = new MyEx();
+
+obj.type = "a";
+obj.mode = (name, mode) => `${name} - ${mode}`.toUpperCase();
+
+console.log(obj.mode("a", "b") === "A - B");
+console.log(obj.type === "A");
+```
+For more information on these topics, you can also see: [Extends](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends) and [Proxy](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Proxy). 
+
 ### Integrating Proxy pattern with Strategy pattern 
 ```Js
-class DLB extends KsProxy {
+class Algorism extends KsProxy {
 
     constructor(options) {
         super();
@@ -20,30 +64,33 @@ class DLB extends KsProxy {
     }
 
     configure(options) {
-        this.opt = this.opt || {}
-        this.opt.dialect = options?.dialect || this.opt.dialect || "json";
-        this.opt.path = options?.path || this.opt.path || "json";
+        this.type = options?.type || this.type || "Base64";
+        this.scheme = options?.scheme || this.scheme || "encode";
 
         this.stg = this.stg || new KsDp.behavioral.Strategy({
             path: __dirname,
-            default: "driver"
+            default: this.scheme
         });
     }
 
     get(target, key) {
-        const obj = this.stg.get({ name: this.opt.dialect });
-        return obj ? obj[key] : null ;
+        const obj = this.stg.get({ name: this.type });
+        if(!obj) {
+            return null;
+        }
+        const res = Reflect.get(obj, key);
+        return typeof(res) === "function" ? res.bind(obj);
     }
 
     set(target, key, value) {
-        const obj = this.stg.get({ name: this.opt.dialect });
+        const obj = this.stg.get({ name: this.type });
         if(obj) {
             obj[key] = value;
         }
     }
 }
 
-module.exports = DLB;
+module.exports = Algorism;
 ```
 
-For more information on these topics, you can also see: [Extends](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends) and [Proxy](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Proxy). For a better understanding of the strategy pattern, see the [next section](behavioral.strategy.md).
+For a better understanding of the strategy pattern, see the [next section](behavioral.strategy.md).

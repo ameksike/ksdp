@@ -79,3 +79,5 @@ const Algorism = require('./Algorism');
 const myalg = new Algorism()
 console.log(myalg.encode("KIII", "Base64"));
 ```
+
+To dig into more complex solutions like this, see the [proxy section](structural.proxy.md) and check its integration with the Strategy pattern.
