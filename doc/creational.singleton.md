@@ -37,13 +37,14 @@ class MyHandler {
     //.....................................CONSTRUCTOR
     constructor(name, mode) {
         this.#name = name ?? "A";
-        this.#mode = mode ?? "+";
+        this.mode = mode ?? "+";
     }
     //................................................
 }
 
 const obj1 = MyHandler.instance();
-const objn = MyHandler.instance("ASD", "@");
+const objn = MyHandler.instance("ASD", "-");
+console.log(obj1.name === "asd");
 console.log(objn.name === obj1.name); 
 ```
 
