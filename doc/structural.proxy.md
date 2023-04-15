@@ -6,15 +6,15 @@ The Proxy design pattern is one of the twenty-three well-known [GoF design patte
 
 ### Load example
 ```Js
-const KsDp = require('ksdp');
-const KsProxy = new KsDp.structural.Proxy();
+const KsDp = require('../..');
+const { Proxy: KsProxy } = KsDp.structural;
 ```
 
 ### Simple use example, isolating methods and properties
 ```Js
 class MyEx extends KsProxy {
 
-   constructor(options) {
+    constructor(options) {
         super();
         this.configure(options);
     }
@@ -25,23 +25,25 @@ class MyEx extends KsProxy {
     }
 
     get(target, key) {
-        if(key in target.attributes) {
+        if (key in target.attributes) {
             return Reflect.get(target.attributes, key);
         }
-        if(key in target.methods) {
+        if (key in target.methods) {
             return Reflect.get(target.methods, key).bind(target);
         }
         return null;
     }
 
     set(target, key, value) {
-        if(typeof(value) !== "function" ) {
+        if (typeof (value) !== "function") {
             this.attributes[key] = value.toUpperCase();
-        }else{
+        } else {
             this.methods[key] = value;
         }
     }
 }
+
+module.exports = MyEx;
 ```
 ```Js
 const obj = new MyEx();
