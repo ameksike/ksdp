@@ -7,14 +7,16 @@ describe('Load KsDp Lib', () => {
 
     afterAll(async () => { });
 
-    it("should a valid instance", (done) => {
+    it("valid instance", (done) => {
         expect(KsDp).toBeInstanceOf(Object);
         expect(KsDp.behavioral).toBeInstanceOf(Object);
         expect(KsDp.integration).toBeInstanceOf(Object);
         expect(KsDp.integration.IoC).toBeInstanceOf(Function);
+        expect(KsDp.integration.Dip).toBeInstanceOf(Function);
         expect(KsDp.creational.Factory).toBeInstanceOf(Function);
         expect(KsDp.behavioral.Observer).toBeInstanceOf(Function);
         expect(KsDp.behavioral.Strategy).toBeInstanceOf(Function);
+        expect(KsDp.structural.Proxy).toBeInstanceOf(Function);
         done();
     });
 });

@@ -3,12 +3,7 @@ const KsDp = require('../');
 const factory = new KsDp.creational.Factory();
 
 describe('Factory from creational group', () => {
-
-    beforeAll(async () => { });
-
-    afterAll(async () => { });
-
-    it("should a valid namespace resolution", (done) => {
+    it("valid namespace resolution", (done) => {
         const target0 = factory.namespace(KsDp);
         const target1 = factory.namespace(KsDp, 'behavioral');
         const target2 = factory.namespace(KsDp, 'behavioral.Observer');

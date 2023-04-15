@@ -3,7 +3,7 @@
  * @email		tonykssa@gmail.com
  * @date		07/10/2019
  * @description Observer pattern
- * @copyright  	Copyright (c) 2020-2030
+ * @copyright  	Copyright (c) 2019-2050
  * @license    	GPL
  * @version    	1.0
  * */

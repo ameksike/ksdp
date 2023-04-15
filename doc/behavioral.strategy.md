@@ -16,14 +16,14 @@ The idea is to load a target or strategy that is inside a folder, for example:
 // .............................. FILE project/encode/Md5.js .....
 class Md5  {
     encode(data){
-        return data + '... Md5';
+        return data + '...MD5';
     }
 }
 module.exports = Md5;
 // .............................. FILE project/decode/Base64.js .....
 class Base64  {
     encode(data){
-        return data + '... Base64';
+        return data + '...BASE64';
     }
 }
 module.exports = Base64;
@@ -79,3 +79,5 @@ const Algorism = require('./Algorism');
 const myalg = new Algorism()
 console.log(myalg.encode("KIII", "Base64"));
 ```
+
+To dig into more complex solutions like this, see the [proxy section](structural.proxy.md) and check its integration with the Strategy pattern.
