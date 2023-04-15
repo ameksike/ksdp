@@ -62,4 +62,4 @@ KsDp.inherit.imitate(General, KsDp.integration.Dip);
 module.exports = General;
 ```
 
-For more comprehension of this topic, see the section [inheritance by imitation](structural.proxy.md).
+For more comprehension of this topic, see the section [inheritance by imitation](inherit.imitate.md), and the test seccion [Imitation Test](test/inherit.imitate.spec.js), [DI Test](test/integration.dip.spec.js). 
