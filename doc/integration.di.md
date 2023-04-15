@@ -19,7 +19,7 @@ There are three main ways in which a client can receive injected services:
 
 In some frameworks, clients do not need to actively accept dependency injection at all. In Java, for example, reflection can make private attributes public when testing and inject services directly.
 
-### Load example
+### Load lib example
 ```Js
 const KsDp = require('ksdp');
 ```
@@ -46,3 +46,20 @@ obj.setDependencies({ driver });
 let res = obj.encode("I-I");
 console.log(res === "I-I...MD5");
 ```
+
+It is also possible to use this pattern without an explicit extension. For example, consider the following code.
+
+```js
+class General {
+    encode(data) {
+        this.checkDependencies(["driver"]);
+        return this.driver.encode(data);
+    }
+}
+
+KsDp.inherit.imitate(General, KsDp.integration.Dip);
+
+module.exports = General;
+```
+
+For more comprehension of this topic, see the section [inheritance by imitation](structural.proxy.md).

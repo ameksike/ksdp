@@ -8,7 +8,7 @@ describe('Strategy class', () => {
         target = require("./demo/strategy.class");
     });
 
-    it("should a valid multiple coding", (done) => {
+    it("valid multiple coding", (done) => {
         const obj = new target();
 
         expect(obj).toBeInstanceOf(Object);

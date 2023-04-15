@@ -7,7 +7,7 @@ describe('Load KsDp Lib', () => {
 
     afterAll(async () => { });
 
-    it("should a valid instance", (done) => {
+    it("valid instance", (done) => {
         expect(KsDp).toBeInstanceOf(Object);
         expect(KsDp.behavioral).toBeInstanceOf(Object);
         expect(KsDp.integration).toBeInstanceOf(Object);

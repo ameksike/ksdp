@@ -5,7 +5,7 @@ const ioc = new KsDp.integration.IoC({
 
 describe('Dependency', () => {
 
-    it("should a valid funtion", (done) => {
+    it("valid funtion", (done) => {
         const myFn = ioc.get({
             name: "myfunction",
             type: "dependency"
@@ -16,7 +16,7 @@ describe('Dependency', () => {
         done();
     });
 
-    it("should a valid object", (done) => {
+    it("valid object", (done) => {
         const myObj = ioc.get({
             name: "myobject",
             type: "dependency"
@@ -28,7 +28,7 @@ describe('Dependency', () => {
         done();
     });
 
-    it("should a valid object with namespace", (done) => {
+    it("valid object with namespace", (done) => {
         const myObj = ioc.get({
             name: "nsobj",
             namespace: "imp",
@@ -43,7 +43,7 @@ describe('Dependency', () => {
 });
 
 describe('Raw', () => {
-    it("should a valid raw data", (done) => {
+    it("valid raw data", (done) => {
         const rawopt = ioc.get({
             data: {
                 name: "raw",
@@ -60,7 +60,7 @@ describe('Raw', () => {
 });
 
 describe('Module', () => {
-    it("should a valid a module", (done) => {
+    it("valid module", (done) => {
         const controller = ioc.get({
             name: "mymodule",
             type: "module"
@@ -70,7 +70,7 @@ describe('Module', () => {
         done();
     });
 
-    it("should a valid a controller with no dependencies", (done) => {
+    it("valid controller with no dependencies", (done) => {
         const controller = ioc.get({
             name: "LocalController",
             module: "mymodule",
@@ -81,7 +81,7 @@ describe('Module', () => {
         done();
     });
 
-    it("should a valid a service with params", (done) => {
+    it("valid service with params", (done) => {
         const service = ioc.get({
             name: "PersonService",
             module: "mymodule",
@@ -93,7 +93,7 @@ describe('Module', () => {
         done();
     });
 
-    it("should a valid a controller with dependencies", (done) => {
+    it("valid controller with dependencies", (done) => {
         const controller = ioc.get({
             name: "PersonController",
             module: "mymodule",
