@@ -15,7 +15,7 @@ npm install ksdp
 
 ### **Integration:** 
 * [IoC](doc/integration.ioc.md) Inversion of Control inverts the flow of control as compared to traditional control flow.
-* [DI](doc/integration.ioc.md) Dependency Injection is a technique in which an object receives other objects that it depends on.
+* [DI](doc/integration.di.md) Dependency Injection is a technique in which an object receives other objects that it depends on.
 * [LS](doc/integration.ioc.md) Service Locator pattern is a design pattern used in software development to encapsulate the processes involved in obtaining a service with a strong abstraction layer.
 
 ### **Creational:** Creational patterns are ones that create objects, rather than having to instantiate objects directly. This gives the program more flexibility in deciding which objects need to be created for a given case.
