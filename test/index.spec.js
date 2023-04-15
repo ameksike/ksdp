@@ -15,6 +15,7 @@ describe('Load KsDp Lib', () => {
         expect(KsDp.creational.Factory).toBeInstanceOf(Function);
         expect(KsDp.behavioral.Observer).toBeInstanceOf(Function);
         expect(KsDp.behavioral.Strategy).toBeInstanceOf(Function);
+        expect(KsDp.structural.Proxy).toBeInstanceOf(Function);
         done();
     });
 });

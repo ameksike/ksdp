@@ -2,7 +2,7 @@
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
  * @date		09/11/2019
- * @copyright  	Copyright (c) 2020-2030
+ * @copyright  	Copyright (c) 2019-2050
  * @description Inversion of Control (IoC)
  * @dependency  Factory
  * @license    	GPL
