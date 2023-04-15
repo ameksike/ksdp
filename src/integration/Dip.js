@@ -3,7 +3,7 @@
  * @email		tonykssa@gmail.com
  * @date		09/11/2019
  * @copyright  	Copyright (c) 2019-2050
- * @description Implement a Dependency Injection Pattern
+ * @description Implement a Dependency Injection Pattern based on inheritance to abstract the Setter Injection type 
  * @license    	GPL
  * @version    	1.0
  * */
