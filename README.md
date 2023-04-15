@@ -24,7 +24,7 @@ npm install ksdp
 * Builder constructs complex objects by separating construction and representation.
 * [Factory](doc/creational.factory.md)  method creates objects without specifying the exact class to create.
 * Prototype creates objects by cloning an existing object.
-* Singleton restricts object creation for a class to only one instance.
+* [Singleton](doc/creational.singleton.md) restricts object creation for a class to only one instance.
 
 ### **Structural:** These concern class and object composition. They use inheritance to compose interfaces and define ways to compose objects to obtain new functionality.
 
@@ -34,7 +34,7 @@ npm install ksdp
 * Decorator dynamically adds/overrides behaviour in an existing method of an object.
 * Facade provides a simplified interface to a large body of code.
 * Flyweight reduces the cost of creating and manipulating a large number of similar objects.
-* Proxy provides a placeholder for another object to control access, reduce cost, and reduce complexity.
+* [Proxy](doc/structural.proxy.md) provides a placeholder for another object to control access, reduce cost, and reduce complexity.
 
 ### **Behavioral:** Most of these design patterns are specifically concerned with communication between objects.
 
