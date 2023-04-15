@@ -30,12 +30,12 @@ class DLB extends KsProxy {
         });
     }
 
-    get(target, key, receiver) {
+    get(target, key) {
         const obj = this.stg.get({ name: this.opt.dialect });
         return obj ? obj[key] : null ;
     }
 
-    set(target, key, value, receiver) {
+    set(target, key, value) {
         const obj = this.stg.get({ name: this.opt.dialect });
         if(obj) {
             obj[key] = value;
@@ -46,4 +46,4 @@ class DLB extends KsProxy {
 module.exports = DLB;
 ```
 
-For more information on these topics, you can also see: [Extends](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends) and [Proxy](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Proxy).
+For more information on these topics, you can also see: [Extends](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/extends) and [Proxy](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Proxy). For a better understanding of the strategy pattern, see the [next section](behavioral.strategy.md).
