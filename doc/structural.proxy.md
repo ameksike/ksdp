@@ -6,7 +6,7 @@ The Proxy design pattern is one of the twenty-three well-known [GoF design patte
 
 ### Load example
 ```Js
-const KsDp = require('../..');
+const KsDp = require('ksdp');
 const { Proxy: KsProxy } = KsDp.structural;
 ```
 
@@ -58,7 +58,7 @@ For more information on these topics, you can also see: [Extends](https://develo
 
 ### Integrating Proxy pattern with Strategy pattern 
 ```Js
-class Algorism extends KsProxy {
+class Algorism extends KsDp.structural.Proxy {
 
     constructor(options) {
         super();
@@ -81,7 +81,7 @@ class Algorism extends KsProxy {
             return null;
         }
         const res = Reflect.get(obj, key);
-        return typeof(res) === "function" ? res.bind(obj);
+        return typeof(res) === "function" ? res.bind(obj) : res;
     }
 
     set(target, key, value) {
@@ -94,5 +94,13 @@ class Algorism extends KsProxy {
 
 module.exports = Algorism;
 ```
+```Js
+const objBase64 = new Algorism({ type: "Base64", scheme: "encode" });
+const res1 = objBase64.encode("I-I");
+console.log(res1 === "I-I...BASE64");
 
+const objMd5 = new Algorism({ type: "Md5", scheme: "encode" });
+const res2 = objMd5.encode("I-I");
+console.log(res2 === "I-I...MD5");
+```
 For a better understanding of the strategy pattern, see the [next section](behavioral.strategy.md).
