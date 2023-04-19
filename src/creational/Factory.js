@@ -11,6 +11,10 @@
 const inherit = require("../inherit");
 class Factory {
 
+    constructor(payload) {
+        this.logger = payload?.logger || console;
+    }
+
     /**
      * @description Get as array
      * @param {Any} payload value 
@@ -55,7 +59,11 @@ class Factory {
             const Src = require(file);
             return inherit.namespace(Src, payload.namespace || payload.name);
         } catch (error) {
-            console.log(error);
+            this.log({
+                src: "ksdp:creational:Factory:load",
+                data: payload,
+                error
+            });
             return null;
         }
     }
@@ -69,6 +77,9 @@ class Factory {
      */
     build(payload = null) {
         if (!payload) return null;
+        if (payload instanceof Function) {
+            payload = { cls: payload };
+        }
         try {
             const Cls = payload.cls;
             const Prm = this.asList(payload.params);
@@ -76,7 +87,11 @@ class Factory {
             // this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
             return Obj;
         } catch (error) {
-            console.log(error);
+            this.log({
+                src: "ksdp:creational:Factory:build",
+                data: payload,
+                error
+            });
             return null;
         }
     }
@@ -92,6 +107,14 @@ class Factory {
         if (!payload) return null;
         payload.cls = this.load(payload);
         return this.build(payload);
+    }
+
+    /**
+     * @description internal log handler 
+     */
+    log() {
+        this.logger.log && this.logger.log(...arguments);
+        return this;
     }
 }
 
