@@ -21,17 +21,26 @@ describe('Strategy class', () => {
                 return data + '...Hex';
             }
         }
+        class Tux {
+            encode(data) {
+                return data + '...Tux';
+            }
+        }
         const obj = new target();
         expect(obj).toBeInstanceOf(Object);
         expect(obj.encode("I-I", "Hex")).toBe(undefined);
 
         obj.strategy.set({ name: "Hex", target: new Hex() });
-        obj.strategy.set(new Hex(), "Hex2");
-        obj.strategy.set(Hex, "Hex3");
+        obj.strategy.set(new Hex(), "Hex_OBJ");
+        obj.strategy.set(Hex, "Hex_CLS");
+        obj.strategy.set(Tux);
+        obj.strategy.set(new Hex());
 
         expect(obj.encode("I-I", "Hex")).toBe("I-I...Hex");
-        expect(obj.encode("I-I", "Hex2")).toBe("I-I...Hex");
-        expect(obj.encode("I-I", "Hex3")).toBe("I-I...Hex");
+        expect(obj.encode("I-I", "Hex_OBJ")).toBe("I-I...Hex");
+        expect(obj.encode("I-I", "Hex_CLS")).toBe("I-I...Hex");
+        expect(obj.encode("I-I", "Tux")).toBe("I-I...Tux");
+        expect(obj.encode("I-I")).toBe("I-I...Hex");
         done();
     });
 });

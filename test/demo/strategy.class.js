@@ -8,7 +8,7 @@ class Algorism {
         });
     }
 
-    encode(data, type = 'Md5') {
+    encode(data, type) {
         const alg = this.strategy.get(type);
         return alg?.encode && alg.encode(data);
     }
