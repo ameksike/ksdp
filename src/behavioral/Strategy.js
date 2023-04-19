@@ -46,10 +46,11 @@ class Strategy {
     }
 
     /**
-     * @description Get strategy
-     * @param {String} type Strategy Key Path
-     * @param {String} name Strategy Key Name
-     * @param {Any} params Single param for Strategy constructor
+     * @description Get strategy Instance
+     * @param {Object} payload
+     * @param {String} payload.type Strategy Key Path
+     * @param {String} payload.name Strategy Key Name
+     * @param {Any} payload.params Single param for Strategy constructor
      * @return {Object} Strategy Instance
      */
     get(payload = {}) {
