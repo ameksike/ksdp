@@ -33,6 +33,15 @@ class Strategy {
         this.default = payload.default || this.default;
         this.path = payload.path || this.path;
         this.params = !payload.params ? this.params : this.asArray(payload.params);
+        this.logger = payload.logger || console;
+        return this;
+    }
+
+    /**
+     * @description internal log handler 
+     */
+    log() {
+        this.logger.log && this.logger.log(...arguments);
         return this;
     }
 
@@ -62,7 +71,41 @@ class Strategy {
             return this.ctrl[type][name];
         }
         catch (error) {
-            console.log(error);
+            this.log({
+                src: "ksdp:behavioral:Strategy:get",
+                data: payload,
+                error
+            });
+            return null;
+        }
+    }
+
+    /**
+     * @description Get strategy
+     * @param {Object} payload 
+     * @param {String} alias [OPTIONAL]
+     * @return {Object} Strategy Instance
+     */
+    set(payload = {}, alias) {
+        try {
+            if (!payload) {
+                return null;
+            }
+            const type = payload.type || this.default;
+            const name = alias || payload.name || 'Default';
+            this.ctrl[type] = this.ctrl[type] || {};
+            if (!payload.safe || (payload.safe && !this.ctrl[type][name])) {
+                const resorce = payload.target || payload;
+                this.ctrl[type][name] = resorce instanceof Function ? this.factory.build(resorce) : resorce;
+            }
+            return this.ctrl[type][name];
+        }
+        catch (error) {
+            this.log({
+                src: "ksdp:behavioral:Strategy:set",
+                data: payload,
+                error
+            });
             return null;
         }
     }

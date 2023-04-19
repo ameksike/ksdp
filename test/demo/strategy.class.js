@@ -10,7 +10,7 @@ class Algorism {
 
     encode(data, type = 'Md5') {
         const alg = this.strategy.get(type);
-        return alg?.encode(data);
+        return alg?.encode && alg.encode(data);
     }
 }
 module.exports = Algorism;

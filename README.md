@@ -39,7 +39,7 @@ npm install ksdp
 ### **Behavioral:** Most of these design patterns are specifically concerned with communication between objects.
 
 * Chain of responsibility delegates commands to a chain of processing objects.
-* Command creates objects that encapsulate actions and parameters.
+* [Command](doc/behavioral.command.md) creates objects that encapsulate actions and parameters.
 * Interpreter implements a specialized language.
 * Iterator accesses the elements of an object sequentially without exposing its underlying representation.
 * Mediator allows loose coupling between classes by being the only class that has detailed knowledge of their methods.

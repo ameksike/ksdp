@@ -12,7 +12,7 @@ const strategy = new KsDp.behavioral.Strategy();
 
 The idea is to load a target or strategy that is inside a folder, for example:
 
-```Js Simple Usage example 
+```Js 
 // .............................. FILE project/encode/Md5.js .....
 class Md5  {
     encode(data){
