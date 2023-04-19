@@ -7,6 +7,7 @@
  * @license    	GPL
  * @version    	1.0
  * */
+const inherit = require("../inherit");
 class Command {
 
     constructor(opt) {
@@ -25,12 +26,19 @@ class Command {
      * @return {Any}
      */
     run(action, params, scope) {
-        scope = this.getScope(scope);
-        const behavior = scope[action];
-        if (behavior instanceof Function) {
-            return behavior.apply(scope, this.asList(params));
+        try {
+            scope = this.getScope(scope);
+            if (typeof (action) === "string") {
+                action = scope[action] instanceof Function ? scope[action] : inherit.ns(scope, action);
+            }
+            if (action instanceof Function) {
+                return { result: action.apply(scope, this.asList(params)) };
+            }
+            return { error: new Error(`"${action}" does not exist`)};
         }
-        return false;
+        catch (error) {
+            return { error };
+        }
     }
 
     /**

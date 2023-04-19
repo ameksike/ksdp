@@ -7,6 +7,8 @@
  * @license    	GPL
  * @version    	1.0
  * */
+
+const inherit = require("../inherit");
 class Factory {
 
     /**
@@ -39,32 +41,19 @@ class Factory {
     }
 
     /**
-     * @description Namespace resolution 
-     * @param {Any} src 
-     * @param {String} name 
-     */
-    namespace(src, name = null) {
-        if (!name) return src;
-        const ns = typeof (name) == 'string' ? name.split(".") : name;
-        let target = src[ns[0]];
-        for (let i = 1; i < ns.length; i++) {
-            target = target[ns[i]];
-        }
-        return target || src;
-    }
-
-    /**
      * @description Load Class
      * @param {String} payload.name taget name
      * @param {String} payload.file taget file path
+     * @param {String} payload.search 
      * @return {Any} Class
      */
     load(payload) {
         try {
-            const file = this.validPath(payload.file);
+            payload.search = payload.search || true;
+            const file = payload.search ? this.validPath(payload.file) : payload.file;
             if (!file) return null;
             const Src = require(file);
-            return this.namespace(Src, payload.namespace || payload.name);
+            return inherit.namespace(Src, payload.namespace || payload.name);
         } catch (error) {
             console.log(error);
             return null;

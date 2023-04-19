@@ -9,6 +9,7 @@
  * @version    	1.0
  * */
 const Factory = require('../../creational/Factory');
+const inherit = require("../../inherit");
 
 class IoC {
 
@@ -17,6 +18,7 @@ class IoC {
         this.ctrls = {};
         this.error = null;
         this.factory = new Factory();
+        this.inherit = inherit;
         this.configure(opt);
     }
 
@@ -136,12 +138,12 @@ class IoC {
 
             case 'package':
                 out = require(opt.name);
-                out = this.factory.namespace(out, opt.namespace || opt.name);
+                out = this.inherit.namespace(out, opt.namespace || opt.name);
                 break;
 
             case 'lib':
                 out = require(opt.name);
-                out = this.factory.namespace(out, opt.namespace || opt.name);
+                out = this.inherit.namespace(out, opt.namespace || opt.name);
                 out = this.factory.build({ cls: out, ...opt });
                 out = this.setDI(out, opt);
                 if (out.init) {
