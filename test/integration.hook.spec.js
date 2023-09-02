@@ -6,7 +6,7 @@ describe('Hooks', () => {
 
     beforeAll(async () => {
         target = new KsDp.integration.hook.Main({
-            path: __dirname + "/../src/integration/hook/"
+            path: __dirname + "/demo/"
         });
     });
 
@@ -41,25 +41,25 @@ describe('Hooks', () => {
 
     it("subscription bulk", async done => {
         target.subscribe([{
-            subscriber: "Memory",
+            subscriber: "MySubs",
             notifier: "Web1",
             value: "Web1",
             event: "onInit",
             owner: 5
         }, {
-            subscriber: "Memory",
+            subscriber: "MySubs",
             notifier: "Web2",
             value: "Web2",
             event: "onInit",
             owner: 3
         }, {
-            subscriber: "Memory",
+            subscriber: "MySubs",
             notifier: "Web3",
             value: "Web3",
             event: "onInit",
             owner: 3
         }]);
-        const result = await target.subscriptions({ event: "onInit", owner: 3 });
+        const result = await target.subscriptions({ event: "onInit", owner: 3, subscriber: "MySubs" });
         expect(result).toBeInstanceOf(Array);
         expect(result[0].notifier).toBe("Web2");
         expect(result[1].notifier).toBe("Web3");

@@ -9,7 +9,8 @@
  **/
 const Strategy = require("../../behavioral/Strategy");
 const Command = require("../../behavioral/Command");
-
+const MemorySubscriber = require("./subscriber/Memory");
+const IocNotifier = require("./notifier/Ioc");
 class Hook {
 
     #notifier;
@@ -28,7 +29,9 @@ class Hook {
 
     constructor(cfg) {
         this.#notifier = new Strategy({ path: cfg.path, default: 'notifier' });
+        this.#notifier.set({ name: "Ioc", target: IocNotifier });
         this.#subscriber = new Strategy({ path: cfg.path, default: 'subscriber' });
+        this.#subscriber.set({ name: "Memory", target: MemorySubscriber });
         this.#cmd = new Command();
         this.logger = cfg.logger || this.logger;
         this.configure(cfg);
