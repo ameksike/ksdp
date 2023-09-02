@@ -1,4 +1,4 @@
-/*
+/**
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
  * @date		09/11/2019
@@ -7,7 +7,7 @@
  * @dependency  Factory
  * @license    	GPL
  * @version    	1.0
- * */
+ **/
 const Factory = require('../../creational/Factory');
 const inherit = require("../../inherit");
 
@@ -87,7 +87,6 @@ class IoC {
 
     set(value, opt = {}) {
         opt = this.fill(opt);
-        this.ctrls[opt.type]
         this.ctrls[opt.type] = this.ctrls[opt.type] || {};
         this.ctrls[opt.type][opt.id] = value;
     }
@@ -121,8 +120,8 @@ class IoC {
 
     /**
      * @description Service Locator Pattern (SL)
-     * @param {*} opt 
-     * @returns 
+     * @param {Object} opt 
+     * @returns result
      */
     process(opt) {
         let path, out = null;
@@ -173,8 +172,8 @@ class IoC {
 
     /**
      * @description Factory Pattern load Type 
-     * @param {*} opt 
-     * @returns {Class}
+     * @param {Object} opt 
+     * @returns {Class} result
      */
     type(opt) {
         try {
@@ -189,8 +188,8 @@ class IoC {
 
     /**
      * @description Factory Pattern
-     * @param {*} opt 
-     * @returns 
+     * @param {Object} opt 
+     * @returns {Object} result
      */
     instance(opt) {
         try {
@@ -215,7 +214,7 @@ class IoC {
 
     /**
      * @description excecute action from object
-     * @param {*} opt 
+     * @param {Object} opt 
      * @returns {Class}
      */
     action(opt) {
@@ -226,8 +225,8 @@ class IoC {
 
     /**
      * @description get dependency 
-     * @param {OBJECT} opt 
-     * @returns {OBJECT}
+     * @param {Object} opt 
+     * @returns {Object} result
      */
     dependency(opt) {
         return this.factory.load(opt);
@@ -235,9 +234,9 @@ class IoC {
 
     /**
      * @description Dependency Injection Pattern (DI)
-     * @param {*} obj 
-     * @param {*} opt 
-     * @returns Object
+     * @param {Object} obj 
+     * @param {Object} opt 
+     * @returns {Object} result
      */
     setDI(obj, opt) {
         if (!obj || !opt || !opt.dependency) {

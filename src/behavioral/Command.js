@@ -1,4 +1,4 @@
-/*
+/**
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
  * @date		07/10/2019
@@ -6,7 +6,7 @@
  * @copyright  	Copyright (c) 2019-2050
  * @license    	GPL
  * @version    	1.0
- * */
+ **/
 const inherit = require("../inherit");
 class Command {
 
@@ -15,7 +15,7 @@ class Command {
     }
 
     configure(opt = false) {
-        this.factory = (opt && opt.factory instanceof Function) ? opt.factory : null;
+        this.factory = (opt?.factory instanceof Function) ? opt.factory : null;
     }
 
     /**
@@ -27,6 +27,9 @@ class Command {
      */
     run(action, params, scope) {
         try {
+            if (!action) {
+                return null;
+            }
             scope = this.getScope(scope);
             if (typeof (action) === "string") {
                 action = scope[action] instanceof Function ? scope[action] : inherit.ns(scope, action);
@@ -34,7 +37,7 @@ class Command {
             if (action instanceof Function) {
                 return { result: action.apply(scope, this.asList(params)) };
             }
-            return { error: new Error(`"${action}" does not exist`)};
+            return { error: new Error(`"${action}" does not exist`) };
         }
         catch (error) {
             return { error };

@@ -1,4 +1,4 @@
-/*
+/**
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
  * @date		09/11/2019
@@ -6,18 +6,28 @@
  * @description Implement a Dependency Injection Pattern based on inheritance to abstract the Setter Injection type 
  * @license    	GPL
  * @version    	1.0
- * */
+ **/
 class DIP {
 
     /**
      * @description Allow setting a list of dependencies where index is the dependency name
      * @param {Object} options 
+     * @returns {Object} self
      */
     setDependencies(options) {
         if (options) {
             Object.assign(this, options);
         }
         return this;
+    }
+
+    /**
+     * @description Allow setting a list of dependencies where index is the dependency name. Alias from setDependencies.
+     * @param {Object} options 
+     * @returns {Object} self
+     */
+    inject(options) {
+        return this.setDependencies(options);
     }
 
     /**

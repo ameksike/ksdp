@@ -1,4 +1,4 @@
-/*
+/**
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
  * @date		07/10/2019
@@ -6,7 +6,7 @@
  * @copyright  	Copyright (c) 2019-2050
  * @license    	GPL
  * @version    	1.0
- * */
+ **/
 
 const inherit = require("../inherit");
 class Factory {
@@ -36,12 +36,8 @@ class Factory {
                     return target[i];
                 }
             }
-        } else {
-            if (fs.existsSync(target)) {
-                return target;
-            }
         }
-        return false;
+        return target;
     }
 
     /**
@@ -68,11 +64,11 @@ class Factory {
         }
     }
 
-
     /**
      * @description Get Instance
-     * @param {Class} payload.cls taget Class
-     * @param {Any} payload.params params for taget constructor
+     * @param {Object|Function} payload taget Class
+     * @param {Class|Function} payload.cls taget Class
+     * @param {Array} payload.params params for taget constructor
      * @return {Object} Instance
      */
     build(payload = null) {
@@ -83,9 +79,7 @@ class Factory {
         try {
             const Cls = payload.cls;
             const Prm = this.asList(payload.params);
-            const Obj = (Cls instanceof Function) ? new Cls(...Prm) : Cls;
-            // this.ctrl[type][name] = new (Function.prototype.bind.apply(Cls, params));
-            return Obj;
+            return (Cls instanceof Function) ? new (Function.prototype.bind.apply(Cls, Prm)) : Cls;
         } catch (error) {
             this.log({
                 src: "ksdp:creational:Factory:build",
@@ -113,7 +107,7 @@ class Factory {
      * @description internal log handler 
      */
     log() {
-        this.logger.log && this.logger.log(...arguments);
+        (this.logger?.log instanceof Function) && this.logger.log(...arguments);
         return this;
     }
 }
