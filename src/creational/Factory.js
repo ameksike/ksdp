@@ -70,6 +70,7 @@ class Factory {
      * @param {Class|Function} payload.cls taget Class
      * @param {Array} payload.params params for taget constructor
      * @return {Object} Instance
+     * @example new (Function.prototype.bind.apply(Cls, Prm))
      */
     build(payload = null) {
         if (!payload) return null;
@@ -79,7 +80,7 @@ class Factory {
         try {
             const Cls = payload.cls;
             const Prm = this.asList(payload.params);
-            return (Cls instanceof Function) ? new (Function.prototype.bind.apply(Cls, Prm)) : Cls;
+            return (Cls instanceof Function) ? new Cls(...Prm) : payload;
         } catch (error) {
             this.log({
                 src: "ksdp:creational:Factory:build",

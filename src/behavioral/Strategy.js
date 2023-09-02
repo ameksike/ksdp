@@ -98,7 +98,7 @@ class Strategy {
             this.ctrl[type] = this.ctrl[type] || {};
             if (!payload.safe || (payload.safe && !this.ctrl[type][name])) {
                 const resorce = payload.target || payload;
-                this.ctrl[type][name] = resorce instanceof Function ? this.factory.build(resorce) : resorce;
+                this.ctrl[type][name] = this.factory.build(resorce);
             }
             return this.ctrl[type][name];
         }
