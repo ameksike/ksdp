@@ -28,7 +28,9 @@ class Command {
     run(action, params, scope) {
         try {
             if (!action) {
-                return null;
+                return {
+                    result: action
+                };
             }
             scope = this.getScope(scope);
             if (typeof (action) === "string") {
