@@ -1,4 +1,4 @@
-/*
+/**
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
  * @description Strategy pattern
@@ -7,7 +7,7 @@
  * @dependency  Factory
  * @license    	CPL
  * @version    	1.0
- * */
+ **/
 const Factory = require('../creational/Factory');
 const _path = require("path");
 
@@ -41,7 +41,7 @@ class Strategy {
      * @description internal log handler 
      */
     log() {
-        this.logger.log && this.logger.log(...arguments);
+        (this.logger?.log instanceof Function) && this.logger.log(...arguments);
         return this;
     }
 
@@ -49,8 +49,9 @@ class Strategy {
      * @description Get strategy Instance
      * @param {Object} payload
      * @param {String} payload.type Strategy Key Path
+     * @param {String} payload.path Strategy Key Path
      * @param {String} payload.name Strategy Key Name
-     * @param {Any} payload.params Single param for Strategy constructor
+     * @param {Array} payload.params Single param for Strategy constructor
      * @return {Object} Strategy Instance
      */
     get(payload = {}) {
@@ -82,12 +83,12 @@ class Strategy {
     }
 
     /**
-     * @description Get strategy
+     * @description Set strategy
      * @param {Object} payload 
      * @param {String} alias [OPTIONAL]
      * @return {Object} Strategy Instance
      */
-    set(payload = {}, alias) {
+    set(payload = {}, alias = "") {
         try {
             if (!payload) {
                 return null;
@@ -97,7 +98,7 @@ class Strategy {
             this.ctrl[type] = this.ctrl[type] || {};
             if (!payload.safe || (payload.safe && !this.ctrl[type][name])) {
                 const resorce = payload.target || payload;
-                this.ctrl[type][name] = resorce instanceof Function ? this.factory.build(resorce) : resorce;
+                this.ctrl[type][name] = this.factory.build(resorce);
             }
             return this.ctrl[type][name];
         }

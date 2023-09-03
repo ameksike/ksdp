@@ -1,4 +1,4 @@
-/*
+/**
  * @description Extendable Proxy class implementation 
  * @author		Antonio Membrides Espinosa
  * @email		tonykssa@gmail.com
@@ -6,10 +6,18 @@
  * @copyright  	Copyright (c) 2020-2050
  * @license    	GPL
  * @version    	1.0
- * */
+ **/
 class KsProxy {
 
     constructor() {
+        return this.build();
+    }
+
+    /**
+     * @description Proxy builder
+     * @returns {Object}
+     */
+    build() {
         return new Proxy(this, {
             set: (target, key, value, receiver) => {
                 if (this.#skip(target, key)) {
