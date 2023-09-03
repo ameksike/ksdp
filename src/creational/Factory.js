@@ -36,6 +36,7 @@ class Factory {
                     return target[i];
                 }
             }
+            return null;
         }
         return target;
     }
