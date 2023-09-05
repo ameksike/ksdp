@@ -13,7 +13,7 @@ const hook = new KsDp.integration.hook.Main({
 
 ### Add a simple subscription to a Memory subscriber 
 ```Js
-target.subscribe({
+hook.subscribe({
     subscriber: "Memory",
     notifier: "Ioc",
     value: "Web",
@@ -24,7 +24,7 @@ target.subscribe({
 
 ### Add a multiple subscriptions to a Memory subscriber 
 ```Js
-target.subscribe([{
+hook.subscribe([{
     subscriber: "Memory",
     notifier: "Ioc",
     value: "Web",
@@ -41,19 +41,19 @@ target.subscribe([{
 
 ### Trigger an event from Memory subscriber
 ```Js
-        const result = target.trigger({
-            subscriber: "Memory",
-            event: "onTest",
-            data: {
-                den: 111,
-                des: 222
-            }
-        });
+const result = hook.trigger({
+	subscriber: "Memory",
+	event: "onTest",
+	data: {
+		den: 111,
+		des: 222
+	}
+});
 ```
 
 ### Trigger an event from different subscribers and handling the parameters
 ```Js
-const result = target.trigger({
+const result = hook.trigger({
 	subscriber: ["Memory", "MySubs"],
 	event: "onTest",
 	data: {
@@ -98,7 +98,7 @@ module.exports = MySubs;
 ### Obtion 2: Setting the subscriber handler by hand into the hook lib
 
 ```Js
-target.subscriber.set({
+hook.subscriber.set({
 	name: "MySubs",
 	target: {
 		cls: MySubs
@@ -137,4 +137,17 @@ hook.notifier.set({
 });
 ```
 
+### Obtion 3: Setting the notify handler as an Object by hand into the hook lib
 
+
+```Js
+hook.notifier.set({
+	name: "MyNotifier",
+	target: {
+        run: function (payload) {
+            console.log("params >>>", arguments);
+            console.log("hook lib ref>>>", this.hook);
+        }
+    }
+});
+```
