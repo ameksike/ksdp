@@ -91,10 +91,10 @@ class Hook {
                 payload.target = target;
 
                 const predat = subscriber.format(payload) || payload;
-                const params = payload?.onPreTrigger && this.cmd?.run(payload?.onPreTrigger, [predat], payload?.scope);
-                const result = notifier.run(params?.result || predat);
-                const posres = payload?.onPosTrigger && this.cmd?.run(payload?.onPosTrigger, [result], payload?.scope) || result;
-                out.push(posres?.result || result);
+                const preres = this.cmd?.run(payload?.onPreTrigger, [predat], payload?.scope);
+                const insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
+                const posres = this.cmd?.run(payload?.onPosTrigger, [insres?.result], payload?.scope);
+                out.push(posres?.result || insres?.result);
             }
         }
         return Promise.all(out);
