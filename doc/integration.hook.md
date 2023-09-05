@@ -137,17 +137,28 @@ hook.notifier.set({
 });
 ```
 
-### Obtion 3: Setting the notify handler as an Object by hand into the hook lib
-
+### Obtion 3: Setting the notify handler as an Object list by hand into the hook lib
 
 ```Js
-hook.notifier.set({
-	name: "MyNotifier",
-	target: {
-        run: function (payload) {
-            console.log("params >>>", arguments);
-            console.log("hook lib ref>>>", this.hook);
-        }
-    }
-});
+hook.notifier.set([
+	{
+		name: "MyNotifier",
+		target: {
+			run: function (payload) {
+				console.log("params >>>", arguments);
+				console.log("hook lib ref>>>", this.hook);
+			}
+		}
+	},{
+		name: "MyNotifier2",
+		target: {
+			run: function (payload) {
+				console.log("params >>>", arguments);
+				console.log("hook lib ref>>>", this.hook);
+			}
+		}
+	}
+]);
 ```
+
+

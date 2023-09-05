@@ -47,15 +47,22 @@ class Strategy {
 
     /**
      * @description Get strategy Instance
-     * @param {Object} payload
+     * @param {Object|Array} payload
      * @param {String} payload.type Strategy Key Path
      * @param {String} payload.path Strategy Key Path
      * @param {String} payload.name Strategy Key Name
      * @param {Array} payload.params Single param for Strategy constructor
-     * @return {Object} Strategy Instance
+     * @return {Object|Array} Strategy Instance
      */
     get(payload = {}) {
         try {
+            if (Array.isArray(payload)) {
+                const out = [];
+                for (let item of payload) {
+                    out.push(this.get(item));
+                }
+                return out;
+            }
             payload = typeof (payload) === 'string' ? { name: payload } : payload;
             const type = payload.type || this.default;
             const path = payload.path || this.path;
@@ -84,14 +91,21 @@ class Strategy {
 
     /**
      * @description Set strategy
-     * @param {Object} payload 
+     * @param {Object|Array} payload 
      * @param {String} alias [OPTIONAL]
-     * @return {Object} Strategy Instance
+     * @return {Object|Array} Strategy Instance
      */
     set(payload = {}, alias = "") {
         try {
             if (!payload) {
                 return null;
+            }
+            if (Array.isArray(payload)) {
+                const out = [];
+                for (let item of payload) {
+                    out.push(this.set(item, alias));
+                }
+                return out;
             }
             const type = payload.type || this.default;
             const name = alias || payload.name || 'Default';
