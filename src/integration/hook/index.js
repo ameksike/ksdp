@@ -82,13 +82,19 @@ class Hook {
         const targets = await subscriber.subscriptions(payload);
         const out = [];
         for (const i in targets) {
-            const notifier = this.notifier.get(targets[i]?.target || targets[i]?.notifier);
+            const target = targets[i];
+            const notifier = this.notifier.get(target?.notifier || target?.target);
             if (notifier) {
+                notifier.hook = this;
+                payload.date = Date.now();
+                payload.data = payload.data || {};
+                payload.target = target;
+
                 const predat = subscriber.format(payload) || payload;
-                const params = this.cmd.run(payload?.onPreTrigger, [predat], payload?.scope) || predat;
-                const result = notifier.run(params?.result);
-                const posres = this.cmd.run(payload?.onPosTrigger, [result], payload?.scope) || result;
-                out.push(posres?.result);
+                const preres = this.cmd?.run(payload?.onPreTrigger, [predat], payload?.scope);
+                const insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
+                const posres = this.cmd?.run(payload?.onPosTrigger, [insres?.result], payload?.scope);
+                out.push(posres?.result || insres?.result);
             }
         }
         return Promise.all(out);
