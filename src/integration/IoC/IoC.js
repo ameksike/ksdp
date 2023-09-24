@@ -32,8 +32,8 @@ class IoC {
     configure(opt = null) {
         opt = opt || {};
         this.opt.src = Object.assign(this.opt.src || {}, opt.src || {});
-        this.opt.name = opt.name || 'IoC';
-        this.opt.path = opt.path || __dirname + '/../../../';
+        this.opt.name = opt.name || this.opt.name || 'IoC';
+        this.opt.path = opt.path || this.opt.path || __dirname + '/../../../';
         this.error = opt.error || this.error;
         return this;
     }
