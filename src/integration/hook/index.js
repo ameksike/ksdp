@@ -90,7 +90,7 @@ class Hook {
                 payload.data = payload.data || {};
                 payload.target = target;
 
-                const predat = subscriber.format(payload) || payload;
+                const predat = (subscriber?.format instanceof Function && subscriber.format(payload)) || payload;
                 const preres = this.cmd?.run(payload?.onPreTrigger, [predat], payload?.scope);
                 const insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
                 const posres = this.cmd?.run(payload?.onPosTrigger, [insres?.result], payload?.scope);

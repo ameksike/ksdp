@@ -75,13 +75,13 @@ class Factory {
      */
     build(payload = null) {
         if (!payload) return null;
-        if (payload instanceof Function) {
+        if (!payload.cls) {
             payload = { cls: payload };
         }
         try {
             const Cls = payload.cls;
             const Prm = this.asList(payload.params);
-            return (Cls instanceof Function) ? new Cls(...Prm) : payload;
+            return (Cls instanceof Function) ? new Cls(...Prm) : Cls;
         } catch (error) {
             this.log({
                 src: "ksdp:creational:Factory:build",
@@ -100,8 +100,13 @@ class Factory {
      * @return {Object} Instance
      */
     get(payload = null) {
-        if (!payload) return null;
-        payload.cls = this.load(payload);
+        if (!payload) {
+            return null;
+        }
+        payload.cls = payload.cls || this.load(payload);
+        if (!payload.cls) {
+            return null;
+        }
         return this.build(payload);
     }
 
