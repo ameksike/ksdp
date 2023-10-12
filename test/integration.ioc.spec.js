@@ -5,6 +5,12 @@ const ioc = new KsDp.integration.IoC({
 
 describe('Dependency', () => {
 
+    it("invalid key", (done) => {
+        const res = ioc.get("my.lib");
+        expect(res).toBe(null);
+        done();
+    });
+
     it("valid funtion", (done) => {
         const myFn = ioc.get({
             name: "myfunction",
@@ -57,6 +63,26 @@ describe('Raw', () => {
         expect(rawopt.lst).toBeInstanceOf(Array);
         done();
     });
+
+    it("valid raw data", (done) => {
+        ioc.configure({
+            src: {
+                "cfg.data": {
+                    data: {
+                        name: "raw",
+                        age: 3,
+                        lst: [1, 3, 4]
+                    },
+                    type: "raw"
+                }
+            }
+        });
+        const rawopt = ioc.get("cfg.data");
+        expect(rawopt).toBeInstanceOf(Object);
+        expect(rawopt.age).toBe(3);
+        expect(rawopt.lst).toBeInstanceOf(Array);
+        done();
+    });
 });
 
 describe('Module', () => {
@@ -70,6 +96,16 @@ describe('Module', () => {
         done();
     });
 
+    it("valid module as object", (done) => {
+        const controller = ioc.get({
+            name: "mymodule2",
+            type: "module"
+        });
+        expect(controller).toBeInstanceOf(Object);
+        expect(controller.getInfo()).toBe('MymoduleModule2');
+        done();
+    });
+
     it("valid controller with no dependencies", (done) => {
         const controller = ioc.get({
             name: "LocalController",
@@ -78,6 +114,17 @@ describe('Module', () => {
         });
         expect(controller).toBeInstanceOf(Object);
         expect(controller.getInfo()).toBe('LocalController');
+        done();
+    });
+
+    it("valid controller as object", (done) => {
+        const controller = ioc.get({
+            name: "LocalController2",
+            module: "mymodule",
+            path: 'controller'
+        });
+        expect(controller).toBeInstanceOf(Object);
+        expect(controller.getInfo()).toBe('LocalController2');
         done();
     });
 

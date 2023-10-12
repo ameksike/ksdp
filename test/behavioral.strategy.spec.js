@@ -30,7 +30,7 @@ describe('Strategy class', () => {
         expect(obj).toBeInstanceOf(Object);
         expect(obj.encode("I-I", "Hex")).toBe(undefined);
 
-        obj.strategy.set({ name: "Hex", target: new Hex() });
+        obj.strategy.set({ name: "Hex", target: { cls: new Hex() } });
         obj.strategy.set(new Hex(), "Hex_OBJ");
         obj.strategy.set(Hex, "Hex_CLS");
         obj.strategy.set(Tux);
