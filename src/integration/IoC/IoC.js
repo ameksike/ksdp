@@ -9,7 +9,8 @@
  * @version    	1.0
  **/
 const Factory = require('../../creational/Factory');
-const inherit = require("../../inherit");
+const inherit = require('../../inherit');
+const _path = require('path');
 
 class IoC {
 
@@ -125,10 +126,13 @@ class IoC {
      */
     process(opt) {
         let path, out = null;
+        let isPack = (itm) => itm?.moduleType === "lib" || itm?.moduleType === "package";
+        let dirPack = (name) => require?.resolve && _path.dirname(require.resolve(name));
         switch (opt.type) {
             case 'module':
-                opt.file = opt.file || this.opt.path + opt.name;
+                opt.file = opt.file || _path.join(this.opt.path, opt.name);
                 out = this.instance(opt);
+                out && (out._ = { type: 'module', path: _path.resolve(opt.file) });
                 break;
 
             case 'raw':
@@ -145,9 +149,8 @@ class IoC {
                 out = this.inherit.namespace(out, opt.namespace || opt.name);
                 out = this.factory.build({ cls: out, ...opt });
                 out = this.setDI(out, opt);
-                if (out.init) {
-                    out.init();
-                }
+                out && (out._ = { type: 'lib', path: dirPack(opt.name) });
+                out?.init instanceof Function && out.init();
                 break;
 
             case 'alias':
@@ -155,14 +158,14 @@ class IoC {
                 break;
 
             default:
-                path = this.opt.path;
-                path = opt.module ? path + opt.module + '/' : path;
-                path = opt.path ? path + opt.path + '/' : path;
+                path = isPack(opt) ? dirPack(opt.module) : this.opt.path;
+                path = !isPack(opt) && opt.module ? _path.join(path, opt.module) : path;
+                path = opt.path ? _path.join(path, opt.path) : path;
 
                 opt.file = opt.file || [
-                    path + opt.name + '.js',
-                    path + opt.name + '/' + opt.name + '.js',
-                    path + opt.name + '/index.js'
+                    _path.join(path, opt.name + '.js'),
+                    _path.join(path, opt.name, 'index.js'),
+                    _path.join(path, opt.name, opt.name + '.js'),
                 ];
                 out = this[opt.type] ? this[opt.type](opt) : null;
                 break;

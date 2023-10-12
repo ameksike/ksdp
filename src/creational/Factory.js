@@ -25,23 +25,6 @@ class Factory {
     }
 
     /**
-     * @description get valid path from path list
-     * @param {array[string]} target 
-     */
-    validPath(target) {
-        const fs = require('fs');
-        if (target instanceof Array) {
-            for (let i in target) {
-                if (fs.existsSync(target[i])) {
-                    return target[i];
-                }
-            }
-            return null;
-        }
-        return target;
-    }
-
-    /**
      * @description Load Class
      * @param {String} payload.name taget name
      * @param {String} payload.file taget file path
@@ -50,10 +33,9 @@ class Factory {
      */
     load(payload) {
         try {
-            payload.search = payload.search || true;
-            const file = payload.search ? this.validPath(payload.file) : payload.file;
-            if (!file) return null;
-            const Src = require(file);
+            const content = this.require(payload.file);
+            if (!content) return null;
+            const Src = content.data;
             return inherit.namespace(Src, payload.namespace || payload.name);
         } catch (error) {
             this.log({
@@ -61,6 +43,33 @@ class Factory {
                 data: payload,
                 error
             });
+            return null;
+        }
+    }
+
+    /**
+     * @description require a file or list of them
+     * @param {String|Array} file 
+     * @returns {data: Object, file: String}
+     */
+    require(file) {
+        try {
+            if (Array.isArray(file)) {
+                for (let i of file) {
+                    let content = this.require(i);
+                    if (content) {
+                        return content;
+                    }
+                }
+
+            } else {
+                return {
+                    data: require(file),
+                    file
+                };
+            }
+        }
+        catch (error) {
             return null;
         }
     }
