@@ -1,5 +1,3 @@
-
-const KsDp = require('../');
 let target = null;
 
 describe('Proxy simple', () => {
@@ -27,57 +25,47 @@ describe('Proxy with Strategy', () => {
         target = require("./demo/proxy.strategy");
     });
 
-    it("valid base64 encode", (done) => {
-        const objBase64 = new target({
-            type: "Base64",
-            scheme: "encode"
-        });
+    it("valid base64 encode", () => {
+        const objBase64 = new target({ type: "Base64", scheme: "encode" });
         const res = objBase64.encode("I-I");
         expect(objBase64).toBeInstanceOf(Object);
         expect(res).toBe("I-I...BASE64");
-        done();
     });
 
-    it("valid md5 encode", (done) => {
-        const objBase64 = new target({
-            type: "Md5",
-            scheme: "encode"
-        });
+    it("valid md5 encode", () => {
+        const objBase64 = new target({ type: "Md5", scheme: "encode" });
         const res = objBase64.encode("I-I");
         expect(objBase64).toBeInstanceOf(Object);
         expect(res).toBe("I-I...MD5");
-        done();
     });
 
-    it("valid multiple coding", (done) => {
+    it("valid multiple coding", () => {
         const objCryp = new target({ type: "Md5", scheme: "encode" });
 
         expect(objCryp).toBeInstanceOf(Object);
+        expect(objCryp.encode).toBeInstanceOf(Function);
 
         objCryp.type = "Md5";
         const res1 = objCryp.encode("I-I");
         expect(res1).toBe("I-I...MD5");
 
-        objCryp.type = "BASE64";
+        objCryp.type = "Base64";
         const res2 = objCryp.encode("I-I");
         expect(res2).toBe("I-I...BASE64");
-
-        done();
     });
 
-    it("valid implicit múltiple coding", (done) => {
+    it("valid implicit múltiple coding", () => {
         const objCryp = new target({ type: "Md5", scheme: "encode" });
 
         expect(objCryp).toBeInstanceOf(Object);
+        expect(objCryp.encode).toBeInstanceOf(Function);
 
         objCryp.type = "Md5";
         const res1 = objCryp.encode("I-I");
         expect(res1).toBe("I-I...MD5");
 
-        objCryp.type = "BASE64";
+        objCryp.type = "Base64";
         const res2 = objCryp.encode("I-I");
         expect(res2).toBe("I-I...BASE64");
-
-        done();
     });
 });
