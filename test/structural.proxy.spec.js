@@ -42,9 +42,10 @@ describe('Proxy with Strategy', () => {
     it("valid multiple coding", () => {
         const objCryp = new target({ type: "Md5", scheme: "encode" });
 
-        console.log("objCryp 1", objCryp);
+        console.log("objCryp 1", objCryp?.encode);
 
         expect(objCryp).toBeInstanceOf(Object);
+        expect(objCryp.encode).toBeInstanceOf(Function);
 
         objCryp.type = "Md5";
         const res1 = objCryp.encode("I-I");
@@ -56,12 +57,12 @@ describe('Proxy with Strategy', () => {
     });
 
     it("valid implicit múltiple coding", (done) => {
-        target = require("./demo/proxy.strategy");
         const objCryp = new target({ type: "Md5", scheme: "encode" });
 
-        console.log("objCryp 2", objCryp);
+        console.log("objCryp 2", objCryp?.encode);
 
         expect(objCryp).toBeInstanceOf(Object);
+        expect(objCryp.encode).toBeInstanceOf(Function);
 
         objCryp.type = "Md5";
         const res1 = objCryp.encode("I-I");

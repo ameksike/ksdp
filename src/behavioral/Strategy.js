@@ -76,6 +76,7 @@ class Strategy {
                     file: _path.join(path, type, Stg + ".js"),
                     params: payload.params
                 });
+                console.log(_path.join(path, type, Stg + ".js"))
             }
             return this.ctrl[type][name];
         }
