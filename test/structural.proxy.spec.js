@@ -28,10 +28,7 @@ describe('Proxy with Strategy', () => {
     });
 
     it("valid base64 encode", (done) => {
-        const objBase64 = new target({
-            type: "Base64",
-            scheme: "encode"
-        });
+        const objBase64 = new target({ type: "Base64", scheme: "encode" });
         const res = objBase64.encode("I-I");
         expect(objBase64).toBeInstanceOf(Object);
         expect(res).toBe("I-I...BASE64");
@@ -39,10 +36,7 @@ describe('Proxy with Strategy', () => {
     });
 
     it("valid md5 encode", (done) => {
-        const objBase64 = new target({
-            type: "Md5",
-            scheme: "encode"
-        });
+        const objBase64 = new target({ type: "Md5", scheme: "encode" });
         const res = objBase64.encode("I-I");
         expect(objBase64).toBeInstanceOf(Object);
         expect(res).toBe("I-I...MD5");
@@ -50,6 +44,7 @@ describe('Proxy with Strategy', () => {
     });
 
     it("valid multiple coding", (done) => {
+        target = require("./demo/proxy.strategy");
         const objCryp = new target({ type: "Md5", scheme: "encode" });
 
         expect(objCryp).toBeInstanceOf(Object);
@@ -66,6 +61,7 @@ describe('Proxy with Strategy', () => {
     });
 
     it("valid implicit múltiple coding", (done) => {
+        target = require("./demo/proxy.strategy");
         const objCryp = new target({ type: "Md5", scheme: "encode" });
 
         expect(objCryp).toBeInstanceOf(Object);
