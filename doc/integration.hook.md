@@ -124,6 +124,46 @@ class MyNotifier {
 	}
 }
 ```
+The **run** method is the one that will be executed after the **trigger** method. The **run** method will receive an object or **payload** as a parameter with the following prototype:   
+
+```js
+{
+	event: String,
+	subscriber: String,
+	date: Number,
+	target: Object,
+	data: Object, 
+}
+```
+For example:
+
+```js
+{
+	subscriber: "Memory",
+	event: "onTest",
+	date: 1704536131119,
+	target: {
+		id: 1,
+		event: "onTest",
+		value: "newrelic.service:onEvent1",
+		notifier: "locator",
+		owner: 5,
+		processor: "Native",
+		expression: "den LESS THAN EQUAL 111 AND des EQUAL 222"
+	},
+	data: {
+		den: 111,
+		des: 222
+	}
+}
+```
+The content of the payload will always depend on the **subscriber**, which define the data structure to save by each subscription or target. The **data** is the information sent in the **trigger** method. 
+
+### Processors
+The processors are strongly related to the payload received at the notifier. These are optional and allow defining a **conditional** or **logic expression** to evaluate in order to decide if the selected **target** must be executed or not. For further information about **processors**, check the followings:
+- [Ksike Expression Evaluator](https://github.com/ameksike/kseval)  
+- [Ksike Hooks](https://github.com/ameksike/kshook)
+
 
 ### Obtion 2: Setting the notify handler by hand into the hook lib
 
