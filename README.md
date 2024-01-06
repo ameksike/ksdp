@@ -1,14 +1,20 @@
 # KsDp library 
-
-### Description
 Design Patterns Library: contains a group elements of reusable Object Oriented Software. It is an attempt to combine implementations of: Gang of Four (GoF), GRASP, IoC. 
+
+
+This library belong to the Ksike ecosystem:
+- [KsMf](https://www.npmjs.com/package/ksmf) - Microframework (WEB, REST API, CLI, Proxy, etc)
+- [Ksdp](https://www.npmjs.com/package/ksdp) - Design Patterns Library (GoF, GRASP, IoC, DI, etc)
+- [KsCryp](https://www.npmjs.com/package/kscryp) - Cryptographic Library (RSA, JWT, x509, HEX, Base64, Hash, etc) 
+- [KsHook](https://www.npmjs.com/package/kshook) - Event Driven Library
+- [KsEval](https://www.npmjs.com/package/kseval) - Expression Evaluator Library 
+- [KsWC](https://www.npmjs.com/package/kswc) - Web API deployment Library
+
 
 ### Install from [npm package](https://www.npmjs.com/package/ksdp)
 ```
 npm install ksdp
 ```
-
-[![Rate on Openbase](https://badges.openbase.com/js/rating/ksdp.svg)](https://openbase.com/js/ksdp?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 
 ### This library is divided into four main categories, which are described below 
 
