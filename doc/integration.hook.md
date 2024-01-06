@@ -76,6 +76,8 @@ const result = hook.trigger({
 
 ## Custom subscribers
 
+
+
 ### Obtion 1: Defining a subscriber in the directory ```demo/subscriber``` : 
 ```Js
 class MySubs {
@@ -106,8 +108,9 @@ hook.subscriber.set({
 });
 ```
 
-
 ## Custom notifiers
+
+The notifiers are handlers or delegates for each subscription or target from subscribers which match with the triggered event. 
 
 ### Obtion 1: Defining a notifier in the directory ```demo/notifier``` : 
 ```Js
@@ -201,4 +204,22 @@ hook.notifier.set([
 ]);
 ```
 
+### Trigger events from a notifier itself 
 
+```Js
+class MyNotifier2 {
+	run(payload) {
+		if(payload.data === "complete") {
+			return this.hook.trigger({
+				subscriber: "Memory",
+				event: "onTest",
+				data: {
+					den: 111,
+					des: 222
+				}
+			});
+		}
+	}
+}
+```
+Notifiers have a reference to the main hook library in other to be able to trigger another events. 
