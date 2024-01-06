@@ -104,7 +104,7 @@ class Hook {
                         }
                     }
                 }
-                let predat = subscriber.format(pld) || pld;
+                let predat = subscriber.format instanceof Function ? subscriber.format(pld) : pld;
                 let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope);
                 let insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
                 let posres = this.cmd?.run(pld?.onPosTrigger, [insres?.result], pld?.scope);
