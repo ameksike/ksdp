@@ -15,6 +15,7 @@ class Hook {
 
     #notifier;
     #subscriber;
+    #processor;
     #cmd;
 
     get notifier() {
@@ -23,11 +24,15 @@ class Hook {
     get subscriber() {
         return this.#subscriber;
     }
+    get processor() {
+        return this.#processor;
+    }
     get cmd() {
         return this.#cmd;
     }
 
     constructor(cfg) {
+        this.#processor = new Strategy({ path: cfg.path, default: 'processor' });
         this.#notifier = new Strategy({ path: cfg.path, default: 'notifier' });
         this.#notifier.set({ name: "Ioc", target: IocNotifier });
         this.#subscriber = new Strategy({ path: cfg.path, default: 'subscriber' });
@@ -78,22 +83,31 @@ class Hook {
      * @return {Object} { [String]: Object }
      */
     async run(payload, name = "Memory") {
-        const subscriber = this.subscriber.get(name);
-        const targets = await subscriber.subscriptions(payload);
-        const out = [];
-        for (const i in targets) {
-            const target = targets[i];
-            const notifier = this.notifier.get(target?.notifier || target?.target);
+        let subscriber = this.subscriber.get(name);
+        let targets = await subscriber.subscriptions(payload);
+        let out = [];
+        for (let i in targets) {
+            let target = targets[i];
+            let notifier = this.notifier.get(target?.notifier || target?.target);
             if (notifier) {
+                let pld = { ...payload };
+                pld.date = Date.now();
+                pld.data = pld.data || {};
+                pld.target = target;
                 notifier.hook = this;
-                payload.date = Date.now();
-                payload.data = payload.data || {};
-                payload.target = target;
-
-                const predat = (subscriber?.format instanceof Function && subscriber.format(payload)) || payload;
-                const preres = this.cmd?.run(payload?.onPreTrigger, [predat], payload?.scope);
-                const insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
-                const posres = this.cmd?.run(payload?.onPosTrigger, [insres?.result], payload?.scope);
+                if (pld?.target?.expression && pld.target.processor) {
+                    let processor = this.processor.get(pld.target.processor);
+                    if (processor) {
+                        let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data, pld], processor);
+                        if (!resprd?.result) {
+                            continue;
+                        }
+                    }
+                }
+                let predat = subscriber.format(pld) || pld;
+                let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope);
+                let insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
+                let posres = this.cmd?.run(pld?.onPosTrigger, [insres?.result], pld?.scope);
                 out.push(posres?.result || insres?.result);
             }
         }
