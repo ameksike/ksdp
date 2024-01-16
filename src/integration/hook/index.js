@@ -32,26 +32,19 @@ class Hook {
     }
 
     /**
-     * @typedef {Object} EventOption
-     * @property {String|String[]} subscriber - Strategy Key Type.
-     * @property {String} event - Strategy Key Type.
-     * @property {Object} [data] - [OPTIONAL].
-     * @property {Object} [owner] - [OPTIONAL]
+     * @typedef {Object} Subscription
+     * @property {Number} [id]
+     * @property {String} event
+     * @property {*} [value]
+     * @property {String} [data]
+     * @property {String} [notifier]
+     * @property {String} [group]
+     * @property {Number} [owner]
+     * @property {Number} [status]
+     * @property {String} [processor]
+     * @property {String} [expression]
      * @property {Function} [onPreTrigger] - [OPTIONAL].
      * @property {Function} [onPosTrigger] - [OPTIONAL].
-     * @property {Object} [scope] - [OPTIONAL].
-     */
-
-    /**
-     * @typedef {'success' | 'failed'} EnumStatus
-     * @typedef {'unsubscribe' | 'subscribe'} EnumAction
-     */
-
-    /**
-     * @typedef {Object} Response
-     * @property {EnumAction} action
-     * @property {EnumStatus} status 
-     * @property {String} details=event
      */
 
     constructor(cfg) {
@@ -73,8 +66,8 @@ class Hook {
 
     /**
      * @description Trigger hooks notification
-     * @param {EventOption} payload 
-     * @return {{ [String]: Promise }} 
+     * @param {Subscription} payload 
+     * @return {{ [subscriber: String]: Promise }} 
      */
     trigger(payload) {
         const out = {};
@@ -92,7 +85,7 @@ class Hook {
      * @description trigger hooks notification by subscriber
      * @param {EventOption} options 
      * @param {String} [name=Memory]
-     * @return {{ [String]: Object }} 
+     * @return {{ [subscriber: String]: Object }} 
      */
     async run(payload, name = "Memory") {
         let subscriber = this.subscriber.get(name);
@@ -127,16 +120,9 @@ class Hook {
     }
 
     /**
-     * @description Add subscriber to event
-     * 
-     * @param {Object} payload - input data 
-     * @param {String} payload.subscriber  
-     * @param {String} payload.target 
-     * @param {String} payload.value 
-     * @param {String} payload.event 
-     * @param {Number} payload.owner 
-     * 
-     * @returns {Response} result The output object with action=subscribe.
+     * @description Save subscription
+     * @param {Subscription|Array<Subscription>} payload
+     * @returns {Subscription|Array<Subscription>} subscribed
      */
     async subscribe(payload) {
         try {
@@ -159,12 +145,9 @@ class Hook {
     }
 
     /**
-     * @description Remove subscriber from event
-     * @param {Object} payload - input data 
-     * @param {String} payload.subscriber  
-     * @param {String} payload.event 
-     * @param {Number} payload.owner 
-     * @returns {Response} result The output object with action=unsubscribe.
+     * @description Remove subscription
+     * @param {Subscription|Array<Subscription>} payload
+     * @returns {Subscription|Array<Subscription>} unsubscription
      */
     async unsubscribe(payload) {
         try {
@@ -190,11 +173,8 @@ class Hook {
 
     /**
      * @description Events list by subscriber
-     * @param {Object} payload - input data 
-     * @param {String} payload.subscriber
-     * @param {String} payload.event [OPTIONAL]
-     * @param {Number} payload.subscriber 
-     * @return {Array} subscriptions
+     * @param {Subscription} payload - input data 
+     * @return {Array<Subscription>} subscriptions
      */
     async subscriptions(payload) {
         try {

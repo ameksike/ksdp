@@ -1,24 +1,19 @@
 export = Hook;
 declare class Hook {
     /**
-     * @typedef {Object} EventOption
-     * @property {String|String[]} subscriber - Strategy Key Type.
-     * @property {String} event - Strategy Key Type.
-     * @property {Object} [data] - [OPTIONAL].
-     * @property {Object} [owner] - [OPTIONAL]
+     * @typedef {Object} Subscription
+     * @property {Number} [id]
+     * @property {String} event
+     * @property {*} [value]
+     * @property {String} [data]
+     * @property {String} [notifier]
+     * @property {String} [group]
+     * @property {Number} [owner]
+     * @property {Number} [status]
+     * @property {String} [processor]
+     * @property {String} [expression]
      * @property {Function} [onPreTrigger] - [OPTIONAL].
      * @property {Function} [onPosTrigger] - [OPTIONAL].
-     * @property {Object} [scope] - [OPTIONAL].
-     */
-    /**
-     * @typedef {'success' | 'failed'} EnumStatus
-     * @typedef {'unsubscribe' | 'subscribe'} EnumAction
-     */
-    /**
-     * @typedef {Object} Response
-     * @property {EnumAction} action
-     * @property {EnumStatus} status
-     * @property {String} details=event
      */
     constructor(cfg: any);
     get notifier(): Strategy;
@@ -29,26 +24,20 @@ declare class Hook {
     configure(cfg: any): this;
     /**
      * @description Trigger hooks notification
-     * @param {EventOption} payload
-     * @return {{ [String]: Promise }}
+     * @param {Subscription} payload
+     * @return {{ [subscriber: String]: Promise }}
      */
     trigger(payload: {
-        /**
-         * - Strategy Key Type.
-         */
-        subscriber: string | string[];
-        /**
-         * - Strategy Key Type.
-         */
+        id?: number;
         event: string;
-        /**
-         * - [OPTIONAL].
-         */
-        data?: any;
-        /**
-         * - [OPTIONAL]
-         */
-        owner?: any;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
         /**
          * - [OPTIONAL].
          */
@@ -57,81 +46,226 @@ declare class Hook {
          * - [OPTIONAL].
          */
         onPosTrigger?: Function;
-        /**
-         * - [OPTIONAL].
-         */
-        scope?: any;
     }): {
-        [String]: Promise<any>;
+        [subscriber: string]: Promise<any>;
     };
     /**
      * @description trigger hooks notification by subscriber
      * @param {EventOption} options
      * @param {String} [name=Memory]
-     * @return {{ [String]: Object }}
+     * @return {{ [subscriber: String]: Object }}
      */
     run(payload: any, name?: string): {
-        [String]: any;
+        [subscriber: string]: any;
     };
     /**
-     * @description Add subscriber to event
-     *
-     * @param {Object} payload - input data
-     * @param {String} payload.subscriber
-     * @param {String} payload.target
-     * @param {String} payload.value
-     * @param {String} payload.event
-     * @param {Number} payload.owner
-     *
-     * @returns {Response} result The output object with action=subscribe.
+     * @description Save subscription
+     * @param {Subscription|Array<Subscription>} payload
+     * @returns {Subscription|Array<Subscription>} subscribed
      */
     subscribe(payload: {
-        subscriber: string;
-        target: string;
-        value: string;
+        id?: number;
         event: string;
-        owner: number;
-    }): {
-        action: "unsubscribe" | "subscribe";
-        status: "failed" | "success";
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
         /**
-         * =event
+         * - [OPTIONAL].
          */
-        details: string;
-    };
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    } | {
+        id?: number;
+        event: string;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    }[]): {
+        id?: number;
+        event: string;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    } | {
+        id?: number;
+        event: string;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    }[];
     /**
-     * @description Remove subscriber from event
-     * @param {Object} payload - input data
-     * @param {String} payload.subscriber
-     * @param {String} payload.event
-     * @param {Number} payload.owner
-     * @returns {Response} result The output object with action=unsubscribe.
+     * @description Remove subscription
+     * @param {Subscription|Array<Subscription>} payload
+     * @returns {Subscription|Array<Subscription>} unsubscription
      */
     unsubscribe(payload: {
-        subscriber: string;
+        id?: number;
         event: string;
-        owner: number;
-    }): {
-        action: "unsubscribe" | "subscribe";
-        status: "failed" | "success";
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
         /**
-         * =event
+         * - [OPTIONAL].
          */
-        details: string;
-    };
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    } | {
+        id?: number;
+        event: string;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    }[]): {
+        id?: number;
+        event: string;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    } | {
+        id?: number;
+        event: string;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    }[];
     /**
      * @description Events list by subscriber
-     * @param {Object} payload - input data
-     * @param {String} payload.subscriber
-     * @param {String} payload.event [OPTIONAL]
-     * @param {Number} payload.subscriber
-     * @return {Array} subscriptions
+     * @param {Subscription} payload - input data
+     * @return {Array<Subscription>} subscriptions
      */
     subscriptions(payload: {
-        subscriber: string;
+        id?: number;
         event: string;
-        subscriber: string;
-    }): any[];
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    }): {
+        id?: number;
+        event: string;
+        value?: any;
+        data?: string;
+        notifier?: string;
+        group?: string;
+        owner?: number;
+        status?: number;
+        processor?: string;
+        expression?: string;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+    }[];
     /**
      * @description List of all avalible events
      * @param {*} payload
