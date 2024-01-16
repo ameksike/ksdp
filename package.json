@@ -1,12 +1,14 @@
 {
   "name": "ksdp",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "Ksike Design Patterns",
   "main": "index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "publish": "npm login && npm publish"
+    "publish": "npm login && npm publish",
+    "type": "npx -p typescript tsc ./index.js --declaration --allowJs --emitDeclarationOnly --outDir types"
   },
   "repository": {
     "type": "git",
