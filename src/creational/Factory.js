@@ -17,7 +17,7 @@ class Factory {
 
     /**
      * @description Get as array
-     * @param {Any} payload value 
+     * @param {Object} payload The input data.
      * @return {Array} 
      */
     asList(payload) {
@@ -26,10 +26,11 @@ class Factory {
 
     /**
      * @description Load Class
+     * @param {Object} payload The input data.
      * @param {String} payload.name taget name
      * @param {String} payload.file taget file path
      * @param {String} payload.search 
-     * @return {Any} Class
+     * @return {Object} Class
      */
     load(payload) {
         try {
@@ -49,8 +50,10 @@ class Factory {
 
     /**
      * @description require a file or list of them
-     * @param {String|Array} file 
-     * @returns {data: Object, file: String}
+     * @param {String|Array<String>} file 
+     * @returns {Object} result - The output object.
+     * @property {Object} result.data - data content.
+     * @property {String} result.file - file path.
      */
     require(file) {
         try {
@@ -75,10 +78,13 @@ class Factory {
     }
 
     /**
+     * 
+     * @typedef {Object} BuildOption
+     * @property {Function} cls - taget Class.
+     * @property {Array} params - params for taget constructor.
+     * 
      * @description Get Instance
-     * @param {Object|Function} payload taget Class
-     * @param {Class|Function} payload.cls taget Class
-     * @param {Array} payload.params params for taget constructor
+     * @param {BuildOption|Function} payload taget Class
      * @return {Object} Instance
      * @example new (Function.prototype.bind.apply(Cls, Prm))
      */
@@ -103,9 +109,10 @@ class Factory {
 
     /**
      * @description Get Instance
+     * @param {Object} payload The input data.
      * @param {String} payload.name taget Name
      * @param {String} payload.file taget File Path
-     * @param {Any} payload.params params for taget constructor
+     * @param {Object} payload.params params for taget constructor
      * @return {Object} Instance
      */
     get(payload = null) {

@@ -1,5 +1,25 @@
 export = Hook;
 declare class Hook {
+    /**
+     * @typedef {Object} EventOption
+     * @property {String|String[]} subscriber - Strategy Key Type.
+     * @property {String} event - Strategy Key Type.
+     * @property {Object} [data] - [OPTIONAL].
+     * @property {Object} [owner] - [OPTIONAL]
+     * @property {Function} [onPreTrigger] - [OPTIONAL].
+     * @property {Function} [onPosTrigger] - [OPTIONAL].
+     * @property {Object} [scope] - [OPTIONAL].
+     */
+    /**
+     * @typedef {'success' | 'failed'} EnumStatus
+     * @typedef {'unsubscribe' | 'subscribe'} EnumAction
+     */
+    /**
+     * @typedef {Object} Response
+     * @property {EnumAction} action
+     * @property {EnumStatus} status
+     * @property {String} details=event
+     */
     constructor(cfg: any);
     get notifier(): Strategy;
     get subscriber(): Strategy;
@@ -9,66 +29,118 @@ declare class Hook {
     configure(cfg: any): this;
     /**
      * @description Trigger hooks notification
-     * @param {Array|String} payload.subscriber
-     * @param {String} payload.event
-     * @param {Object} payload.data [OPTIONAL]
-     * @param {Funtion} payload.onPreTrigger [OPTIONAL]
-     * @param {Funtion} payload.onPosTrigger [OPTIONAL]
-     * @param {Funtion} payload.scope [OPTIONAL]
-     * @return {Object} { [String]: Promise }
+     * @param {EventOption} payload
+     * @return {{ [String]: Promise }}
      */
-    trigger(payload: any): any;
+    trigger(payload: {
+        /**
+         * - Strategy Key Type.
+         */
+        subscriber: string | string[];
+        /**
+         * - Strategy Key Type.
+         */
+        event: string;
+        /**
+         * - [OPTIONAL].
+         */
+        data?: any;
+        /**
+         * - [OPTIONAL]
+         */
+        owner?: any;
+        /**
+         * - [OPTIONAL].
+         */
+        onPreTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        onPosTrigger?: Function;
+        /**
+         * - [OPTIONAL].
+         */
+        scope?: any;
+    }): {
+        [String]: Promise<any>;
+    };
     /**
      * @description trigger hooks notification by subscriber
-     * @param {Array|String} subscriber
-     * @param {Object} payload
-     * @param {String} payload.event
-     * @param {Object} payload.data [OPTIONAL]
-     * @param {Object} payload.owner [OPTIONAL]
-     * @param {Funtion} payload.onPreTrigger [OPTIONAL]
-     * @param {Funtion} payload.onPosTrigger [OPTIONAL]
-     * @param {Funtion} payload.scope [OPTIONAL]
-     * @return {Object} { [String]: Object }
+     * @param {EventOption} options
+     * @param {String} [name=Memory]
+     * @return {{ [String]: Object }}
      */
-    run(payload: {
-        event: string;
-        data: any;
-        owner: any;
-        onPreTrigger: Funtion;
-        onPosTrigger: Funtion;
-        scope: Funtion;
-    }, name?: string): any;
+    run(payload: any, name?: string): {
+        [String]: any;
+    };
     /**
      * @description Add subscriber to event
+     *
+     * @param {Object} payload - input data
      * @param {String} payload.subscriber
      * @param {String} payload.target
      * @param {String} payload.value
      * @param {String} payload.event
      * @param {Number} payload.owner
-     * @return { action: String ['subscribe'], status: String ['success'/'failed'], details: String [event] }
+     *
+     * @returns {Response} result The output object with action=subscribe.
      */
-    subscribe(payload: any): action;
+    subscribe(payload: {
+        subscriber: string;
+        target: string;
+        value: string;
+        event: string;
+        owner: number;
+    }): {
+        action: "unsubscribe" | "subscribe";
+        status: "failed" | "success";
+        /**
+         * =event
+         */
+        details: string;
+    };
     /**
      * @description Remove subscriber from event
+     * @param {Object} payload - input data
      * @param {String} payload.subscriber
      * @param {String} payload.event
      * @param {Number} payload.owner
-     * @return { action: String ['unsubscribe'], status: String ['success'/'failed'], details: String [event] }
+     * @returns {Response} result The output object with action=unsubscribe.
      */
-    unsubscribe(payload: any): action;
+    unsubscribe(payload: {
+        subscriber: string;
+        event: string;
+        owner: number;
+    }): {
+        action: "unsubscribe" | "subscribe";
+        status: "failed" | "success";
+        /**
+         * =event
+         */
+        details: string;
+    };
     /**
      * @description Events list by subscriber
+     * @param {Object} payload - input data
      * @param {String} payload.subscriber
      * @param {String} payload.event [OPTIONAL]
      * @param {Number} payload.subscriber
-     * @return {Attay} subscriptions
+     * @return {Array} subscriptions
      */
-    subscriptions(payload: any): Attay;
+    subscriptions(payload: {
+        subscriber: string;
+        event: string;
+        subscriber: string;
+    }): any[];
     /**
      * @description List of all avalible events
-     * @return {Array} [{name: String, description: String}]
+     * @param {*} payload
+     * @return {Array<{name: String, description: String}>}
      */
-    events(payload: any): any[];
+    events(payload: any): Array<{
+        name: string;
+        description: string;
+    }>;
     #private;
 }
 import Strategy = require("../../behavioral/Strategy");

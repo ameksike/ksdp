@@ -31,6 +31,29 @@ class Hook {
         return this.#cmd;
     }
 
+    /**
+     * @typedef {Object} EventOption
+     * @property {String|String[]} subscriber - Strategy Key Type.
+     * @property {String} event - Strategy Key Type.
+     * @property {Object} [data] - [OPTIONAL].
+     * @property {Object} [owner] - [OPTIONAL]
+     * @property {Function} [onPreTrigger] - [OPTIONAL].
+     * @property {Function} [onPosTrigger] - [OPTIONAL].
+     * @property {Object} [scope] - [OPTIONAL].
+     */
+
+    /**
+     * @typedef {'success' | 'failed'} EnumStatus
+     * @typedef {'unsubscribe' | 'subscribe'} EnumAction
+     */
+
+    /**
+     * @typedef {Object} Response
+     * @property {EnumAction} action
+     * @property {EnumStatus} status 
+     * @property {String} details=event
+     */
+
     constructor(cfg) {
         this.#processor = new Strategy({ path: cfg.path, default: 'processor' });
         this.#notifier = new Strategy({ path: cfg.path, default: 'notifier' });
@@ -50,13 +73,8 @@ class Hook {
 
     /**
      * @description Trigger hooks notification
-     * @param {Array|String} payload.subscriber 
-     * @param {String} payload.event 
-     * @param {Object} payload.data [OPTIONAL]
-     * @param {Funtion} payload.onPreTrigger [OPTIONAL]
-     * @param {Funtion} payload.onPosTrigger [OPTIONAL]
-     * @param {Funtion} payload.scope [OPTIONAL]
-     * @return {Object} { [String]: Promise }
+     * @param {EventOption} payload 
+     * @return {{ [String]: Promise }} 
      */
     trigger(payload) {
         const out = {};
@@ -72,15 +90,9 @@ class Hook {
 
     /**
      * @description trigger hooks notification by subscriber
-     * @param {Array|String} subscriber 
-     * @param {Object} payload 
-     * @param {String} payload.event 
-     * @param {Object} payload.data [OPTIONAL]
-     * @param {Object} payload.owner [OPTIONAL]
-     * @param {Funtion} payload.onPreTrigger [OPTIONAL]
-     * @param {Funtion} payload.onPosTrigger [OPTIONAL]
-     * @param {Funtion} payload.scope [OPTIONAL]
-     * @return {Object} { [String]: Object }
+     * @param {EventOption} options 
+     * @param {String} [name=Memory]
+     * @return {{ [String]: Object }} 
      */
     async run(payload, name = "Memory") {
         let subscriber = this.subscriber.get(name);
@@ -116,12 +128,15 @@ class Hook {
 
     /**
      * @description Add subscriber to event
+     * 
+     * @param {Object} payload - input data 
      * @param {String} payload.subscriber  
      * @param {String} payload.target 
      * @param {String} payload.value 
      * @param {String} payload.event 
      * @param {Number} payload.owner 
-     * @return { action: String ['subscribe'], status: String ['success'/'failed'], details: String [event] }
+     * 
+     * @returns {Response} result The output object with action=subscribe.
      */
     async subscribe(payload) {
         try {
@@ -145,10 +160,11 @@ class Hook {
 
     /**
      * @description Remove subscriber from event
+     * @param {Object} payload - input data 
      * @param {String} payload.subscriber  
      * @param {String} payload.event 
      * @param {Number} payload.owner 
-     * @return { action: String ['unsubscribe'], status: String ['success'/'failed'], details: String [event] }
+     * @returns {Response} result The output object with action=unsubscribe.
      */
     async unsubscribe(payload) {
         try {
@@ -174,10 +190,11 @@ class Hook {
 
     /**
      * @description Events list by subscriber
+     * @param {Object} payload - input data 
      * @param {String} payload.subscriber
      * @param {String} payload.event [OPTIONAL]
      * @param {Number} payload.subscriber 
-     * @return {Attay} subscriptions
+     * @return {Array} subscriptions
      */
     async subscriptions(payload) {
         try {
@@ -196,7 +213,8 @@ class Hook {
 
     /**
      * @description List of all avalible events
-     * @return {Array} [{name: String, description: String}]
+     * @param {*} payload
+     * @return {Array<{name: String, description: String}>} 
      */
     async events(payload) {
         try {

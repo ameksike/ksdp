@@ -13,6 +13,13 @@ const _path = require("path");
 
 class Strategy {
 
+    /**
+     * @typedef {Object} StrategyOption
+     * @property {String} type - Strategy Key Type.
+     * @property {String} path - Strategy Key Path.
+     * @property {String} name - Strategy Key Name.
+     * @property {Array} params - Single param for Strategy constructor.
+     */
     constructor(payload) {
         this.ctrl = {};
         this.params = [];
@@ -24,10 +31,11 @@ class Strategy {
 
     /**
      * @description Get strategy
-     * @param {String} type Strategy Key Path
-     * @param {String} name Strategy Key Name
-     * @param {Any} params  
-     * @return {Object} This
+     * @param {Object} payload The input data.
+     * @param {String} payload.type Strategy Key Path
+     * @param {String} [payload.name='Default'] Strategy Key Name
+     * @param {Object} payload.params  
+     * @return {Strategy} This
      */
     configure(payload = {}) {
         this.default = payload.default || this.default;
@@ -47,12 +55,8 @@ class Strategy {
 
     /**
      * @description Get strategy Instance
-     * @param {Object|Array} payload
-     * @param {String} payload.type Strategy Key Path
-     * @param {String} payload.path Strategy Key Path
-     * @param {String} payload.name Strategy Key Name
-     * @param {Array} payload.params Single param for Strategy constructor
-     * @return {Object|Array} Strategy Instance
+     * @param {(StrategyOption|Array<StrategyOption>)} payload
+     * @return {Object|Array<Object>} Strategy Instance
      */
     get(payload = {}) {
         try {
@@ -91,9 +95,9 @@ class Strategy {
 
     /**
      * @description Set strategy
-     * @param {Object|Array} payload 
-     * @param {String} alias [OPTIONAL]
-     * @return {Object|Array} Strategy Instance
+     * @param {StrategyOption|Array<StrategyOption>} payload 
+     * @param {String} [alias=""]
+     * @return {Object|Array<Object>} Strategy Instance
      */
     set(payload = {}, alias = "") {
         try {

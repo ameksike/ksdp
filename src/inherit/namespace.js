@@ -1,6 +1,6 @@
 /**
  * @description Namespace resolution 
- * @param {Any} src 
+ * @param {Object} src 
  * @param {String} name 
  */
 function namespace(src, name = null) {
