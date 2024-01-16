@@ -26,7 +26,7 @@ const out = obj.encode('this is a test');
 Note that, the parameter of the 'Factory::get' function is composed of 3 essential attributes:
 * Type {String}, payload.name it is taget Name
 * Type {String}, payload.file it is taget File Path
-* Type {Any}, payload.params it is params for taget constructor
+* Type {Object}, payload.params it is params for taget constructor
 
 
 ### In case only loading the class is required

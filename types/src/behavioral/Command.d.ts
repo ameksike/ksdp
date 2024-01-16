@@ -6,20 +6,20 @@ declare class Command {
     /**
      * @description run action with params on scope
      * @param {String} action
-     * @param {Any} params
+     * @param {Object} params
      * @param {Object} scope
-     * @return {Any}
+     * @return {Object}
      */
-    run(action: string, params: Any, scope: any): Any;
+    run(action: string, params: any, scope: any): any;
     /**
      * @description Get as array
-     * @param {Any} payload value
+     * @param {Object} payload value
      * @return {Array}
      */
-    asList(payload: Any): any[];
+    asList(payload: any): any[];
     /**
      * @description resolve scope
-     * @param {Any} scope
+     * @param {Object} scope
      */
-    getScope(scope: Any): any;
+    getScope(scope: any): any;
 }

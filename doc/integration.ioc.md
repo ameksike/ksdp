@@ -18,16 +18,16 @@ const helper = new KsDp.integration.IoC({
 ```
 
 ### Each element within the configuration must have a prototype with the following attributes: 
-* name {string} [OPTIONAL] DEFAULT['DefaultService']  
-* type {string} [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib']
-* module {string} [OPTIONAL] DEFAULT['app']  
-* dependency {string} [OPTIONAL] DEFAULT[null]  
-* options {any} [OPTIONAL] DEFAULT[null] only for type ['instance', 'action', 'raw']    
-* source {string} [OPTIONAL] DEFAULT['default'] only for type 'alias'   
-* params {any} [OPTIONAL] DEFAULT[null] only for type 'action'  
-* path {string} [OPTIONAL] DEFAULT[@type]    
-* file {string} [OPTIONAL]    
-* id {string} [OPTIONAL]   
+* name {String} [OPTIONAL] DEFAULT['DefaultService']  
+* type {String} [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib']
+* module {String} [OPTIONAL] DEFAULT['app']  
+* dependency {String} [OPTIONAL] DEFAULT[null]  
+* options {Object} [OPTIONAL] DEFAULT[null] only for type ['instance', 'action', 'raw']    
+* source {String} [OPTIONAL] DEFAULT['default'] only for type 'alias'   
+* params {Object} [OPTIONAL] DEFAULT[null] only for type 'action'  
+* path {String} [OPTIONAL] DEFAULT[@type]    
+* file {String} [OPTIONAL]    
+* id {String} [OPTIONAL]   
 
 ### It is possible to configure from new data once the library has been initialized: 
 ```Js

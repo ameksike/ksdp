@@ -27,9 +27,9 @@ class Observer {
 
     /**
      * @description add an event on scope
-     * @param {string} subscriber 
-     * @param {string} event 
-     * @param {string} scope 
+     * @param {String} subscriber 
+     * @param {String} event 
+     * @param {String} [scope=default] 
      * @return {Event}
      */
     add(subscriber, event, scope = "default") {
@@ -42,8 +42,8 @@ class Observer {
 
     /**
      * @description delete an event from scope
-     * @param {string} event 
-     * @param {string} scope 
+     * @param {String} event 
+     * @param {String} [scope=default] 
      * @return {Event}
      */
     del(event, scope = "default") {
@@ -54,9 +54,9 @@ class Observer {
 
     /**
      * @description emit an event on a scope with a params list
-     * @param {string} event 
-     * @param {string} scope 
-     * @param {string} params 
+     * @param {String} event 
+     * @param {String} scope 
+     * @param {String} params 
      * @return {Event}
      */
     emit(event, scope = "default", params = []) {
@@ -69,9 +69,9 @@ class Observer {
 
     /**
      * @description process an event on a scope
-     * @param {string} subscriber 
-     * @param {string} event 
-     * @param {string} params 
+     * @param {String} subscriber 
+     * @param {String} event 
+     * @param {String} params 
      */
     process(subscriber, event, params = []) {
         const target = this.helper ? this.helper.get(subscriber) : subscriber;

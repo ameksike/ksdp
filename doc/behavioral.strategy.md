@@ -41,7 +41,7 @@ console.log(objBase64?.encode('this is a test'));
 Note that, the parameter of the 'Strategy::get' function is composed of 3 essential attributes:
 * Type {String}, payload.type it is target path name or ID for a group of targets
 * Type {String}, payload.name it is target name
-* Type {Any}, payload.params it is parameters for target constructor
+* Type {Object}, payload.params it is parameters for target constructor
 
 
 ### It is possible to define default values

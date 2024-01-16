@@ -31,6 +31,22 @@ class Hook {
         return this.#cmd;
     }
 
+    /**
+     * @typedef {Object} Subscription
+     * @property {Number} [id]
+     * @property {String} event
+     * @property {*} [value]
+     * @property {String} [data]
+     * @property {String} [notifier]
+     * @property {String} [group]
+     * @property {Number} [owner]
+     * @property {Number} [status]
+     * @property {String} [processor]
+     * @property {String} [expression]
+     * @property {Function} [onPreTrigger] - [OPTIONAL].
+     * @property {Function} [onPosTrigger] - [OPTIONAL].
+     */
+
     constructor(cfg) {
         this.#processor = new Strategy({ path: cfg.path, default: 'processor' });
         this.#notifier = new Strategy({ path: cfg.path, default: 'notifier' });
@@ -50,13 +66,8 @@ class Hook {
 
     /**
      * @description Trigger hooks notification
-     * @param {Array|String} payload.subscriber 
-     * @param {String} payload.event 
-     * @param {Object} payload.data [OPTIONAL]
-     * @param {Funtion} payload.onPreTrigger [OPTIONAL]
-     * @param {Funtion} payload.onPosTrigger [OPTIONAL]
-     * @param {Funtion} payload.scope [OPTIONAL]
-     * @return {Object} { [String]: Promise }
+     * @param {Subscription} payload 
+     * @return {{ [subscriber: String]: Promise }} 
      */
     trigger(payload) {
         const out = {};
@@ -72,15 +83,9 @@ class Hook {
 
     /**
      * @description trigger hooks notification by subscriber
-     * @param {Array|String} subscriber 
-     * @param {Object} payload 
-     * @param {String} payload.event 
-     * @param {Object} payload.data [OPTIONAL]
-     * @param {Object} payload.owner [OPTIONAL]
-     * @param {Funtion} payload.onPreTrigger [OPTIONAL]
-     * @param {Funtion} payload.onPosTrigger [OPTIONAL]
-     * @param {Funtion} payload.scope [OPTIONAL]
-     * @return {Object} { [String]: Object }
+     * @param {EventOption} options 
+     * @param {String} [name=Memory]
+     * @return {{ [subscriber: String]: Object }} 
      */
     async run(payload, name = "Memory") {
         let subscriber = this.subscriber.get(name);
@@ -115,13 +120,9 @@ class Hook {
     }
 
     /**
-     * @description Add subscriber to event
-     * @param {String} payload.subscriber  
-     * @param {String} payload.target 
-     * @param {String} payload.value 
-     * @param {String} payload.event 
-     * @param {Number} payload.owner 
-     * @return { action: String ['subscribe'], status: String ['success'/'failed'], details: String [event] }
+     * @description Save subscription
+     * @param {Subscription|Array<Subscription>} payload
+     * @returns {Subscription|Array<Subscription>} subscribed
      */
     async subscribe(payload) {
         try {
@@ -144,11 +145,9 @@ class Hook {
     }
 
     /**
-     * @description Remove subscriber from event
-     * @param {String} payload.subscriber  
-     * @param {String} payload.event 
-     * @param {Number} payload.owner 
-     * @return { action: String ['unsubscribe'], status: String ['success'/'failed'], details: String [event] }
+     * @description Remove subscription
+     * @param {Subscription|Array<Subscription>} payload
+     * @returns {Subscription|Array<Subscription>} unsubscription
      */
     async unsubscribe(payload) {
         try {
@@ -174,10 +173,8 @@ class Hook {
 
     /**
      * @description Events list by subscriber
-     * @param {String} payload.subscriber
-     * @param {String} payload.event [OPTIONAL]
-     * @param {Number} payload.subscriber 
-     * @return {Attay} subscriptions
+     * @param {Subscription} payload - input data 
+     * @return {Array<Subscription>} subscriptions
      */
     async subscriptions(payload) {
         try {
@@ -196,7 +193,8 @@ class Hook {
 
     /**
      * @description List of all avalible events
-     * @return {Array} [{name: String, description: String}]
+     * @param {*} payload
+     * @return {Array<{name: String, description: String}>} 
      */
     async events(payload) {
         try {

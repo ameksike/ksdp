@@ -21,9 +21,9 @@ class Command {
     /**
      * @description run action with params on scope
      * @param {String} action 
-     * @param {Any} params 
+     * @param {Object} params 
      * @param {Object} scope 
-     * @return {Any}
+     * @return {Object}
      */
     run(action, params, scope) {
         try {
@@ -48,7 +48,7 @@ class Command {
 
     /**
      * @description Get as array
-     * @param {Any} payload value 
+     * @param {Object} payload value 
      * @return {Array} 
      */
     asList(payload) {
@@ -57,7 +57,7 @@ class Command {
 
     /**
      * @description resolve scope
-     * @param {Any} scope 
+     * @param {Object} scope 
      */
     getScope(scope) {
         return this.factory ? this.factory(scope) : (scope || this);

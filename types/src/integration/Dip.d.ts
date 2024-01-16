@@ -29,7 +29,7 @@ declare class DIP {
     /**
      * @description Check all requided dependencies and throw an error
      * @param {Array|String} list
-     * @param {Class} ErrorType
+     * @param {Function} ErrorType
      */
-    checkDependencies(list: any[] | string, ErrorType?: Class): this;
+    checkDependencies(list: any[] | string, ErrorType?: Function): this;
 }

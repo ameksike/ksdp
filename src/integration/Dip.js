@@ -46,7 +46,7 @@ class DIP {
     /**
      * @description Check all requided dependencies and throw an error 
      * @param {Array|String} list 
-     * @param {Class} ErrorType 
+     * @param {Function} ErrorType 
      */
     checkDependencies(list, ErrorType = null) {
         const missing = this.getMissingDependencies(list);
