@@ -8,7 +8,6 @@ export = Observer;
  * @license    	GPL
  * @version    	1.0
  **/
-
 /**
  * @typedef {({[name:String]:Object} | Array)} List
  **/

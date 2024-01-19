@@ -1,19 +1,20 @@
 export = Hook;
 /**
- * @typedef {({[name:String]:Object} | Array)} List
+ * @typedef {({[name:String]:Object})} List
  **/
 /**
  * @typedef {Object} Subscription
- * @property {Number} [id]
- * @property {String} event
+ * @property {*} [data]
  * @property {*} [value]
- * @property {String} [data]
+ * @property {String} event
  * @property {String} [notifier]
+ * @property {String} [subscriber]
+ * @property {String} [expression]
+ * @property {String} [processor]
  * @property {String} [group]
  * @property {Number} [owner]
  * @property {Number} [status]
- * @property {String} [processor]
- * @property {String} [expression]
+ * @property {Number} [id]
  * @property {Date} [date]
  * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
  * @property {Function} [onPosTrigger] - formater action to run after process the event action
@@ -45,11 +46,11 @@ declare class Hook {
     };
     /**
      * @description trigger hooks notification by subscriber
-     * @param {EventOption} payload
+     * @param {Subscription} payload
      * @param {String} [name=Memory]
      * @return {Promise<Array>}
      */
-    run(payload: EventOption, name?: string): Promise<any[]>;
+    run(payload: Subscription, name?: string): Promise<any[]>;
     /**
      * @description Save subscription
      * @param {Subscription|Array<Subscription>} payload
@@ -81,20 +82,21 @@ declare namespace Hook {
 }
 import Strategy = require("../../behavioral/Strategy");
 import Command = require("../../behavioral/Command");
-type List = any[] | {
+type List = {
     [name: string]: any;
 };
 type Subscription = {
-    id?: number;
-    event: string;
+    data?: any;
     value?: any;
-    data?: string;
+    event: string;
     notifier?: string;
+    subscriber?: string;
+    expression?: string;
+    processor?: string;
     group?: string;
     owner?: number;
     status?: number;
-    processor?: string;
-    expression?: string;
+    id?: number;
     date?: Date;
     /**
      * - formater action to run before process the event but after the subscriber format action

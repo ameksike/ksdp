@@ -1,19 +1,20 @@
 /**
- * @typedef {({[name:String]:Object} | Array)} List 
+ * @typedef {({[name:String]:Object})} List 
  **/
 
 /**
  * @typedef {Object} Subscription
- * @property {Number} [id]
- * @property {String} event
+ * @property {*} [data]
  * @property {*} [value]
- * @property {String} [data]
+ * @property {String} event
  * @property {String} [notifier]
+ * @property {String} [subscriber]
+ * @property {String} [expression]
+ * @property {String} [processor]
  * @property {String} [group]
  * @property {Number} [owner]
  * @property {Number} [status]
- * @property {String} [processor]
- * @property {String} [expression]
+ * @property {Number} [id]
  * @property {Date} [date]
  * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
  * @property {Function} [onPosTrigger] - formater action to run after process the event action
@@ -33,7 +34,7 @@ class SubscriberBase {
     /**
      * @description preformat subscriptions payload before precess the event
      * @param {*} payload 
-     * @returns {*}
+     * @returns {*} formated payload
      */
     format(payload) {
         payload.date = new Date();
@@ -51,28 +52,28 @@ class SubscriberBase {
 
     /**
      * @description remove subscriptions
-     * @param {Subscription|Array<Subscription>} payload
+     * @param {Subscription|Array<Subscription>} [payload=null]
      * @returns {Subscription|Array<Subscription>} succeed unsubscriptions
      */
-    unsubscribe(payload) {
+    unsubscribe(payload = null) {
         return null;
     }
 
     /**
      * @description get the subscriptions list
-     * @param {Subscription} payload - input data 
+     * @param {Subscription} [payload=null] - input data 
      * @return {Array<Subscription>} subscriptions
      */
-    subscriptions(payload) {
+    subscriptions(payload = null) {
         return null;
     }
 
     /**
      * @description get the event list
-     * @param {List} payload 
+     * @param {List} [payload] 
      * @returns {Array<Event>} events
      */
-    async events() {
+    async events(payload = false) {
         return [];
     }
 }

@@ -1,19 +1,20 @@
 export = Memory;
 /**
- * @typedef {({[name:String]:Object} | Array)} List
+ * @typedef {({[name:String]:Object})} List
  **/
 /**
  * @typedef {Object} Subscription
- * @property {Number} [id]
- * @property {String} event
+ * @property {*} [data]
  * @property {*} [value]
- * @property {String} [data]
+ * @property {String} event
  * @property {String} [notifier]
+ * @property {String} [subscriber]
+ * @property {String} [expression]
+ * @property {String} [processor]
  * @property {String} [group]
  * @property {Number} [owner]
  * @property {Number} [status]
- * @property {String} [processor]
- * @property {String} [expression]
+ * @property {Number} [id]
  * @property {Date} [date]
  * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
  * @property {Function} [onPosTrigger] - formater action to run after process the event action
@@ -31,7 +32,7 @@ declare class Memory {
     /**
      * @description preformat subscriptions payload before precess the event
      * @param {*} payload
-     * @returns {*}
+     * @returns {*} formated payload
      */
     format(payload: any): any;
     /**
@@ -42,41 +43,42 @@ declare class Memory {
     subscribe(payload: Subscription | Array<Subscription>): Subscription | Array<Subscription>;
     /**
      * @description Remove subscription
-     * @param {Subscription|Array<Subscription>} payload
+     * @param {Subscription|Array<Subscription>} [payload]
      * @returns {Subscription|Array<Subscription>} unsubscription
      */
-    unsubscribe(payload: Subscription | Array<Subscription>): Subscription | Array<Subscription>;
+    unsubscribe(payload?: Subscription | Array<Subscription>): Subscription | Array<Subscription>;
     /**
      * @description get the subscriptions list
-     * @param {Subscription} payload - input data
+     * @param {Subscription} [payload] - input data
      * @return {Array<Subscription>} subscriptions
      */
-    subscriptions(payload: Subscription): Array<Subscription>;
+    subscriptions(payload?: Subscription): Array<Subscription>;
     /**
      * @description List of all avalible events
-     * @param {List} payload
+     * @param {List} [payload]
      * @return {Array<Event>}
      */
-    events(): Array<Event>;
+    events(payload?: List): Array<Event>;
     #private;
 }
 declare namespace Memory {
     export { List, Subscription, Event };
 }
-type List = any[] | {
+type List = {
     [name: string]: any;
 };
 type Subscription = {
-    id?: number;
-    event: string;
+    data?: any;
     value?: any;
-    data?: string;
+    event: string;
     notifier?: string;
+    subscriber?: string;
+    expression?: string;
+    processor?: string;
     group?: string;
     owner?: number;
     status?: number;
-    processor?: string;
-    expression?: string;
+    id?: number;
     date?: Date;
     /**
      * - formater action to run before process the event but after the subscriber format action
