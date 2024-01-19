@@ -32,7 +32,8 @@ class DIP {
 
     /**
      * @description Get the missing dependencies based on a list of dependencies name
-     * @param {Array|String} list 
+     * @param {Array<String>|String} list 
+     * @returns {Array<String>} missing dependencies
      */
     getMissingDependencies(list) {
         list = typeof (list) === "string" ? [list] : list;
@@ -45,8 +46,9 @@ class DIP {
 
     /**
      * @description Check all requided dependencies and throw an error 
-     * @param {Array|String} list 
-     * @param {Function} ErrorType 
+     * @param {Array<String>|String} list 
+     * @param {Error} ErrorType 
+     * @returns {DIP} self-reference
      */
     checkDependencies(list, ErrorType = null) {
         const missing = this.getMissingDependencies(list);

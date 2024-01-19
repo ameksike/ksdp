@@ -14,6 +14,11 @@ class Command {
         this.configure(opt);
     }
 
+    /**
+     * @description configure the Command lib
+     * @param {Object} opt
+     * @param {Function} opt.factory 
+     */
     configure(opt = false) {
         this.factory = (opt?.factory instanceof Function) ? opt.factory : null;
     }

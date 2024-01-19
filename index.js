@@ -16,10 +16,15 @@ module.exports = {
         Dip: require('./src/integration/Dip'),
         hook: {
             Main: require('./src/integration/hook'),
+            processor: {
+                ProcessorBase: require('ksdp/src/integration/hook/processor/ProcessorBase'),
+            },
             subscriber: {
+                SubscriberBase: require('ksdp/src/integration/hook/subscriber/SubscriberBase'),
                 Memory: require('./src/integration/hook/subscriber/Memory')
             },
             notifier: {
+                NotifierBase: require('ksdp/src/integration/hook/notifier/NotifierBase'),
                 IoC: require('./src/integration/hook/notifier/Ioc')
             }
         }
