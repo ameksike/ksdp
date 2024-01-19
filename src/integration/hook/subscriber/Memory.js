@@ -1,19 +1,20 @@
 /**
- * @typedef {({[name:String]:Object} | Array)} List 
+ * @typedef {({[name:String]:Object})} List 
  **/
 
 /**
  * @typedef {Object} Subscription
- * @property {Number} [id]
- * @property {String} event
+ * @property {*} [data]
  * @property {*} [value]
- * @property {String} [data]
+ * @property {String} event
  * @property {String} [notifier]
+ * @property {String} [subscriber]
+ * @property {String} [expression]
+ * @property {String} [processor]
  * @property {String} [group]
  * @property {Number} [owner]
  * @property {Number} [status]
- * @property {String} [processor]
- * @property {String} [expression]
+ * @property {Number} [id]
  * @property {Date} [date]
  * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
  * @property {Function} [onPosTrigger] - formater action to run after process the event action
@@ -39,7 +40,7 @@ class Memory {
     /**
      * @description preformat subscriptions payload before precess the event
      * @param {*} payload 
-     * @returns {*}
+     * @returns {*} formated payload
      */
     format(payload) {
         payload.date = new Date();
@@ -68,7 +69,7 @@ class Memory {
 
     /**
      * @description Remove subscription
-     * @param {Subscription|Array<Subscription>} payload
+     * @param {Subscription|Array<Subscription>} [payload]
      * @returns {Subscription|Array<Subscription>} unsubscription
      */
     unsubscribe(payload) {
@@ -84,21 +85,21 @@ class Memory {
 
     /**
      * @description get the subscriptions list
-     * @param {Subscription} payload - input data 
+     * @param {Subscription} [payload] - input data 
      * @return {Array<Subscription>} subscriptions
      */
-    subscriptions(payload) {
-        const event = payload.event || "default";
+    subscriptions(payload = {}) {
+        const event = payload?.event || "default";
         this.#db[event] = this.#db[event] || [];
         return payload?.owner ? this.#db[event].filter(item => item.owner === payload.owner) : this.#db[event];
     }
 
     /**
      * @description List of all avalible events
-     * @param {List} payload
+     * @param {List} [payload]
      * @return {Array<Event>} 
      */
-    async events() {
+    async events(payload = null) {
         return Object.keys(this.#db).map(item => {
             return {
                 name: item
