@@ -8,6 +8,10 @@ export = Observer;
  * @license    	GPL
  * @version    	1.0
  **/
+
+/**
+ * @typedef {({[name:String]:Object} | Array)} List
+ **/
 declare class Observer {
     sts: {};
     evs: {
@@ -20,29 +24,36 @@ declare class Observer {
      * @param {String} subscriber
      * @param {String} event
      * @param {String} [scope=default]
-     * @return {Event}
+     * @return {Observer} self-reference
      */
-    add(subscriber: string, event: string, scope?: string): Event;
+    add(subscriber: string, event: string, scope?: string): Observer;
     /**
      * @description delete an event from scope
      * @param {String} event
      * @param {String} [scope=default]
-     * @return {Event}
+     * @return {Observer} self-reference
      */
-    del(event: string, scope?: string): Event;
+    del(event: string, scope?: string): Observer;
     /**
      * @description emit an event on a scope with a params list
      * @param {String} event
      * @param {String} scope
-     * @param {String} params
-     * @return {Event}
+     * @param {List} params
+     * @return {Observer} self-reference
      */
-    emit(event: string, scope?: string, params?: string): Event;
+    emit(event: string, scope?: string, params?: List): Observer;
     /**
      * @description process an event on a scope
-     * @param {String} subscriber
+     * @param {*} subscriber
      * @param {String} event
-     * @param {String} params
+     * @param {List} params
+     * @returns {*} target
      */
-    process(subscriber: string, event: string, params?: string): any;
+    process(subscriber: any, event: string, params?: List): any;
 }
+declare namespace Observer {
+    export { List };
+}
+type List = any[] | {
+    [name: string]: any;
+};

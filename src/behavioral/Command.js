@@ -8,12 +8,21 @@
  * @version    	1.0
  **/
 const inherit = require("../inherit");
+
+/**
+ * @typedef {({[name:String]:Object} | Array)} List 
+ **/
 class Command {
 
     constructor(opt) {
         this.configure(opt);
     }
 
+    /**
+     * @description configure the Command lib
+     * @param {Object} opt
+     * @param {Function} [opt.factory] 
+     */
     configure(opt = false) {
         this.factory = (opt?.factory instanceof Function) ? opt.factory : null;
     }
@@ -21,9 +30,9 @@ class Command {
     /**
      * @description run action with params on scope
      * @param {String} action 
-     * @param {Object} params 
+     * @param {List} params 
      * @param {Object} scope 
-     * @return {Object}
+     * @return {Object} result
      */
     run(action, params, scope) {
         try {
@@ -48,8 +57,8 @@ class Command {
 
     /**
      * @description Get as array
-     * @param {Object} payload value 
-     * @return {Array} 
+     * @param {List} payload value 
+     * @return {Array} list
      */
     asList(payload) {
         return (payload instanceof Array ? payload : [payload]);

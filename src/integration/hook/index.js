@@ -11,6 +11,37 @@ const Strategy = require("../../behavioral/Strategy");
 const Command = require("../../behavioral/Command");
 const MemorySubscriber = require("./subscriber/Memory");
 const IocNotifier = require("./notifier/Ioc");
+
+/**
+ * @typedef {({[name:String]:Object} | Array)} List 
+ **/
+
+/**
+ * @typedef {Object} Subscription
+ * @property {Number} [id]
+ * @property {String} event
+ * @property {*} [value]
+ * @property {String} [data]
+ * @property {String} [notifier]
+ * @property {String} [group]
+ * @property {Number} [owner]
+ * @property {Number} [status]
+ * @property {String} [processor]
+ * @property {String} [expression]
+ * @property {Date} [date]
+ * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
+ * @property {Function} [onPosTrigger] - formater action to run after process the event action
+ **/
+
+/**
+ * @typedef {Object} Event
+ * @property {String|Number} [id]
+ * @property {String} event
+ * @property {String} description
+ * @property {String} [payload]
+ * @property {String} [group]
+ * @property {String} [status]
+ */
 class Hook {
 
     #notifier;
@@ -30,22 +61,6 @@ class Hook {
     get cmd() {
         return this.#cmd;
     }
-
-    /**
-     * @typedef {Object} Subscription
-     * @property {Number} [id]
-     * @property {String} event
-     * @property {*} [value]
-     * @property {String} [data]
-     * @property {String} [notifier]
-     * @property {String} [group]
-     * @property {Number} [owner]
-     * @property {Number} [status]
-     * @property {String} [processor]
-     * @property {String} [expression]
-     * @property {Function} [onPreTrigger] - [OPTIONAL].
-     * @property {Function} [onPosTrigger] - [OPTIONAL].
-     */
 
     constructor(cfg) {
         this.#processor = new Strategy({ path: cfg.path, default: 'processor' });
@@ -67,7 +82,7 @@ class Hook {
     /**
      * @description Trigger hooks notification
      * @param {Subscription} payload 
-     * @return {{ [subscriber: String]: Promise }} 
+     * @return {{ [subscriber: String]: Promise<Array> }} 
      */
     trigger(payload) {
         const out = {};
@@ -83,13 +98,13 @@ class Hook {
 
     /**
      * @description trigger hooks notification by subscriber
-     * @param {EventOption} options 
+     * @param {EventOption} payload 
      * @param {String} [name=Memory]
-     * @return {{ [subscriber: String]: Object }} 
+     * @return {Promise<Array>} 
      */
     async run(payload, name = "Memory") {
         let subscriber = this.subscriber.get(name);
-        let targets = await subscriber.subscriptions(payload);
+        let targets = await subscriber?.subscriptions(payload);
         let out = [];
         for (let i in targets) {
             let target = targets[i];
@@ -109,7 +124,7 @@ class Hook {
                         }
                     }
                 }
-                let predat = subscriber.format instanceof Function ? subscriber.format(pld) : pld;
+                let predat = subscriber?.format instanceof Function ? subscriber.format(pld) : pld;
                 let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope);
                 let insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
                 let posres = this.cmd?.run(pld?.onPosTrigger, [insres?.result], pld?.scope);
@@ -172,7 +187,7 @@ class Hook {
     }
 
     /**
-     * @description Events list by subscriber
+     * @description get the subscriptions list
      * @param {Subscription} payload - input data 
      * @return {Array<Subscription>} subscriptions
      */
@@ -193,8 +208,8 @@ class Hook {
 
     /**
      * @description List of all avalible events
-     * @param {*} payload
-     * @return {Array<{name: String, description: String}>} 
+     * @param {List} payload
+     * @return {Array<Event>} 
      */
     async events(payload) {
         try {

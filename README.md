@@ -1,6 +1,5 @@
 # KsDp library 
-Design Patterns Library: contains a group elements of reusable Object Oriented Software. It is an attempt to combine implementations of: Gang of Four (GoF), GRASP, IoC. 
-
+Design Patterns Library or core base library containing elements group of reusable Object-Oriented Design and functional programming. It is an attempt to combine implementations of: GoF, GRASP, IoC, SL, SOLID, DRY, KISS, etc. 
 
 This library belong to the Ksike ecosystem:
 - [KsMf](https://www.npmjs.com/package/ksmf) - Microframework (WEB, REST API, CLI, Proxy, etc)

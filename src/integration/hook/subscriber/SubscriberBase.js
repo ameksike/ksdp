@@ -29,13 +29,7 @@
  * @property {String} [status]
  */
 
-class Memory {
-
-    #db;
-    constructor() {
-        this.#db = {};
-    }
-
+class SubscriberBase {
     /**
      * @description preformat subscriptions payload before precess the event
      * @param {*} payload 
@@ -52,34 +46,16 @@ class Memory {
      * @returns {Subscription|Array<Subscription>} subscribed
      */
     subscribe(payload) {
-        if (!payload) {
-            return null;
-        }
-        const event = payload.event || "default";
-        this.#db[event] = this.#db[event] || [];
-        const id = payload.id || this.#db[event].length;
-        this.#db[event][id] = {
-            notifier: payload.target || payload.notifier,
-            value: payload.value,
-            owner: payload.owner
-        };
-        return this.#db[event][id];
+        return payload;
     }
 
     /**
-     * @description Remove subscription
+     * @description remove subscriptions
      * @param {Subscription|Array<Subscription>} payload
-     * @returns {Subscription|Array<Subscription>} unsubscription
+     * @returns {Subscription|Array<Subscription>} succeed unsubscriptions
      */
     unsubscribe(payload) {
-        if (!payload) {
-            return null;
-        }
-        const event = payload.event || "default";
-        this.#db[event] = this.#db[event] || [];
-        const id = payload.id || this.#db[event].length;
-        const res = this.#db[event][id];
-        return res;
+        return null;
     }
 
     /**
@@ -88,23 +64,17 @@ class Memory {
      * @return {Array<Subscription>} subscriptions
      */
     subscriptions(payload) {
-        const event = payload.event || "default";
-        this.#db[event] = this.#db[event] || [];
-        return payload?.owner ? this.#db[event].filter(item => item.owner === payload.owner) : this.#db[event];
+        return null;
     }
 
     /**
-     * @description List of all avalible events
-     * @param {List} payload
-     * @return {Array<Event>} 
+     * @description get the event list
+     * @param {List} payload 
+     * @returns {Array<Event>} events
      */
     async events() {
-        return Object.keys(this.#db).map(item => {
-            return {
-                name: item
-            }
-        });
+        return [];
     }
 }
 
-module.exports = Memory;
+module.exports = SubscriberBase;

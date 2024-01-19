@@ -1,8 +1,8 @@
 export = imitate;
 /**
- * @description allow inheritance based on imitation
- * @param {Function|Object} target
- * @param {Function|Object} source
- * @returns {Function|Object} target
+ * @description allow inheritance based on imitation of classes or objects
+ * @param {*} target
+ * @param {*} source
+ * @returns {*} target
  */
-declare function imitate(target: Function | any, source: Function | any): Function | any;
+declare function imitate(target: any, source: any): any;

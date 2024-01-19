@@ -1,8 +1,8 @@
 /**
- * @description allow inheritance based on imitation
- * @param {Function|Object} target 
- * @param {Function|Object} source 
- * @returns {Function|Object} target
+ * @description allow inheritance based on imitation of classes or objects
+ * @param {*} target 
+ * @param {*} source 
+ * @returns {*} target
  */
 function imitate(target, source) {
     if (!source) {

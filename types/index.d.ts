@@ -19,10 +19,15 @@ export namespace integration {
     let Dip: typeof import("./src/integration/Dip");
     namespace hook {
         let Main: typeof import("./src/integration/hook");
+        namespace processor {
+            let ProcessorBase: any;
+        }
         namespace subscriber {
+            let SubscriberBase: any;
             let Memory: typeof import("./src/integration/hook/subscriber/Memory");
         }
         namespace notifier {
+            export let NotifierBase: any;
             let IoC_1: typeof import("./src/integration/hook/notifier/Ioc");
             export { IoC_1 as IoC };
         }

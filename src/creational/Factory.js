@@ -9,6 +9,12 @@
  **/
 
 const inherit = require("../inherit");
+
+/**
+ * @typedef {Object} BuildOption
+ * @property {*} cls - taget Class.
+ * @property {Array} params - params for taget constructor.
+ */
 class Factory {
 
     constructor(payload) {
@@ -78,13 +84,8 @@ class Factory {
     }
 
     /**
-     * 
-     * @typedef {Object} BuildOption
-     * @property {Function} cls - taget Class.
-     * @property {Array} params - params for taget constructor.
-     * 
      * @description Get Instance
-     * @param {BuildOption|Function} payload taget Class
+     * @param {BuildOption|*} payload taget Class
      * @return {Object} Instance
      * @example new (Function.prototype.bind.apply(Cls, Prm))
      */
