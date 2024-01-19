@@ -90,9 +90,9 @@ declare class IoC {
     /**
      * @description Factory Pattern load Type
      * @param {Object} opt
-     * @returns {Function} result
+     * @returns {*} result
      */
-    type(opt: any): Function;
+    type(opt: any): any;
     /**
      * @description Factory Pattern
      * @param {Object} opt
@@ -102,9 +102,9 @@ declare class IoC {
     /**
      * @description excecute action from object
      * @param {Object} opt
-     * @returns {Function}
+     * @returns {*}
      */
-    action(opt: any): Function;
+    action(opt: any): any;
     /**
      * @description get dependency
      * @param {Object} opt

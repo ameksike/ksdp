@@ -7,6 +7,10 @@
  * @license    	GPL
  * @version    	1.0
  **/
+
+/**
+ * @typedef {({[name:String]:Object} | Array)} List 
+ **/
 class Observer {
 
     constructor() {
@@ -30,7 +34,7 @@ class Observer {
      * @param {String} subscriber 
      * @param {String} event 
      * @param {String} [scope=default] 
-     * @return {Event}
+     * @return {Observer} self-reference
      */
     add(subscriber, event, scope = "default") {
         if (!event) return this;
@@ -44,7 +48,7 @@ class Observer {
      * @description delete an event from scope
      * @param {String} event 
      * @param {String} [scope=default] 
-     * @return {Event}
+     * @return {Observer} self-reference
      */
     del(event, scope = "default") {
         if (!this.evs[scope]) return this;
@@ -56,22 +60,25 @@ class Observer {
      * @description emit an event on a scope with a params list
      * @param {String} event 
      * @param {String} scope 
-     * @param {String} params 
-     * @return {Event}
+     * @param {List} params 
+     * @return {Observer} self-reference
      */
     emit(event, scope = "default", params = []) {
-        if (!this.evs[scope] || !this.evs[scope][event]) return this;
+        if (!this.evs[scope] || !this.evs[scope][event]) {
+            return this;
+        }
         for (let i in this.evs[scope][event]) {
             this.process(this.evs[scope][event][i], event, params);
         }
-        return false;
+        return this;
     }
 
     /**
      * @description process an event on a scope
-     * @param {String} subscriber 
+     * @param {*} subscriber 
      * @param {String} event 
-     * @param {String} params 
+     * @param {List} params 
+     * @returns {*} target
      */
     process(subscriber, event, params = []) {
         const target = this.helper ? this.helper.get(subscriber) : subscriber;

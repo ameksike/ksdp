@@ -1,4 +1,9 @@
 export = Factory;
+/**
+ * @typedef {Object} BuildOption
+ * @property {*} cls - taget Class.
+ * @property {Array} params - params for taget constructor.
+ */
 declare class Factory {
     constructor(payload: any);
     logger: any;
@@ -30,26 +35,12 @@ declare class Factory {
      */
     require(file: string | Array<string>): any;
     /**
-     *
-     * @typedef {Object} BuildOption
-     * @property {Function} cls - taget Class.
-     * @property {Array} params - params for taget constructor.
-     *
      * @description Get Instance
-     * @param {BuildOption|Function} payload taget Class
+     * @param {BuildOption|*} payload taget Class
      * @return {Object} Instance
      * @example new (Function.prototype.bind.apply(Cls, Prm))
      */
-    build(payload?: Function | {
-        /**
-         * - taget Class.
-         */
-        cls: Function;
-        /**
-         * - params for taget constructor.
-         */
-        params: any[];
-    }): any;
+    build(payload?: BuildOption | any): any;
     /**
      * @description Get Instance
      * @param {Object} payload The input data.
@@ -68,3 +59,16 @@ declare class Factory {
      */
     log(...args: any[]): this;
 }
+declare namespace Factory {
+    export { BuildOption };
+}
+type BuildOption = {
+    /**
+     * - taget Class.
+     */
+    cls: any;
+    /**
+     * - params for taget constructor.
+     */
+    params: any[];
+};

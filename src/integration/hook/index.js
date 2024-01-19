@@ -11,6 +11,37 @@ const Strategy = require("../../behavioral/Strategy");
 const Command = require("../../behavioral/Command");
 const MemorySubscriber = require("./subscriber/Memory");
 const IocNotifier = require("./notifier/Ioc");
+
+/**
+ * @typedef {({[name:String]:Object} | Array)} List 
+ **/
+
+/**
+ * @typedef {Object} Subscription
+ * @property {Number} [id]
+ * @property {String} event
+ * @property {*} [value]
+ * @property {String} [data]
+ * @property {String} [notifier]
+ * @property {String} [group]
+ * @property {Number} [owner]
+ * @property {Number} [status]
+ * @property {String} [processor]
+ * @property {String} [expression]
+ * @property {Date} [date]
+ * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
+ * @property {Function} [onPosTrigger] - formater action to run after process the event action
+ **/
+
+/**
+ * @typedef {Object} Event
+ * @property {String|Number} [id]
+ * @property {String} event
+ * @property {String} description
+ * @property {String} [payload]
+ * @property {String} [group]
+ * @property {String} [status]
+ */
 class Hook {
 
     #notifier;
@@ -30,33 +61,6 @@ class Hook {
     get cmd() {
         return this.#cmd;
     }
-
-    /**
-     * @typedef {{[name:String]: Object}} List 
-     * 
-     * @typedef {Object} Subscription
-     * @property {Number} [id]
-     * @property {String} event
-     * @property {*} [value]
-     * @property {String} [data]
-     * @property {String} [notifier]
-     * @property {String} [group]
-     * @property {Number} [owner]
-     * @property {Number} [status]
-     * @property {String} [processor]
-     * @property {String} [expression]
-     * @property {Date} [date]
-     * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
-     * @property {Function} [onPosTrigger] - formater action to run after process the event action
-     * 
-     * @typedef {Object} Event
-     * @property {String|Number} [id]
-     * @property {String} event
-     * @property {String} description
-     * @property {String} [payload]
-     * @property {String} [group]
-     * @property {String} [status]
-     */
 
     constructor(cfg) {
         this.#processor = new Strategy({ path: cfg.path, default: 'processor' });

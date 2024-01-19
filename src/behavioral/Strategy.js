@@ -11,15 +11,15 @@
 const Factory = require('../creational/Factory');
 const _path = require("path");
 
+/**
+ * @typedef {Object} StrategyOption
+ * @property {String} type - Strategy Key Type.
+ * @property {String} path - Strategy Key Path.
+ * @property {String} name - Strategy Key Name.
+ * @property {Array} params - Single param for Strategy constructor.
+ */
 class Strategy {
 
-    /**
-     * @typedef {Object} StrategyOption
-     * @property {String} type - Strategy Key Type.
-     * @property {String} path - Strategy Key Path.
-     * @property {String} name - Strategy Key Name.
-     * @property {Array} params - Single param for Strategy constructor.
-     */
     constructor(payload) {
         this.ctrl = {};
         this.params = [];

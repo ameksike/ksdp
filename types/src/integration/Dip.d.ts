@@ -23,13 +23,15 @@ declare class DIP {
     inject(options: any): any;
     /**
      * @description Get the missing dependencies based on a list of dependencies name
-     * @param {Array|String} list
+     * @param {Array<String>|String} list
+     * @returns {Array<String>} missing dependencies
      */
-    getMissingDependencies(list: any[] | string): any[];
+    getMissingDependencies(list: Array<string> | string): Array<string>;
     /**
      * @description Check all requided dependencies and throw an error
-     * @param {Array|String} list
-     * @param {Function} ErrorType
+     * @param {Array<String>|String} list
+     * @param {Error} ErrorType
+     * @returns {DIP} self-reference
      */
-    checkDependencies(list: any[] | string, ErrorType?: Function): this;
+    checkDependencies(list: Array<string> | string, ErrorType?: Error): DIP;
 }

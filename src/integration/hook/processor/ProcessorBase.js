@@ -1,6 +1,7 @@
 /**
- * @typedef {{[name:String]: Object}} List 
- */
+ * @typedef {({[name:String]:Object} | Array)} List 
+ **/
+
 class ProcessorBase {
     /**
      * @description Evaluate an expression

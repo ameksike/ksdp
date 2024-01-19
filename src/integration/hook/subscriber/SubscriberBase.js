@@ -1,7 +1,8 @@
+/**
+ * @typedef {({[name:String]:Object} | Array)} List 
+ **/
 
 /**
- * @typedef {{[name:String]: Object}} List 
- * 
  * @typedef {Object} Subscription
  * @property {Number} [id]
  * @property {String} event
@@ -16,7 +17,9 @@
  * @property {Date} [date]
  * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
  * @property {Function} [onPosTrigger] - formater action to run after process the event action
- * 
+ **/
+
+/**
  * @typedef {Object} Event
  * @property {String|Number} [id]
  * @property {String} event

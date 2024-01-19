@@ -1,19 +1,24 @@
 /**
- * @typedef {{[name:String]: *}} List 
- * 
+ * @typedef {({[name:String]:Object} | Array)} List 
+ **/
+
+/**
  * @typedef {Object} Subscription
- * @property {String|Number} [id]
+ * @property {Number} [id]
  * @property {String} event
- * @property {String} notifier
- * @property {String} value
- * @property {String} [owner]
+ * @property {*} [value]
+ * @property {String} [data]
+ * @property {String} [notifier]
  * @property {String} [group]
- * @property {String} [status]
- * @property {Date} [date]
+ * @property {Number} [owner]
+ * @property {Number} [status]
  * @property {String} [processor]
  * @property {String} [expression]
- * @property {String} [subscriber]
- */
+ * @property {Date} [date]
+ * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
+ * @property {Function} [onPosTrigger] - formater action to run after process the event action
+ **/
+
 class NotifierBase {
     /**
      * @description Perform a custom action based on the parameters
