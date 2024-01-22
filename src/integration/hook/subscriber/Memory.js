@@ -1,37 +1,19 @@
 /**
- * @typedef {({[name:String]:Object})} List 
- **/
-
-/**
- * @typedef {Object} Subscription
- * @property {*} [data]
- * @property {*} [value]
- * @property {String} event
- * @property {String} [notifier]
- * @property {String} [subscriber]
- * @property {String} [expression]
- * @property {String} [processor]
- * @property {String} [group]
- * @property {Number} [owner]
- * @property {Number} [status]
- * @property {Number} [id]
- * @property {Date} [date]
- * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
- * @property {Function} [onPosTrigger] - formater action to run after process the event action
- **/
-
-/**
- * @typedef {Object} Event
- * @property {String|Number} [id]
- * @property {String} event
- * @property {String} description
- * @property {String} [payload]
- * @property {String} [group]
- * @property {String} [status]
+ * @typedef {import('../types').THook} THook 
+ * @typedef {import('../types').TEmission} TEmission 
+ * @typedef {import('../types').TSubscription} TSubscription 
+ * @typedef {import('../types').TEvent} TEvent 
+ * @typedef {import('../types').TList} TList 
  */
-
 class Memory {
+    /**
+     * @type {THook}
+     */
+    hook;
 
+    /**
+     * @type {TList}
+     */
     #db;
     constructor() {
         this.#db = {};
@@ -39,8 +21,8 @@ class Memory {
 
     /**
      * @description preformat subscriptions payload before precess the event
-     * @param {*} payload 
-     * @returns {*} formated payload
+     * @param {TEmission} payload 
+     * @returns {TEmission} formated payload
      */
     format(payload) {
         payload.date = new Date();
@@ -48,63 +30,99 @@ class Memory {
     }
 
     /**
-     * @description Save subscription
-     * @param {Subscription|Array<Subscription>} payload
-     * @returns {Subscription|Array<Subscription>} subscribed
+     * @description add subscription
+     * @param {TSubscription} payload
+     * @returns {TSubscription} subscribed
      */
-    subscribe(payload) {
+    #add(payload) {
         if (!payload) {
             return null;
         }
-        const event = payload.event || "default";
+        const event = payload?.event || 'default';
         this.#db[event] = this.#db[event] || [];
-        const id = payload.id || this.#db[event].length;
+        const id = payload?.id || Object.keys(this.#db[event]).length;
         this.#db[event][id] = {
-            notifier: payload.target || payload.notifier,
-            value: payload.value,
-            owner: payload.owner
+            notifier: payload?.notifier,
+            value: payload?.value,
+            owner: payload?.owner
         };
         return this.#db[event][id];
     }
 
     /**
+     * @description Save subscription
+     * @param {TSubscription|Array<TSubscription>} payload
+     * @returns {Array<TSubscription>} subscribed
+     */
+    subscribe(payload) {
+        if (!payload) {
+            return null;
+        }
+        if (Array.isArray(payload)) {
+            let res = [];
+            for (let i in payload) {
+                res.push(this.#add(payload[i]));
+            }
+            return res;
+        }
+        return [this.#add(payload)];
+    }
+
+    /**
      * @description Remove subscription
-     * @param {Subscription|Array<Subscription>} [payload]
-     * @returns {Subscription|Array<Subscription>} unsubscription
+     * @param {TSubscription} payload
+     * @returns {TSubscription} unsubscription
+     */
+    #remove(payload) {
+        const event = payload?.event || 'default';
+        this.#db[event] = this.#db[event] || {};
+        const id = payload?.id || Object.keys(this.#db[event]).pop();
+        const tmp = this.#db[event][id];
+        delete this.#db[event][id];
+        return tmp;
+    }
+
+    /**
+     * @description Remove subscriptions
+     * @param {TSubscription|Array<TSubscription>} [payload]
+     * @returns {Array<TSubscription>} unsubscriptions
      */
     unsubscribe(payload) {
         if (!payload) {
             return null;
         }
-        const event = payload.event || "default";
-        this.#db[event] = this.#db[event] || [];
-        const id = payload.id || this.#db[event].length;
-        const res = this.#db[event][id];
-        return res;
+        if (Array.isArray(payload)) {
+            let res = [];
+            for (let i in payload) {
+                res.push(this.#remove(payload[i]));
+            }
+            return res;
+        }
+        return [this.#remove(payload)];
     }
 
     /**
      * @description get the subscriptions list
-     * @param {Subscription} [payload] - input data 
-     * @return {Array<Subscription>} subscriptions
+     * @param {TSubscription} [payload] - input data 
+     * @return {Array<TSubscription>} subscriptions
      */
-    subscriptions(payload = {}) {
-        const event = payload?.event || "default";
+    subscriptions(payload = { event: 'default' }) {
+        const event = payload?.event || 'default';
         this.#db[event] = this.#db[event] || [];
         return payload?.owner ? this.#db[event].filter(item => item.owner === payload.owner) : this.#db[event];
     }
 
     /**
      * @description List of all avalible events
-     * @param {List} [payload]
-     * @return {Array<Event>} 
+     * @param {TList} [payload]
+     * @return {Promise<TEvent[]>} 
      */
     async events(payload = null) {
-        return Object.keys(this.#db).map(item => {
+        return Promise.resolve(Object.keys(this.#db).map(item => {
             return {
-                name: item
+                event: item
             }
-        });
+        }));
     }
 }
 

@@ -17,19 +17,29 @@ declare class Observer {
         default: {};
     };
     helper: any;
-    configure(opt?: boolean): this;
+    /**
+     * @description configure lib
+     * @param {Object} [opt]
+     * @param {Object} [opt.sts]
+     * @param {Object} [opt.evs]
+     * @returns {Observer} self-reference
+     */
+    configure(opt?: {
+        sts?: any;
+        evs?: any;
+    }): Observer;
     /**
      * @description add an event on scope
      * @param {String} subscriber
-     * @param {String} event
-     * @param {String} [scope=default]
+     * @param {String} [event]
+     * @param {String} [scope='default']
      * @return {Observer} self-reference
      */
-    add(subscriber: string, event: string, scope?: string): Observer;
+    add(subscriber: string, event?: string, scope?: string): Observer;
     /**
      * @description delete an event from scope
      * @param {String} event
-     * @param {String} [scope=default]
+     * @param {String} [scope='default']
      * @return {Observer} self-reference
      */
     del(event: string, scope?: string): Observer;

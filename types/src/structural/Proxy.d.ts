@@ -18,11 +18,11 @@ declare class KsProxy {
      * @description Must be overridden in the child class to define how methods or properties of the controlled class are read
      * @virtual
      * @param {Object} target
-     * @param {String} key
+     * @param {string | number | symbol} key
      * @param {Object} receiver
      * @returns {*} value
      */
-    get(target: any, key: string, receiver: any): any;
+    get(target: any, key: string | number | symbol, receiver: any): any;
     /**
      * @description Must be overridden in the child class to define how properties of the controlled class are set
      * @virtual

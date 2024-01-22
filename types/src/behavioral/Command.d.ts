@@ -6,7 +6,7 @@ declare class Command {
     constructor(opt: any);
     /**
      * @description configure the Command lib
-     * @param {Object} opt
+     * @param {Object} [opt]
      * @param {Function} [opt.factory]
      */
     configure(opt?: {
@@ -15,12 +15,12 @@ declare class Command {
     factory: Function;
     /**
      * @description run action with params on scope
-     * @param {String} action
+     * @param {String|Function} action
      * @param {List} params
      * @param {Object} scope
      * @return {Object} result
      */
-    run(action: string, params: List, scope: any): any;
+    run(action: string | Function, params: List, scope: any): any;
     /**
      * @description Get as array
      * @param {List} payload value

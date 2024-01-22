@@ -30,8 +30,8 @@ declare class DIP {
     /**
      * @description Check all requided dependencies and throw an error
      * @param {Array<String>|String} list
-     * @param {Error} ErrorType
+     * @param {typeof Error} ErrorType
      * @returns {DIP} self-reference
      */
-    checkDependencies(list: Array<string> | string, ErrorType?: Error): DIP;
+    checkDependencies(list: Array<string> | string, ErrorType?: typeof Error): DIP;
 }

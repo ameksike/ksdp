@@ -21,22 +21,27 @@ class Observer {
         this.helper = null;
     }
 
-    configure(opt = false) {
-        if (opt) {
-            this.sts = opt.sts ? opt.sts : this.sts;
-            this.evs = opt.evs ? opt.evs : this.evs;
-        }
+    /**
+     * @description configure lib
+     * @param {Object} [opt] 
+     * @param {Object} [opt.sts]
+     * @param {Object} [opt.evs] 
+     * @returns {Observer} self-reference
+     */
+    configure(opt = null) {
+        this.sts = opt?.sts || this.sts;
+        this.evs = opt?.evs || this.evs;
         return this;
     }
 
     /**
      * @description add an event on scope
      * @param {String} subscriber 
-     * @param {String} event 
-     * @param {String} [scope=default] 
+     * @param {String} [event] 
+     * @param {String} [scope='default'] 
      * @return {Observer} self-reference
      */
-    add(subscriber, event, scope = "default") {
+    add(subscriber, event, scope = 'default') {
         if (!event) return this;
         if (!this.evs[scope]) this.evs[scope] = {};
         if (!this.evs[scope][event]) this.evs[scope][event] = [];
@@ -47,10 +52,10 @@ class Observer {
     /**
      * @description delete an event from scope
      * @param {String} event 
-     * @param {String} [scope=default] 
+     * @param {String} [scope='default'] 
      * @return {Observer} self-reference
      */
-    del(event, scope = "default") {
+    del(event, scope = 'default') {
         if (!this.evs[scope]) return this;
         delete this.evs[scope][event];
         return this;

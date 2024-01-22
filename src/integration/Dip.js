@@ -47,7 +47,7 @@ class DIP {
     /**
      * @description Check all requided dependencies and throw an error 
      * @param {Array<String>|String} list 
-     * @param {Error} ErrorType 
+     * @param {typeof Error} ErrorType 
      * @returns {DIP} self-reference
      */
     checkDependencies(list, ErrorType = null) {

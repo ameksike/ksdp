@@ -20,6 +20,9 @@ class KsProxy {
     build() {
         return new Proxy(this, {
             set: (target, key, value, receiver) => {
+                if (typeof (key) === "symbol") {
+                    return null;
+                }
                 if (this.#skip(target, key)) {
                     target[key] = value;
                 } else {
@@ -27,6 +30,9 @@ class KsProxy {
                 }
             },
             get: (target, key, receiver) => {
+                if (typeof (key) === "symbol") {
+                    return null;
+                }
                 if (this.#skip(target, key)) {
                     const res = Reflect.get(target, key, receiver);
                     return typeof res === 'function' ? res.bind(target) : res;
@@ -39,9 +45,8 @@ class KsProxy {
 
     /**
      * @description Define if it is possible to skip some properties and method from the target
-     * @private
      * @param {Object} target 
-     * @param {String} key 
+     * @param {String|Number} key 
      * @returns {Boolean}
      */
     #skip(target, key) {
@@ -52,7 +57,7 @@ class KsProxy {
      * @description Must be overridden in the child class to define how methods or properties of the controlled class are read
      * @virtual
      * @param {Object} target 
-     * @param {String} key 
+     * @param {string | number | symbol} key 
      * @param {Object} receiver 
      * @returns {*} value
      */

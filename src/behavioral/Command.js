@@ -20,16 +20,16 @@ class Command {
 
     /**
      * @description configure the Command lib
-     * @param {Object} opt
+     * @param {Object} [opt]
      * @param {Function} [opt.factory] 
      */
-    configure(opt = false) {
+    configure(opt = null) {
         this.factory = (opt?.factory instanceof Function) ? opt.factory : null;
     }
 
     /**
      * @description run action with params on scope
-     * @param {String} action 
+     * @param {String|Function} action 
      * @param {List} params 
      * @param {Object} scope 
      * @return {Object} result

@@ -1,10 +1,12 @@
 export = Strategy;
 /**
  * @typedef {Object} StrategyOption
- * @property {String} type - Strategy Key Type.
- * @property {String} path - Strategy Key Path.
- * @property {String} name - Strategy Key Name.
- * @property {Array} params - Single param for Strategy constructor.
+ * @property {String} [type] - Strategy Key Type.
+ * @property {String} [path] - Strategy Key Path.
+ * @property {String} [name] - Strategy Key Name.
+ * @property {Array} [params] - Single param for Strategy constructor.
+ * @property {Boolean|Number} [safe] - Single param for Strategy constructor.
+ * @property {*} [target] - Class or Object
  */
 declare class Strategy {
     constructor(payload: any);
@@ -15,28 +17,38 @@ declare class Strategy {
     factory: Factory;
     /**
      * @description Get strategy
-     * @param {Object} payload The input data.
-     * @param {String} payload.type Strategy Key Path
+     * @param {Object} [payload] The input data.
      * @param {String} [payload.name='Default'] Strategy Key Name
-     * @param {Object} payload.params
-     * @return {Strategy} This
+     * @param {String} [payload.default='Default'] Strategy Key Name
+     * @param {Object} [payload.params]
+     * @param {Console} [payload.logger]
+     * @param {String} [payload.path]
+     * @return {Strategy} self
      */
     configure(payload?: {
-        type: string;
         name?: string;
-        params: any;
+        default?: string;
+        params?: any;
+        logger?: Console;
+        path?: string;
     }): Strategy;
-    logger: any;
+    logger: Console;
     /**
      * @description internal log handler
      */
     log(...args: any[]): this;
     /**
+      * @description Get strategy Instance
+      * @param {(String|StrategyOption)} payload
+      * @return {Object} Strategy Instance
+      */
+    getOne(payload?: (string | StrategyOption)): any;
+    /**
      * @description Get strategy Instance
-     * @param {(StrategyOption|Array<StrategyOption>)} payload
+     * @param {(String|String[]|StrategyOption|Array<StrategyOption>)} payload
      * @return {Object|Array<Object>} Strategy Instance
      */
-    get(payload?: (StrategyOption | Array<StrategyOption>)): any | Array<any>;
+    get(payload?: (string | string[] | StrategyOption | Array<StrategyOption>)): any | Array<any>;
     /**
      * @description Set strategy
      * @param {StrategyOption|Array<StrategyOption>} payload
@@ -53,17 +65,25 @@ type StrategyOption = {
     /**
      * - Strategy Key Type.
      */
-    type: string;
+    type?: string;
     /**
      * - Strategy Key Path.
      */
-    path: string;
+    path?: string;
     /**
      * - Strategy Key Name.
      */
-    name: string;
+    name?: string;
     /**
      * - Single param for Strategy constructor.
      */
-    params: any[];
+    params?: any[];
+    /**
+     * - Single param for Strategy constructor.
+     */
+    safe?: boolean | number;
+    /**
+     * - Class or Object
+     */
+    target?: any;
 };
