@@ -105,6 +105,7 @@ class Hook {
             let target = targets[i];
             let notifier = this.notifier.get(target?.notifier || target?.target);
             if (notifier) {
+                notifier.hook = this;
                 let pld = { scope: null, ...payload, target, date: Date.now(), hook: this };
                 pld.data = pld.data || {};
                 if (pld?.target?.expression && pld.target.processor) {
