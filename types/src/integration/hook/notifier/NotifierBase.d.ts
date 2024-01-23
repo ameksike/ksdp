@@ -1,20 +1,14 @@
-export = Ioc;
+export = NotifierBase;
 /**
  * @typedef {import('../types').THook} THook
  * @typedef {import('../types').TSubscription} TSubscription
  * @typedef {import('../types').TList} TList
  */
-declare class Ioc {
-    /**
-     * @description class constructor
-     * @param {TList} [cfg]
-     */
-    constructor(cfg?: TList);
+declare class NotifierBase {
     /**
      * @type {THook}
      */
     hook: THook;
-    helper: any;
     /**
      * @description Perform a custom action based on the parameters
      * @param {Object} payload
@@ -29,7 +23,7 @@ declare class Ioc {
         target: TSubscription;
     }): any;
 }
-declare namespace Ioc {
+declare namespace NotifierBase {
     export { THook, TSubscription, TList };
 }
 type THook = import('../types').THook;

@@ -1,117 +1,89 @@
 export = Hook;
 /**
- * @typedef {({[name:String]:Object})} List
- **/
-/**
- * @typedef {Object} Subscription
- * @property {*} [data]
- * @property {*} [value]
- * @property {String} event
- * @property {String} [notifier]
- * @property {String} [subscriber]
- * @property {String} [expression]
- * @property {String} [processor]
- * @property {String} [group]
- * @property {Number} [owner]
- * @property {Number} [status]
- * @property {Number} [id]
- * @property {Date} [date]
- * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
- * @property {Function} [onPosTrigger] - formater action to run after process the event action
- **/
-/**
- * @typedef {Object} Event
- * @property {String|Number} [id]
- * @property {String} event
- * @property {String} description
- * @property {String} [payload]
- * @property {String} [group]
- * @property {String} [status]
+ * @typedef {import('./types').TEvent} TEvent
+ * @typedef {import('./types').TSubscription} TSubscription
+ * @typedef {import('./types').TList} TList
+ * @typedef {Object<string, Promise<any[]>>|{}} TListEmitted
  */
 declare class Hook {
     constructor(cfg: any);
+    /**
+     * @returns {Strategy}
+     */
     get notifier(): Strategy;
+    /**
+     * @returns {Strategy}
+     */
     get subscriber(): Strategy;
+    /**
+     * @returns {Strategy}
+     */
     get processor(): Strategy;
+    /**
+     * @returns {Command}
+     */
     get cmd(): Command;
     logger: any;
     configure(cfg: any): this;
     /**
      * @description Trigger hooks notification
-     * @param {Subscription} payload
-     * @return {{ [subscriber: String]: Promise<Array> }}
+     * @param {TSubscription} payload
+     * @return {TListEmitted}
      */
-    trigger(payload: Subscription): {
-        [subscriber: string]: Promise<any[]>;
-    };
+    trigger(payload: TSubscription): TListEmitted;
     /**
      * @description trigger hooks notification by subscriber
-     * @param {Subscription} payload
+     * @param {TSubscription} payload
      * @param {String} [name=Memory]
      * @return {Promise<Array>}
      */
-    run(payload: Subscription, name?: string): Promise<any[]>;
+    run(payload: TSubscription, name?: string): Promise<any[]>;
     /**
      * @description Save subscription
-     * @param {Subscription|Array<Subscription>} payload
-     * @returns {Subscription|Array<Subscription>} subscribed
+     * @param {TSubscription} payload
+     * @returns {Promise<TSubscription>} subscribed
      */
-    subscribe(payload: Subscription | Array<Subscription>): Subscription | Array<Subscription>;
+    add(payload: TSubscription): Promise<TSubscription>;
+    /**
+     * @description Save subscription
+     * @param {TSubscription|Array<TSubscription>} payload
+     * @returns {Promise<TSubscription[]>} subscribed
+     */
+    subscribe(payload: TSubscription | Array<TSubscription>): Promise<TSubscription[]>;
     /**
      * @description Remove subscription
-     * @param {Subscription|Array<Subscription>} payload
-     * @returns {Subscription|Array<Subscription>} unsubscription
+     * @param {TSubscription} payload
+     * @returns {Promise<TSubscription>} unsubscription
      */
-    unsubscribe(payload: Subscription | Array<Subscription>): Subscription | Array<Subscription>;
+    remove(payload: TSubscription): Promise<TSubscription>;
+    /**
+     * @description Remove subscription
+     * @param {TSubscription|Array<TSubscription>} payload
+     * @returns {Promise<TSubscription[]>} unsubscriptions
+     */
+    unsubscribe(payload: TSubscription | Array<TSubscription>): Promise<TSubscription[]>;
     /**
      * @description get the subscriptions list
-     * @param {Subscription} payload - input data
-     * @return {Array<Subscription>} subscriptions
+     * @param {TSubscription} [payload] - input data
+     * @return {Promise<TSubscription[]>} subscriptions
      */
-    subscriptions(payload: Subscription): Array<Subscription>;
+    subscriptions(payload?: TSubscription): Promise<TSubscription[]>;
     /**
      * @description List of all avalible events
-     * @param {List} payload
-     * @return {Array<Event>}
+     * @param {TList} payload
+     * @return {Promise<TEvent[]>}
      */
-    events(payload: List): Array<Event>;
+    events(payload: TList): Promise<TEvent[]>;
     #private;
 }
 declare namespace Hook {
-    export { List, Subscription, Event };
+    export { TEvent, TSubscription, TList, TListEmitted };
 }
 import Strategy = require("../../behavioral/Strategy");
 import Command = require("../../behavioral/Command");
-type List = {
-    [name: string]: any;
-};
-type Subscription = {
-    data?: any;
-    value?: any;
-    event: string;
-    notifier?: string;
-    subscriber?: string;
-    expression?: string;
-    processor?: string;
-    group?: string;
-    owner?: number;
-    status?: number;
-    id?: number;
-    date?: Date;
-    /**
-     * - formater action to run before process the event but after the subscriber format action
-     */
-    onPreTrigger?: Function;
-    /**
-     * - formater action to run after process the event action
-     */
-    onPosTrigger?: Function;
-};
-type Event = {
-    id?: string | number;
-    event: string;
-    description: string;
-    payload?: string;
-    group?: string;
-    status?: string;
-};
+type TEvent = import('./types').TEvent;
+type TSubscription = import('./types').TSubscription;
+type TList = import('./types').TList;
+type TListEmitted = {
+    [x: string]: Promise<any[]>;
+} | {};

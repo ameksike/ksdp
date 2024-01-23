@@ -13,35 +13,10 @@ const MemorySubscriber = require("./subscriber/Memory");
 const IocNotifier = require("./notifier/Ioc");
 
 /**
- * @typedef {({[name:String]:Object})} List 
- **/
-
-/**
- * @typedef {Object} Subscription
- * @property {*} [data]
- * @property {*} [value]
- * @property {String} event
- * @property {String} [notifier]
- * @property {String} [subscriber]
- * @property {String} [expression]
- * @property {String} [processor]
- * @property {String} [group]
- * @property {Number} [owner]
- * @property {Number} [status]
- * @property {Number} [id]
- * @property {Date} [date]
- * @property {Function} [onPreTrigger] - formater action to run before process the event but after the subscriber format action
- * @property {Function} [onPosTrigger] - formater action to run after process the event action
- **/
-
-/**
- * @typedef {Object} Event
- * @property {String|Number} [id]
- * @property {String} event
- * @property {String} description
- * @property {String} [payload]
- * @property {String} [group]
- * @property {String} [status]
+ * @typedef {import('./types').TEvent} TEvent 
+ * @typedef {import('./types').TSubscription} TSubscription 
+ * @typedef {import('./types').TList} TList 
+ * @typedef {Object<string, Promise<any[]>>|{}} TListEmitted
  */
 class Hook {
 
@@ -50,15 +25,30 @@ class Hook {
     #processor;
     #cmd;
 
+    /**
+     * @returns {Strategy}
+     */
     get notifier() {
         return this.#notifier;
     }
+
+    /**
+     * @returns {Strategy}
+     */
     get subscriber() {
         return this.#subscriber;
     }
+
+    /**
+     * @returns {Strategy}
+     */
     get processor() {
         return this.#processor;
     }
+
+    /**
+     * @returns {Command}
+     */
     get cmd() {
         return this.#cmd;
     }
@@ -82,12 +72,12 @@ class Hook {
 
     /**
      * @description Trigger hooks notification
-     * @param {Subscription} payload 
-     * @return {{ [subscriber: String]: Promise<Array> }} 
+     * @param {TSubscription} payload 
+     * @return {TListEmitted} 
      */
     trigger(payload) {
         const out = {};
-        if (payload.subscriber instanceof Array) {
+        if (Array.isArray(payload.subscriber)) {
             for (const i of payload.subscriber) {
                 out[i] = this.run(payload, i);
             }
@@ -99,27 +89,29 @@ class Hook {
 
     /**
      * @description trigger hooks notification by subscriber
-     * @param {Subscription} payload 
+     * @param {TSubscription} payload 
      * @param {String} [name=Memory]
      * @return {Promise<Array>} 
      */
     async run(payload, name = "Memory") {
         let subscriber = this.subscriber.get(name);
+        if (!subscriber) {
+            return Promise.reject('There are no subscribers available with name: ' + name);
+        }
+        subscriber.hook = this;
         let targets = await subscriber?.subscriptions(payload);
         let out = [];
         for (let i in targets) {
             let target = targets[i];
             let notifier = this.notifier.get(target?.notifier || target?.target);
             if (notifier) {
-                let pld = { ...payload };
-                pld.date = Date.now();
-                pld.data = pld.data || {};
-                pld.target = target;
                 notifier.hook = this;
+                let pld = { scope: null, ...payload, target, date: Date.now(), hook: this };
+                pld.data = pld.data || {};
                 if (pld?.target?.expression && pld.target.processor) {
                     let processor = this.processor.get(pld.target.processor);
                     if (processor) {
-                        let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data, pld], processor);
+                        let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data], processor);
                         if (!resprd?.result) {
                             continue;
                         }
@@ -137,18 +129,11 @@ class Hook {
 
     /**
      * @description Save subscription
-     * @param {Subscription|Array<Subscription>} payload
-     * @returns {Subscription|Array<Subscription>} subscribed
+     * @param {TSubscription} payload
+     * @returns {Promise<TSubscription>} subscribed
      */
-    async subscribe(payload) {
+    async add(payload) {
         try {
-            if (Array.isArray(payload)) {
-                const out = [];
-                for (let item of payload) {
-                    out.push(this.subscribe(item));
-                }
-                return out;
-            }
             const subscriber = this.subscriber.get(payload.subscriber);
             return await subscriber?.subscribe(payload);
         } catch (error) {
@@ -161,23 +146,32 @@ class Hook {
     }
 
     /**
-     * @description Remove subscription
-     * @param {Subscription|Array<Subscription>} payload
-     * @returns {Subscription|Array<Subscription>} unsubscription
+     * @description Save subscription
+     * @param {TSubscription|Array<TSubscription>} payload
+     * @returns {Promise<TSubscription[]>} subscribed
      */
-    async unsubscribe(payload) {
-        try {
-            if (Array.isArray(payload)) {
-                const out = [];
-                for (let item of payload) {
-                    out.push(this.unsubscribe(item));
-                }
-                return out;
+    async subscribe(payload) {
+        if (Array.isArray(payload)) {
+            const out = [];
+            for (let item of payload) {
+                out.push(this.add(item));
             }
-            payload = payload || {};
+            return Promise.all(out);
+        }
+        return [await this.add(payload)];
+    }
+
+    /**
+     * @description Remove subscription
+     * @param {TSubscription} payload
+     * @returns {Promise<TSubscription>} unsubscription
+     */
+    async remove(payload) {
+        try {
+            payload = payload || { event: 'Memory' };
             payload.subscriber = payload.subscriber || 'Memory'
             const subscriber = this.subscriber.get(payload.subscriber);
-            return await subscriber?.unsubscribe(payload)
+            return await subscriber?.unsubscribe(payload);
         } catch (error) {
             this.logger?.error({
                 src: 'Ksdp:Hook:unsubscribe',
@@ -188,13 +182,29 @@ class Hook {
     }
 
     /**
+     * @description Remove subscription
+     * @param {TSubscription|Array<TSubscription>} payload
+     * @returns {Promise<TSubscription[]>} unsubscriptions
+     */
+    async unsubscribe(payload) {
+        if (Array.isArray(payload)) {
+            const out = [];
+            for (let item of payload) {
+                out.push(this.remove(item));
+            }
+            return Promise.all(out);
+        }
+        return [await this.remove(payload)];
+    }
+
+    /**
      * @description get the subscriptions list
-     * @param {Subscription} payload - input data 
-     * @return {Array<Subscription>} subscriptions
+     * @param {TSubscription} [payload] - input data 
+     * @return {Promise<TSubscription[]>} subscriptions
      */
     async subscriptions(payload) {
         try {
-            payload = payload || {};
+            payload = payload || { event: 'Memory' };
             payload.subscriber = payload.subscriber || 'Memory';
             const subscriber = this.subscriber.get(payload.subscriber);
             return await subscriber?.subscriptions(payload);
@@ -209,8 +219,8 @@ class Hook {
 
     /**
      * @description List of all avalible events
-     * @param {List} payload
-     * @return {Array<Event>} 
+     * @param {TList} payload
+     * @return {Promise<TEvent[]>} 
      */
     async events(payload) {
         try {

@@ -40,7 +40,11 @@ describe('Hooks', () => {
     });
 
     it("subscription bulk", async done => {
-        target.subscribe([{
+        /*target.subscriber.set({
+            name: "MySubs",
+            target: (class extends KsDp.integration.hook.subscriber.Memory { })
+        });*/
+        await target.subscribe([{
             subscriber: "MySubs",
             notifier: "Web1",
             value: "Web1",

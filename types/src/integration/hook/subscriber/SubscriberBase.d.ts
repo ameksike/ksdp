@@ -1,4 +1,4 @@
-export = Memory;
+export = SubscriberBase;
 /**
  * @typedef {import('../types').THook} THook
  * @typedef {import('../types').TEmission} TEmission
@@ -6,7 +6,7 @@ export = Memory;
  * @typedef {import('../types').TEvent} TEvent
  * @typedef {import('../types').TList} TList
  */
-declare class Memory {
+declare class SubscriberBase {
     /**
      * @type {THook}
      */
@@ -19,31 +19,30 @@ declare class Memory {
     format(payload: TEmission): TEmission;
     /**
      * @description Save subscription
-     * @param {TSubscription|Array<TSubscription>} payload
+     * @param {TSubscription|Array<TSubscription>} [payload=null]
      * @returns {Array<TSubscription>} subscribed
      */
-    subscribe(payload: TSubscription | Array<TSubscription>): Array<TSubscription>;
+    subscribe(payload?: TSubscription | Array<TSubscription>): Array<TSubscription>;
     /**
-     * @description Remove subscriptions
-     * @param {TSubscription|Array<TSubscription>} [payload]
-     * @returns {Array<TSubscription>} unsubscriptions
+     * @description remove subscriptions
+     * @param {TSubscription|Array<TSubscription>} [payload=null]
+     * @returns {Array<TSubscription>} succeed unsubscriptions
      */
     unsubscribe(payload?: TSubscription | Array<TSubscription>): Array<TSubscription>;
     /**
      * @description get the subscriptions list
-     * @param {TSubscription} [payload] - input data
+     * @param {TSubscription} [payload=null] - input data
      * @return {Array<TSubscription>} subscriptions
      */
     subscriptions(payload?: TSubscription): Array<TSubscription>;
     /**
-     * @description List of all avalible events
+     * @description get the event list
      * @param {TList} [payload]
-     * @return {Promise<TEvent[]>}
+     * @returns {Promise<TEvent[]>} events
      */
     events(payload?: TList): Promise<TEvent[]>;
-    #private;
 }
-declare namespace Memory {
+declare namespace SubscriberBase {
     export { THook, TEmission, TSubscription, TEvent, TList };
 }
 type THook = import('../types').THook;

@@ -13,10 +13,12 @@ const _path = require("path");
 
 /**
  * @typedef {Object} StrategyOption
- * @property {String} type - Strategy Key Type.
- * @property {String} path - Strategy Key Path.
- * @property {String} name - Strategy Key Name.
- * @property {Array} params - Single param for Strategy constructor.
+ * @property {String} [type] - Strategy Key Type.
+ * @property {String} [path] - Strategy Key Path.
+ * @property {String} [name] - Strategy Key Name.
+ * @property {Array} [params] - Single param for Strategy constructor.
+ * @property {Boolean|Number} [safe] - Single param for Strategy constructor.
+ * @property {*} [target] - Class or Object
  */
 class Strategy {
 
@@ -31,17 +33,19 @@ class Strategy {
 
     /**
      * @description Get strategy
-     * @param {Object} payload The input data.
-     * @param {String} payload.type Strategy Key Path
+     * @param {Object} [payload] The input data.
      * @param {String} [payload.name='Default'] Strategy Key Name
-     * @param {Object} payload.params  
-     * @return {Strategy} This
+     * @param {String} [payload.default='Default'] Strategy Key Name
+     * @param {Object} [payload.params]  
+     * @param {Console} [payload.logger]  
+     * @param {String} [payload.path]  
+     * @return {Strategy} self
      */
     configure(payload = {}) {
-        this.default = payload.default || this.default;
-        this.path = payload.path || this.path;
-        this.params = !payload.params ? this.params : this.asArray(payload.params);
-        this.logger = payload.logger || console;
+        this.default = payload?.default || payload?.name || this.default;
+        this.path = payload?.path || this.path;
+        this.params = payload?.params || this.params;
+        this.logger = payload?.logger || console;
         return this;
     }
 
@@ -54,19 +58,12 @@ class Strategy {
     }
 
     /**
-     * @description Get strategy Instance
-     * @param {(StrategyOption|Array<StrategyOption>)} payload
-     * @return {Object|Array<Object>} Strategy Instance
-     */
-    get(payload = {}) {
+      * @description Get strategy Instance
+      * @param {(String|StrategyOption)} payload
+      * @return {Object} Strategy Instance
+      */
+    getOne(payload = {}) {
         try {
-            if (Array.isArray(payload)) {
-                const out = [];
-                for (let item of payload) {
-                    out.push(this.get(item));
-                }
-                return out;
-            }
             payload = typeof (payload) === 'string' ? { name: payload } : payload;
             const type = payload.type || this.default;
             const path = payload.path || this.path;
@@ -82,6 +79,32 @@ class Strategy {
                 });
             }
             return this.ctrl[type][name];
+        }
+        catch (error) {
+            this.log({
+                src: "ksdp:behavioral:Strategy:get",
+                data: payload,
+                error
+            });
+            return null;
+        }
+    }
+
+    /**
+     * @description Get strategy Instance
+     * @param {(String|String[]|StrategyOption|Array<StrategyOption>)} payload
+     * @return {Object|Array<Object>} Strategy Instance
+     */
+    get(payload = {}) {
+        try {
+            if (Array.isArray(payload)) {
+                const out = [];
+                for (let item of payload) {
+                    out.push(this.getOne(item));
+                }
+                return out;
+            }
+            return this.getOne(payload);
         }
         catch (error) {
             this.log({
