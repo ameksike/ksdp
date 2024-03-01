@@ -116,7 +116,7 @@ class Observer {
      */
     process(subscriber, event, params = []) {
         const target = this.helper ? this.helper.get(subscriber) : subscriber;
-        const action = (target instanceof Function) ? target : target[event];
+        const action = (target instanceof Function) && target || target[event] || target?.on;
         const scope = (target instanceof Function) ? {} : target;
         if (target && typeof (action) === 'function') {
             return action.apply(scope, params);

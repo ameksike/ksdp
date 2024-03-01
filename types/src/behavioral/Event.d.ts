@@ -15,6 +15,14 @@ declare class Event extends EventEmitter {
      * @param {Object} [option]
      * @returns {Event} self
      */
+    add(subscriber: any, event?: string | symbol, option?: any): Event;
+    /**
+     * @description subscribe a listener to an event
+     * @param {*} subscriber
+     * @param {String|symbol} [event]
+     * @param {Object} [option]
+     * @returns {Event} self
+     */
     set(subscriber: any, event?: string | symbol, option?: any): Event;
     /**
      * @description

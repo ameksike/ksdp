@@ -152,7 +152,7 @@ describe('Observer class', () => {
 
     it('emit', () => {
         const target = new KsDp.behavioral.Observer();
-        const state = { value1: 0, value2: 10 };
+        const state = { value1: 0, value2: 10, value3: 0 };
 
         target.add({
             onread: (val) => {
@@ -164,6 +164,11 @@ describe('Observer class', () => {
                 state.value1 -= val - 1;
             }
         }, "onread");
+        target.add({
+            on(val) {
+                state.value3 = val;
+            }
+        }, "onread");
         target.add((val) => {
             state.value2 -= val;
         }, "onwrite");
@@ -171,6 +176,7 @@ describe('Observer class', () => {
         target.emit("onread", "default", [3]);
         expect(state.value1).toBe(1);
         expect(state.value2).toBe(10);
+        expect(state.value3).toBe(3);
         target.emit("onwrite", "default", [5]);
         expect(state.value2).toBe(5);
 

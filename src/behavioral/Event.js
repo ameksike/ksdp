@@ -58,6 +58,17 @@ class Event extends EventEmitter {
      * @param {Object} [option] 
      * @returns {Event} self
      */
+    add(subscriber, event = 'default', option = null) {
+        return this.set(subscriber, event, option);
+    }
+
+    /**
+     * @description subscribe a listener to an event
+     * @param {*} subscriber 
+     * @param {String|symbol} [event] 
+     * @param {Object} [option] 
+     * @returns {Event} self
+     */
     set(subscriber, event = 'default', option = null) {
         if (!subscriber) {
             return this;
