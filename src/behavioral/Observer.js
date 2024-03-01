@@ -39,13 +39,27 @@ class Observer {
      * @param {String} subscriber 
      * @param {String} [event] 
      * @param {String} [scope='default'] 
+     * @param {Object} [option] 
+     * @param {String} [option.event] 
+     * @param {String} [option.scope] 
+     * @param {Number} [option.index]
+     * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
-    add(subscriber, event, scope = 'default') {
+    add(subscriber, event, scope = 'default', option = null) {
+        option = option || { event, scope };
+        option.event = event;
+        option.scope = scope;
         if (!event) return this;
         if (!this.evs[scope]) this.evs[scope] = {};
         if (!this.evs[scope][event]) this.evs[scope][event] = [];
-        this.evs[scope][event].push(subscriber);
+        if (option?.index !== undefined && option?.index !== null) {
+            this.evs[scope][event][option.index] = subscriber;
+        } else {
+            this.evs[scope][event].push(subscriber);
+            option.index = this.evs[scope][event].length;
+        }
+        option.rows = [subscriber];
         return this;
     }
 
@@ -53,11 +67,26 @@ class Observer {
      * @description delete an event from scope
      * @param {String} event 
      * @param {String} [scope='default'] 
+     * @param {Object} [option] 
+     * @param {Number} [option.index] 
+     * @param {String} [option.event] 
+     * @param {String} [option.scope] 
+     * @param {Number} [option.amount] 
+     * @param {Array} [option.rows] 
      * @return {Observer} self-reference
      */
-    del(event, scope = 'default') {
+    del(event, scope = 'default', option = null) {
+        option = option || { event, scope };
+        option.event = event;
+        option.scope = scope;
         if (!this.evs[scope]) return this;
-        delete this.evs[scope][event];
+        if (!this.evs[scope][event]) return this;
+        if (option.index === null || option.index === undefined) {
+            option.rows = this.evs[scope][event];
+            delete this.evs[scope][event];
+            return this;
+        }
+        option.rows = this.evs[scope][event].splice(option.index, option.amount ?? 1);
         return this;
     }
 
@@ -65,7 +94,7 @@ class Observer {
      * @description emit an event on a scope with a params list
      * @param {String} event 
      * @param {String} scope 
-     * @param {List} params 
+     * @param {Array} params 
      * @return {Observer} self-reference
      */
     emit(event, scope = "default", params = []) {
@@ -82,7 +111,7 @@ class Observer {
      * @description process an event on a scope
      * @param {*} subscriber 
      * @param {String} event 
-     * @param {List} params 
+     * @param {Array} params 
      * @returns {*} target
      */
     process(subscriber, event, params = []) {

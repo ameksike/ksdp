@@ -33,32 +33,54 @@ declare class Observer {
      * @param {String} subscriber
      * @param {String} [event]
      * @param {String} [scope='default']
+     * @param {Object} [option]
+     * @param {String} [option.event]
+     * @param {String} [option.scope]
+     * @param {Number} [option.index]
+     * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
-    add(subscriber: string, event?: string, scope?: string): Observer;
+    add(subscriber: string, event?: string, scope?: string, option?: {
+        event?: string;
+        scope?: string;
+        index?: number;
+        rows?: any[];
+    }): Observer;
     /**
      * @description delete an event from scope
      * @param {String} event
      * @param {String} [scope='default']
+     * @param {Object} [option]
+     * @param {Number} [option.index]
+     * @param {String} [option.event]
+     * @param {String} [option.scope]
+     * @param {Number} [option.amount]
+     * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
-    del(event: string, scope?: string): Observer;
+    del(event: string, scope?: string, option?: {
+        index?: number;
+        event?: string;
+        scope?: string;
+        amount?: number;
+        rows?: any[];
+    }): Observer;
     /**
      * @description emit an event on a scope with a params list
      * @param {String} event
      * @param {String} scope
-     * @param {List} params
+     * @param {Array} params
      * @return {Observer} self-reference
      */
-    emit(event: string, scope?: string, params?: List): Observer;
+    emit(event: string, scope?: string, params?: any[]): Observer;
     /**
      * @description process an event on a scope
      * @param {*} subscriber
      * @param {String} event
-     * @param {List} params
+     * @param {Array} params
      * @returns {*} target
      */
-    process(subscriber: any, event: string, params?: List): any;
+    process(subscriber: any, event: string, params?: any[]): any;
 }
 declare namespace Observer {
     export { List };
