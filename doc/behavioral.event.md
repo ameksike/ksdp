@@ -70,4 +70,4 @@ console.log(
 You might be interested in the following topics:
 
 - [Hook](./integration.hook.md) is a publish/subscribe pattern, which allows a number of observer objects to see an event.
-- [Event](./behavioral.observer.md) implements the Observer design pattern.
+- [Observer](./behavioral.observer.md) implements the Observer design pattern.
