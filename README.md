@@ -49,7 +49,7 @@ npm install ksdp
 * Iterator accesses the elements of an object sequentially without exposing its underlying representation.
 * Mediator allows loose coupling between classes by being the only class that has detailed knowledge of their methods.
 * Memento provides the ability to restore an object to its previous state (undo).
-* [Observer](doc/integration.hook.md) is a publish/subscribe pattern, which allows a number of observer objects to see an event.
+* [Observer](doc/behavioral.observer.md) is a publish/subscribe pattern, which allows a number of observer objects to see an event.
 * State allows an object to alter its behavior when its internal state changes.
 * [Strategy](doc/behavioral.strategy.md) allows one of a family of algorithms to be selected on-the-fly at runtime.
 * Template method defines the skeleton of an algorithm as an abstract class, allowing its subclasses to provide concrete behavior.
