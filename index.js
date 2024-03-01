@@ -6,6 +6,7 @@ module.exports = {
     behavioral: {
         Strategy: require('./src/behavioral/Strategy'),
         Observer: require('./src/behavioral/Observer'),
+        Event: require('./src/behavioral/Event'),
         Command: require('./src/behavioral/Command')
     },
     structural: {
