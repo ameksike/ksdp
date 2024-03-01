@@ -40,10 +40,11 @@ class Event extends EventEmitter {
      * @param {*} subscriber 
      * @param {String|symbol} [event] 
      * @param {Object} [option] 
+     * @param {Array} [option.args] 
      * @returns {*} listener
      */
     #getListener(subscriber, event = 'default', option = null) {
-        let args = option?.arg;
+        let args = option?.args || [];
         let listener = subscriber instanceof Function ? (...arg) => subscriber(...arg, ...args) : null;
         !listener && subscriber[event] instanceof Function && (listener = (...arg) => subscriber[event](...arg, ...args));
         !listener && subscriber.on instanceof Function && (listener = (...arg) => subscriber.on(...arg, ...args));
@@ -65,12 +66,12 @@ class Event extends EventEmitter {
         if (!listener) {
             return this;
         }
-        if (option.once) {
+        if (option?.once) {
             this.once(event, listener);
         } else {
             this.on(event, listener);
         }
-        if (option.pre) {
+        if (option?.pre) {
             let preListener = this.#getListener(option.pre, event, option);
             preListener && this.prependListener(event, preListener);
         }
