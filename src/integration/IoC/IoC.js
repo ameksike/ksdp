@@ -88,16 +88,67 @@ class IoC {
         return cfg;
     }
 
+    /**
+     * @description register a resource
+     * @param {Object|String|Function|Array} value 
+     * @param {Object} [opt] 
+     * @returns {IoC} self
+     */
     set(value, opt = {}) {
         opt = this.fill(opt);
-        this.ctrls[opt.type] = this.ctrls[opt.type] || {};
-        this.ctrls[opt.type][opt.id] = value;
+        opt.rows = opt.rows || [];
+        if (Array.isArray(value)) {
+            for (let item of value) {
+                item?.value && this.set(item.value, { opt, ...this.fill(item.option) });
+            }
+        } else {
+            this.ctrls[opt.type] = this.ctrls[opt.type] || {};
+            this.ctrls[opt.type][opt.id] = value;
+            opt.rows.push(value);
+        }
+        return this;
     }
 
-    del(opt = {}) {
-        opt = this.fill(opt);
-        this.ctrls[opt.type] = this.ctrls[opt.type] || {};
-        delete this.ctrls[opt.type][opt.id];
+    /**
+     * @description remove a resource
+     * @param {Object|String|Function|Array} opt 
+     * @param {Object} [out] 
+     * @returns {IoC} self
+     */
+    del(opt, out = {}) {
+        out = out || {};
+        out.rows = opt.rows || [];
+        if (Array.isArray(opt)) {
+            for (let item of opt) {
+                this.del(item, out);
+            }
+        } else {
+            opt = this.fill(opt);
+            this.ctrls[opt.type] = this.ctrls[opt.type] || {};
+            out.rows.push(this.ctrls[opt.type][opt.id]);
+            delete this.ctrls[opt.type][opt.id];
+        }
+        return this;
+    }
+
+    /**
+     * @description alias for register a resource
+     * @param {Object|String|Function|Array} value 
+     * @param {Object} [opt] 
+     * @returns {IoC} self
+     */
+    register(value, opt = {}) {
+        return this.set(value, opt);
+    }
+
+    /**
+     * @description alias for remove a resource
+     * @param {Object|String|Function|Array} opt 
+     * @param {Object} out 
+     * @returns {IoC} self
+     */
+    unregister(opt = {}, out = {}) {
+        return this.del(opt, out);
     }
 
     /**

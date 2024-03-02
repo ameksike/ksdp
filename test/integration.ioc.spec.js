@@ -3,6 +3,82 @@ const ioc = new KsDp.integration.IoC({
     path: __dirname + "/demo/"
 });
 
+describe('CRUD', () => {
+
+    it("simple set/get", () => {
+        const han = { get(key) { return key + 1 }, name: 111 };
+        const res2 = ioc.set(han, "custom").get("custom");
+        expect(han.name).toBe(res2.name);
+    });
+
+    it("multiple set/get", () => {
+        let opt = {};
+        ioc.register([
+            { value: { get(key) { return key + 1 }, name: 111 }, option: "custom" },
+            { value: { get(key) { return key + 2 }, name: 222 }, option: "demo" },
+        ], opt);
+        let custom = ioc.get("custom");
+        let demo = ioc.get("demo");
+        expect(custom.name).toBe(111);
+        expect(demo.name).toBe(222);
+        expect(custom.get(3)).toBe(4);
+        expect(demo.get(3)).toBe(5);
+    });
+
+    it("unregister", () => {
+        ioc.register([
+            { value: { get(key) { return key + 1 }, name: 100 }, option: "custom" },
+            { value: { get(key) { return key + 2 }, name: 111 }, option: "demo1" },
+            { value: { get(key) { return key + 2 }, name: 222 }, option: "demo2" },
+        ]);
+        ioc.unregister("custom");
+
+        const custom = ioc.get("custom");
+        const demo1 = ioc.get("demo1");
+        const demo2 = ioc.get("demo2");
+
+        expect(custom).toBe(null);
+        expect(demo1.name).toBe(111);
+        expect(demo2.name).toBe(222);
+    });
+
+    it("multi unregister", () => {
+        ioc.register([
+            { value: { get(key) { return key + 1 }, name: 100 }, option: "custom" },
+            { value: { get(key) { return key + 2 }, name: 111 }, option: "demo1" },
+            { value: { get(key) { return key + 2 }, name: 222 }, option: "demo2" },
+        ]);
+        ioc.unregister(["custom", "demo1"]);
+
+        const custom = ioc.get("custom");
+        const demo1 = ioc.get("demo1");
+        const demo2 = ioc.get("demo2");
+
+        expect(custom).toBe(null);
+        expect(demo1).toBe(null);
+        expect(demo2.name).toBe(222);
+    });
+
+    it("update registration", () => {
+        ioc.register([
+            { value: { get(key) { return key + 1 }, name: 100 }, option: "custom" },
+            { value: { get(key) { return key + 2 }, name: 111 }, option: "demo1" },
+            { value: { get(key) { return key + 3 }, name: 222 }, option: "demo2" },
+        ]);
+
+        ioc.register({ get(key) { return key + 5 }, name: 555 }, "custom");
+
+        const custom = ioc.get("custom");
+        const demo1 = ioc.get("demo1");
+
+        expect(custom.name).toBe(555);
+        expect(custom.get(3)).toBe(8);
+        expect(demo1.name).toBe(111);
+        expect(demo1.get(3)).toBe(5);
+    });
+
+});
+
 describe('Dependency', () => {
 
     it("invalid key", (done) => {
