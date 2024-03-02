@@ -1,4 +1,4 @@
-The **KsDp.Event** class is a specialized version of the native Node EventEmitter, designed to provide a familiar API similar to the Observer implementation included in KsDp. This class enhances the EventEmitter functionality by overloading some methods to simplify event subscription and handling.
+The **KsDp.behavioral.Emitter** class is a specialized version of the native Node EventEmitter, designed to provide a familiar API similar to the Observer implementation included in KsDp. This class enhances the EventEmitter functionality by overloading some methods to simplify event subscription and handling.
 
 ```Js
 const KsDp = require('ksdp');
@@ -7,7 +7,7 @@ const emitter = new KsDp.behavioral.Emitter();
 
 ### Flexible Event Subscription:
 
-The KsDp.Event class allows listeners to subscribe to events using various approaches. Listeners can be an anonymous function, an object with a method named after the event, or an object with a generic method named "on".
+The KsDp.behavioral.Emitter class allows listeners to subscribe to events using various approaches. Listeners can be an anonymous function, an object with a method named after the event, or an object with a generic method named "on".
 
 **Anonymous Function:** You can define a subscriber as an anonymous function that directly captures the event. When the event is emitted, the anonymous function is executed, receiving the emitted data as parameters.
 
@@ -68,12 +68,13 @@ emitter.emit("default", { value: 5 });
 
 ### Event Emission from Listeners:
 
-Additionally, listeners can emit events directly from within their own event handlers by passing an instance of the KsDp.Event class as the first parameter. This feature enables listeners to trigger other events seamlessly.
+Additionally, listeners can emit events directly from within their own event handlers by passing an instance of the KsDp.behavioral.Emitter class as the first parameter. This feature enables listeners to trigger other events seamlessly.
 
 ```Js
 const listener = {
-    on(emitter, val) {
+    on(_emitter, val) {
         /* ... */
+        _emitter.add((_emitter_, val) => {/* ... */}, "onread");
     }
 }
 emitter.add(listener, "onread");
