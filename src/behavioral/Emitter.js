@@ -58,6 +58,8 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.args] 
      * @param {Array} [option.rows] 
+     * @param {Boolean} [option.once] 
+     * @param {Array|Object|Function} [option.pre] 
      * @param {String|symbol} [option.event] 
      * @returns {Emitter} self
      */
@@ -71,19 +73,30 @@ class Emitter extends EventEmitter {
                 this.set(listener, event, option);
             }
         } else {
+            // decorate the listener
             let listener = this.#getListener(subscriber, event, option);
             if (!listener) {
                 return this;
             }
+            // define the mode 
             if (option?.once) {
                 this.once(event, listener);
             } else {
                 this.on(event, listener);
             }
+            // prepend Listener
             if (option?.pre) {
-                let preListener = this.#getListener(option.pre, event, option);
-                preListener && this.prependListener(event, preListener);
+                if (Array.isArray(option.pre)) {
+                    for (let pre of option.pre) {
+                        let preListener = this.#getListener(pre, event, option);
+                        preListener && this.prependListener(event, preListener);
+                    }
+                } else {
+                    let preListener = this.#getListener(option.pre, event, option);
+                    preListener && this.prependListener(event, preListener);
+                }
             }
+            // track actions 
             option.rows = option.rows || [];
             option.rows.push(listener);
             option.event = event;
@@ -98,7 +111,9 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.args] 
      * @param {Array} [option.rows] 
+     * @param {Boolean} [option.once] 
      * @param {String|symbol} [option.event] 
+     * @param {Array|Object|Function} [option.pre] 
      * @returns {Emitter} self
      */
     add(subscriber, event = 'default', option = null) {
@@ -112,7 +127,9 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.args] 
      * @param {Array} [option.rows] 
+     * @param {Boolean} [option.once] 
      * @param {String|symbol} [option.event] 
+     * @param {Array|Object|Function} [option.pre] 
      * @returns {Emitter} self
      */
     subscribe(subscriber, event = 'default', option = null) {
