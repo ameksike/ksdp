@@ -29,8 +29,22 @@ declare class Observer {
         evs?: any;
     }): Observer;
     /**
+     * @description Getting the Number of Subscriptions for an Event
+     * @param {String} event
+     * @param {String} scope
+     * @returns {Number} count
+     */
+    count(event?: string, scope?: string): number;
+    /**
+     * @description Getting the Subscriptions for an Event
+     * @param {String} event
+     * @param {String} scope
+     * @returns {Array} list
+     */
+    listeners(event?: string, scope?: string): any[];
+    /**
      * @description add an event on scope
-     * @param {String} subscriber
+     * @param {Array|Object|Function} subscriber
      * @param {String} [event]
      * @param {String} [scope='default']
      * @param {Object} [option]
@@ -40,10 +54,47 @@ declare class Observer {
      * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
-    add(subscriber: string, event?: string, scope?: string, option?: {
+    add(subscriber: any[] | any | Function, event?: string, scope?: string, option?: {
         event?: string;
         scope?: string;
         index?: number;
+        rows?: any[];
+    }): Observer;
+    /**
+     * @description alias for add an event on scope
+     * @param {Array|Object|Function} subscriber
+     * @param {String} [event]
+     * @param {String} [scope='default']
+     * @param {Object} [option]
+     * @param {String} [option.event]
+     * @param {String} [option.scope]
+     * @param {Number} [option.index]
+     * @param {Array} [option.rows]
+     * @return {Observer} self-reference
+     */
+    subscribe(subscriber: any[] | any | Function, event?: string, scope?: string, option?: {
+        event?: string;
+        scope?: string;
+        index?: number;
+        rows?: any[];
+    }): Observer;
+    /**
+     * @description alias for delete an event from scope
+     * @param {String} event
+     * @param {String} [scope='default']
+     * @param {Object} [option]
+     * @param {Number} [option.index]
+     * @param {String} [option.event]
+     * @param {String} [option.scope]
+     * @param {Number} [option.count]
+     * @param {Array} [option.rows]
+     * @return {Observer} self-reference
+     */
+    unsubscribe(event: string, scope?: string, option?: {
+        index?: number;
+        event?: string;
+        scope?: string;
+        count?: number;
         rows?: any[];
     }): Observer;
     /**
@@ -54,7 +105,7 @@ declare class Observer {
      * @param {Number} [option.index]
      * @param {String} [option.event]
      * @param {String} [option.scope]
-     * @param {Number} [option.amount]
+     * @param {Number} [option.count]
      * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
@@ -62,7 +113,7 @@ declare class Observer {
         index?: number;
         event?: string;
         scope?: string;
-        amount?: number;
+        count?: number;
         rows?: any[];
     }): Observer;
     /**

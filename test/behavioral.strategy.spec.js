@@ -2,7 +2,7 @@
 const KsDp = require('..');
 let target = null;
 
-describe('Strategy class', () => {
+describe('Strategy', () => {
     beforeAll(async () => {
         target = require("./demo/strategy.class");
     });

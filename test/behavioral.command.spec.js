@@ -3,7 +3,7 @@ const KsDp = require('..');
 const cmd = new KsDp.behavioral.Command();
 const obj = require("./demo/command.obj");
 
-describe('Strategy class', () => {
+describe('Strategy', () => {
 
     it('correct run action', () => {
         function fun(a, b) {
