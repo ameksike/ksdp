@@ -44,7 +44,8 @@ describe('Observer', () => {
             });
 
         target.add({ name: "itm-7" }, "onread", "local")
-
+        expect(target.count("onread", "local")).toBe(4);
+        expect(target.listeners("onread", "local")).toBeInstanceOf(Array);
         expect(target.evs.default.onread.length).toBe(1);
         expect(target.evs.default.onread[0].name).toBe("itm-6");
         expect(target.evs.global.onread.length).toBe(1);

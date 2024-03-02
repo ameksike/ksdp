@@ -134,9 +134,47 @@ emitter.unsubscribe(eventName, null, options);
 console.log('Rows removed:', options.rows);
 console.log('Event:', options.event);
 console.log('Scope:', options.scope);
+console.log('Count:', emitter.count(eventName));
 ```
 
 In this example, the unsubscribe method is called to remove listeners from the 'exampleEvent' in the 'exampleScope'. The options object is passed by reference, and after the operation, it contains information about the removed registrations, the event name, and the scope name.
+
+### Mode 
+The options parameter in this context has a property called mode, which is a string that determines how the listener should be treated. Here's an explanation of each mode:
+
+- **"once":** If the mode is set to "once", the listener will execute only once. After the listener is invoked for the first time, it will automatically be removed from the event's listener list.
+
+- **"prepend":** If the mode is set to "prepend", the listener will be added to the beginning of the listener list for the specified event. This means that when the event is emitted, the listener with this mode will be executed before any other listeners associated with the same event.
+
+- **Default Behavior:** If the mode is not specified or if it's set to any other value, the listener will behave in the ordinary way. It will be appended to the end of the listener list for the event, and it will execute every time the event is emitted until explicitly removed.
+
+```Js
+// Import the EventEmitter module
+const KsDp = require('ksdp');
+
+// Create an instance of Emitter
+const emitter = new KsDp.behavioral.Emitter();
+
+// Define event handler function
+const eventHandler = () => {
+    console.log('Event handler executed');
+};
+
+// Subscribe to the 'eventName' event with mode 'once'
+emitter.subscribe('eventName', eventHandler, { mode: 'once' });
+
+// Subscribe to the 'eventName' event with mode 'prepend'
+emitter.subscribe('eventName', eventHandler, { mode: 'prepend' });
+
+// Subscribe to the 'eventName' event with no mode specified (default behavior)
+emitter.subscribe('eventName', eventHandler);
+
+// Emit the 'eventName' event
+emitter.emit('eventName');
+
+```
+In this example, the eventHandler function is subscribed to the 'eventName' event multiple times with different modes. The behavior of each subscription will be determined by the specified mode: "once", "prepend", or the default behavior.
+
 
 You might be interested in the following topics:
 

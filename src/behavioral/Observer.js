@@ -35,6 +35,28 @@ class Observer {
     }
 
     /**
+     * @description Getting the Number of Subscriptions for an Event
+     * @param {String} event
+     * @param {String} scope
+     * @returns {Number} count
+     */
+    count(event = 'default', scope = 'default') {
+        let listeners = this.listeners(event, scope);
+        return listeners?.length || 0;
+    }
+
+    /**
+     * @description Getting the Subscriptions for an Event
+     * @param {String} event
+     * @param {String} scope
+     * @returns {Array} list
+     */
+    listeners(event = 'default', scope = 'default') {
+        this.evs[scope] = this.evs[scope] || {};
+        return this.evs[scope][event];
+    }
+
+    /**
      * @description add an event on scope
      * @param {Array|Object|Function} subscriber 
      * @param {String} [event] 

@@ -29,6 +29,20 @@ declare class Observer {
         evs?: any;
     }): Observer;
     /**
+     * @description Getting the Number of Subscriptions for an Event
+     * @param {String} event
+     * @param {String} scope
+     * @returns {Number} count
+     */
+    count(event?: string, scope?: string): number;
+    /**
+     * @description Getting the Number of Subscriptions for an Event
+     * @param {String} event
+     * @param {String} scope
+     * @returns {Array} list
+     */
+    listeners(event?: string, scope?: string): any[];
+    /**
      * @description add an event on scope
      * @param {Array|Object|Function} subscriber
      * @param {String} [event]
