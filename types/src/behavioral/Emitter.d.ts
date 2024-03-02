@@ -78,14 +78,14 @@ declare class Emitter extends EventEmitter {
      * @param {Array} [option.rows]
      * @param {String|symbol} [option.event]
      * @param {Number} [option.index]
-     * @param {Number} [option.amount]
+     * @param {Number} [option.count]
      * @returns {Emitter} self
      */
     unsubscribe(event?: string | symbol, subscriber?: any[] | any | Function, option?: {
         rows?: any[];
         event?: string | symbol;
         index?: number;
-        amount?: number;
+        count?: number;
     }): Emitter;
     /**
      * @description remove a subscriber from an event or clean an event
@@ -95,14 +95,14 @@ declare class Emitter extends EventEmitter {
      * @param {Array} [option.rows]
      * @param {String|symbol} [option.event]
      * @param {Number} [option.index]
-     * @param {Number} [option.amount]
+     * @param {Number} [option.count]
      * @returns {Emitter} self
      */
     del(event?: string | symbol, subscriber?: any[] | any | Function, option?: {
         rows?: any[];
         event?: string | symbol;
         index?: number;
-        amount?: number;
+        count?: number;
     }): Emitter;
     /**
      * @description Getting the Number of Subscriptions for an Event

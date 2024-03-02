@@ -95,7 +95,7 @@ class Observer {
      * @param {Number} [option.index] 
      * @param {String} [option.event] 
      * @param {String} [option.scope] 
-     * @param {Number} [option.amount] 
+     * @param {Number} [option.count] 
      * @param {Array} [option.rows] 
      * @return {Observer} self-reference
      */
@@ -111,7 +111,7 @@ class Observer {
      * @param {Number} [option.index] 
      * @param {String} [option.event] 
      * @param {String} [option.scope] 
-     * @param {Number} [option.amount] 
+     * @param {Number} [option.count] 
      * @param {Array} [option.rows] 
      * @return {Observer} self-reference
      */
@@ -126,7 +126,7 @@ class Observer {
             delete this.evs[scope][event];
             return this;
         }
-        option.rows = this.evs[scope][event].splice(option.index, option.amount ?? 1);
+        option.rows = this.evs[scope][event].splice(option.index, option.count ?? 1);
         return this;
     }
 

@@ -165,7 +165,7 @@ describe('Observer', () => {
         expect(target.evs.local.onwrite.length).toBe(1);
         expect(target.evs.local.onwrite[0].name).toBe("itm-7");
 
-        let out3 = { index: 1, amount: 2 };
+        let out3 = { index: 1, count: 2 };
         target.del("onread", "local", out3);
         expect(out3.rows.length).toBe(2);
         expect(out3.rows[0].name).toBe("itm-3");

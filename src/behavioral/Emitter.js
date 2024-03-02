@@ -133,7 +133,7 @@ class Emitter extends EventEmitter {
      * @param {Array} [option.rows] 
      * @param {String|symbol} [option.event] 
      * @param {Number} [option.index] 
-     * @param {Number} [option.amount] 
+     * @param {Number} [option.count] 
      * @returns {Emitter} self
      */
     unsubscribe(event = 'default', subscriber = null, option = null) {
@@ -148,7 +148,7 @@ class Emitter extends EventEmitter {
      * @param {Array} [option.rows] 
      * @param {String|symbol} [option.event] 
      * @param {Number} [option.index] 
-     * @param {Number} [option.amount] 
+     * @param {Number} [option.count] 
      * @returns {Emitter} self
      */
     del(event = 'default', subscriber = null, option = null) {
@@ -166,9 +166,9 @@ class Emitter extends EventEmitter {
             if (!listener) {
                 let listeners = this.rawListeners(event);
                 let index = option.index || 0;
-                let amount = index + (option.amount || 0);
-                amount = amount >= listeners.length ? listeners.length - 1 : amount;
-                for (let i = index; i <= amount; i++) {
+                let count = index + (option.count || 0);
+                count = count >= listeners.length ? listeners.length - 1 : count;
+                for (let i = index; i <= count; i++) {
                     this.del(event, listeners[i], option);
                 }
             } else {

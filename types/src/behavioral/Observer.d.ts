@@ -72,7 +72,7 @@ declare class Observer {
      * @param {Number} [option.index]
      * @param {String} [option.event]
      * @param {String} [option.scope]
-     * @param {Number} [option.amount]
+     * @param {Number} [option.count]
      * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
@@ -80,7 +80,7 @@ declare class Observer {
         index?: number;
         event?: string;
         scope?: string;
-        amount?: number;
+        count?: number;
         rows?: any[];
     }): Observer;
     /**
@@ -91,7 +91,7 @@ declare class Observer {
      * @param {Number} [option.index]
      * @param {String} [option.event]
      * @param {String} [option.scope]
-     * @param {Number} [option.amount]
+     * @param {Number} [option.count]
      * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
@@ -99,7 +99,7 @@ declare class Observer {
         index?: number;
         event?: string;
         scope?: string;
-        amount?: number;
+        count?: number;
         rows?: any[];
     }): Observer;
     /**

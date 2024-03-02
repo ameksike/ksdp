@@ -167,7 +167,7 @@ describe('Emitter', () => {
         let data = target.get("onread");
         let counter = 0;
         let optSub = {};
-        let optUns = { index: 1, amount: 2 };
+        let optUns = { index: 1, count: 2 };
         let listeners = [
             {
                 onread(drv, data) {
