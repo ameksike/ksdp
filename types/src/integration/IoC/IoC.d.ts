@@ -51,7 +51,34 @@ declare class IoC {
         file?: string;
         id?: string;
     }): any;
-    set(value: any, opt?: {}): void;
+    /**
+     * @description register a resource
+     * @param {Object|String|Function|Array} value
+     * @param {Object} [opt]
+     * @returns {IoC} self
+     */
+    set(value: any | string | Function | any[], opt?: any): IoC;
+    /**
+     * @description remove a resource
+     * @param {Object|String|Function|Array} opt
+     * @param {Object} [out]
+     * @returns {IoC} self
+     */
+    del(opt: any | string | Function | any[], out?: any): IoC;
+    /**
+     * @description alias for register a resource
+     * @param {Object|String|Function|Array} value
+     * @param {Object} [opt]
+     * @returns {IoC} self
+     */
+    register(value: any | string | Function | any[], opt?: any): IoC;
+    /**
+     * @description alias for remove a resource
+     * @param {Object|String|Function|Array} opt
+     * @param {Object} out
+     * @returns {IoC} self
+     */
+    unregister(opt?: any | string | Function | any[], out?: any): IoC;
     /**
      * @description Inversion of Control Pattern (IoC)
      * @param {Object} opt The input data.
