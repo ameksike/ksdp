@@ -10,7 +10,7 @@ describe('Emitter', () => {
         let data = target.get("default");
 
         target.set({
-            onread(drv, data) {
+            default(drv, data) {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -121,6 +121,8 @@ describe('Emitter', () => {
         target.emit("onread", { value: 1 });
         let data = target.get("onread");
         let counter = 0;
+        let optSub = {};
+        let optUns = {};
         const list1 = {
             onread(drv, data) {
                 expect(drv.constructor.name).toBe("Emitter");
@@ -144,16 +146,21 @@ describe('Emitter', () => {
             expect(data.value !== undefined).toBe(true);
             counter++;
         };
-        target.subscribe([list1, list2, list3], "onread");
-        target.unsubscribe([list1, list3], "onread");
+        target.subscribe([list1, list2, list3], "onread", optSub);
+        target.unsubscribe("onread", [optSub.rows[0], optSub.rows[2]], optUns);
 
         target.emit("onread", { value: 5 });
+
+        expect(optSub.event).toBe("onread");
+        expect(optSub.rows.length).toBe(3);
+        expect(optUns.event).toBe("onread");
+        expect(optUns.rows.length).toBe(2);
 
         expect(data[0].value).toBe(1);
         expect(target.get("onread")[0].value).toBe(2);
         expect(counter).toBe(1);
-        expect(target.count("onread")).toBe(1);
-        
+        expect(target.count("onread")).toBe(counter);
+
     });
 
 });

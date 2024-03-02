@@ -56,9 +56,13 @@ class Emitter extends EventEmitter {
      * @param {Array|Object|Function} subscriber 
      * @param {String|symbol} [event] 
      * @param {Object} [option] 
+     * @param {Array} [option.args] 
+     * @param {Array} [option.rows] 
+     * @param {String|symbol} [option.event] 
      * @returns {Emitter} self
      */
     set(subscriber, event = 'default', option = null) {
+        option = option || {};
         if (!subscriber) {
             return this;
         }
@@ -80,6 +84,9 @@ class Emitter extends EventEmitter {
                 let preListener = this.#getListener(option.pre, event, option);
                 preListener && this.prependListener(event, preListener);
             }
+            option.rows = option.rows || [];
+            option.rows.push(listener);
+            option.event = event;
         }
         return this;
     }
@@ -89,6 +96,9 @@ class Emitter extends EventEmitter {
      * @param {Array|Object|Function} subscriber 
      * @param {String|symbol} [event] 
      * @param {Object} [option] 
+     * @param {Array} [option.args] 
+     * @param {Array} [option.rows] 
+     * @param {String|symbol} [option.event] 
      * @returns {Emitter} self
      */
     add(subscriber, event = 'default', option = null) {
@@ -100,6 +110,9 @@ class Emitter extends EventEmitter {
      * @param {Array|Object|Function} subscriber 
      * @param {String|symbol} [event] 
      * @param {Object} [option] 
+     * @param {Array} [option.args] 
+     * @param {Array} [option.rows] 
+     * @param {String|symbol} [option.event] 
      * @returns {Emitter} self
      */
     subscribe(subscriber, event = 'default', option = null) {
@@ -111,6 +124,8 @@ class Emitter extends EventEmitter {
      * @param {String|symbol} [event] 
      * @param {Array|Object|Function} subscriber 
      * @param {Object} [option] 
+     * @param {Array} [option.rows] 
+     * @param {String|symbol} [option.event] 
      * @returns {Emitter} self
      */
     unsubscribe(event = 'default', subscriber = null, option = null) {
@@ -122,9 +137,15 @@ class Emitter extends EventEmitter {
      * @param {String|symbol} [event] 
      * @param {Array|Object|Function} subscriber 
      * @param {Object} [option] 
+     * @param {Array} [option.rows] 
+     * @param {String|symbol} [option.event] 
      * @returns {Emitter} self
      */
     del(event = 'default', subscriber = null, option = null) {
+        if (event && !subscriber && (option === undefined || option === null)) {
+            this.removeAllListeners(event);
+        }
+        option = option || {};
         if (!subscriber) {
             this.removeAllListeners(event);
             return this;
@@ -134,8 +155,15 @@ class Emitter extends EventEmitter {
                 this.del(event, listener, option);
             }
         } else {
-            let listener = this.#getListener(subscriber, event, option);
-            listener && this.removeListener(event, listener);
+            let listener = subscriber;
+            if (!listener) {
+                let listeners = this.rawListeners(event);
+                listeners[option.index || 0];
+            }
+            let res = listener && this.removeListener(event, listener);
+            option.rows = option.rows || [];
+            option.rows.push(listener);
+            option.event = event;
         }
         return this;
     }
