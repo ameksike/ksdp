@@ -30,7 +30,7 @@ declare class Observer {
     }): Observer;
     /**
      * @description add an event on scope
-     * @param {String} subscriber
+     * @param {Array|Object|Function} subscriber
      * @param {String} [event]
      * @param {String} [scope='default']
      * @param {Object} [option]
@@ -40,10 +40,47 @@ declare class Observer {
      * @param {Array} [option.rows]
      * @return {Observer} self-reference
      */
-    add(subscriber: string, event?: string, scope?: string, option?: {
+    add(subscriber: any[] | any | Function, event?: string, scope?: string, option?: {
         event?: string;
         scope?: string;
         index?: number;
+        rows?: any[];
+    }): Observer;
+    /**
+     * @description alias for add an event on scope
+     * @param {Array|Object|Function} subscriber
+     * @param {String} [event]
+     * @param {String} [scope='default']
+     * @param {Object} [option]
+     * @param {String} [option.event]
+     * @param {String} [option.scope]
+     * @param {Number} [option.index]
+     * @param {Array} [option.rows]
+     * @return {Observer} self-reference
+     */
+    subscribe(subscriber: any[] | any | Function, event?: string, scope?: string, option?: {
+        event?: string;
+        scope?: string;
+        index?: number;
+        rows?: any[];
+    }): Observer;
+    /**
+     * @description alias for delete an event from scope
+     * @param {String} event
+     * @param {String} [scope='default']
+     * @param {Object} [option]
+     * @param {Number} [option.index]
+     * @param {String} [option.event]
+     * @param {String} [option.scope]
+     * @param {Number} [option.amount]
+     * @param {Array} [option.rows]
+     * @return {Observer} self-reference
+     */
+    unsubscribe(event: string, scope?: string, option?: {
+        index?: number;
+        event?: string;
+        scope?: string;
+        amount?: number;
         rows?: any[];
     }): Observer;
     /**

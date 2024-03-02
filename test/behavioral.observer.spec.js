@@ -1,7 +1,7 @@
 
 const KsDp = require('../');
 
-describe('Observer class', () => {
+describe('Observer', () => {
 
     it('configure', () => {
         const target = new KsDp.behavioral.Observer();
@@ -56,6 +56,31 @@ describe('Observer class', () => {
         expect(target.evs.local.onread[1].name).toBe("itm-3");
         expect(target.evs.local.onread[2].name).toBe("itm-4");
         expect(target.evs.local.onread[3].name).toBe("itm-7");
+    });
+
+    it('multiple subscriptions', () => {
+        const target = new KsDp.behavioral.Observer();
+        target
+            .subscribe([
+                { name: "itm-1" },
+                { name: "itm-3" },
+                { name: "itm-4" },
+            ], "onread", "local")
+            .add({ name: "itm-2" }, "onwrite", "local")
+            .add({ name: "itm-5" }, "onread", "global")
+            .add({ name: "itm-6" }, "onread")
+            .add({ name: "itm-7" });
+
+        expect(target.evs.default.onread.length).toBe(1);
+        expect(target.evs.default.onread[0].name).toBe("itm-6");
+        expect(target.evs.global.onread.length).toBe(1);
+        expect(target.evs.global.onread[0].name).toBe("itm-5");
+        expect(target.evs.local.onread.length).toBe(3);
+        expect(target.evs.local.onwrite.length).toBe(1);
+        expect(target.evs.local.onwrite[0].name).toBe("itm-2");
+        expect(target.evs.local.onread[0].name).toBe("itm-1");
+        expect(target.evs.local.onread[1].name).toBe("itm-3");
+        expect(target.evs.local.onread[2].name).toBe("itm-4");
     });
 
     it('add', () => {
@@ -180,5 +205,42 @@ describe('Observer class', () => {
         target.emit("onwrite", "default", [5]);
         expect(state.value2).toBe(5);
 
+    });
+
+
+    it('emit with multi subscriptions', () => {
+        let counter = 0;
+        const target = new KsDp.behavioral.Observer();
+        const state = { value1: 0, value2: 10, value3: 0 };
+        target.add([
+            (val) => {
+                counter++;
+                state.value1 += val;
+            },
+            {
+                onread: (val) => {
+                    counter++;
+                    state.value1 -= val - 1;
+                }
+            },
+            {
+                on(val) {
+                    counter++;
+                    state.value3 = val;
+                }
+            }
+        ], "onread");
+
+        target.add((val) => {
+            state.value2 -= val;
+        }, "onwrite");
+
+        target.emit("onread", "default", [3]);
+        expect(state.value1).toBe(1);
+        expect(state.value2).toBe(10);
+        expect(state.value3).toBe(3);
+        expect(counter).toBe(3);
+        target.emit("onwrite", "default", [5]);
+        expect(state.value2).toBe(5);
     });
 });

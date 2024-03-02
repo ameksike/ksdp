@@ -243,5 +243,5 @@ class MyNotifier2 {
 Notifiers have a reference to the main hook library in other to be able to trigger another events. 
 
 You might be interested in the following topics:
-- [Event](./behavioral.event.md) extension of the Node.Js EventEmitter.
+- [Emitter](./behavioral.emitter.md) extension of the Node.Js EventEmitter.
 - [Observer](./behavioral.observer.md) implements the Observer design pattern.

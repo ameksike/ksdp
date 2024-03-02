@@ -9,7 +9,7 @@ export namespace creational {
 export namespace behavioral {
     let Strategy: typeof import("./src/behavioral/Strategy");
     let Observer: typeof import("./src/behavioral/Observer");
-    let Event: typeof import("./src/behavioral/Event");
+    let Emitter: typeof import("./src/behavioral/Emitter");
     let Command: typeof import("./src/behavioral/Command");
 }
 export namespace structural {

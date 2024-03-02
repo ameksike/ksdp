@@ -36,7 +36,7 @@ class Observer {
 
     /**
      * @description add an event on scope
-     * @param {String} subscriber 
+     * @param {Array|Object|Function} subscriber 
      * @param {String} [event] 
      * @param {String} [scope='default'] 
      * @param {Object} [option] 
@@ -50,17 +50,57 @@ class Observer {
         option = option || { event, scope };
         option.event = event;
         option.scope = scope;
-        if (!event) return this;
-        if (!this.evs[scope]) this.evs[scope] = {};
-        if (!this.evs[scope][event]) this.evs[scope][event] = [];
-        if (option?.index !== undefined && option?.index !== null) {
-            this.evs[scope][event][option.index] = subscriber;
+        if (Array.isArray(subscriber)) {
+            for (let listener of subscriber) {
+                delete option['index'];
+                this.add(listener, event, scope, option);
+            }
         } else {
-            this.evs[scope][event].push(subscriber);
-            option.index = this.evs[scope][event].length;
+            if (!event) return this;
+            if (!this.evs[scope]) this.evs[scope] = {};
+            if (!this.evs[scope][event]) this.evs[scope][event] = [];
+            if (option?.index !== undefined && option?.index !== null) {
+                this.evs[scope][event][option.index] = subscriber;
+            } else {
+                this.evs[scope][event].push(subscriber);
+                option.index = this.evs[scope][event].length;
+            }
+            option.rows = option.rows || [];
+            option.rows.push(subscriber);
         }
-        option.rows = [subscriber];
         return this;
+    }
+
+    /**
+     * @description alias for add an event on scope
+     * @param {Array|Object|Function} subscriber 
+     * @param {String} [event] 
+     * @param {String} [scope='default'] 
+     * @param {Object} [option] 
+     * @param {String} [option.event] 
+     * @param {String} [option.scope] 
+     * @param {Number} [option.index]
+     * @param {Array} [option.rows]
+     * @return {Observer} self-reference
+     */
+    subscribe(subscriber, event, scope = 'default', option = null) {
+        return this.add(subscriber, event, scope, option);
+    }
+
+    /**
+     * @description alias for delete an event from scope
+     * @param {String} event 
+     * @param {String} [scope='default'] 
+     * @param {Object} [option] 
+     * @param {Number} [option.index] 
+     * @param {String} [option.event] 
+     * @param {String} [option.scope] 
+     * @param {Number} [option.amount] 
+     * @param {Array} [option.rows] 
+     * @return {Observer} self-reference
+     */
+    unsubscribe(event, scope = 'default', option = null) {
+        return this.del(event, scope, option);
     }
 
     /**
