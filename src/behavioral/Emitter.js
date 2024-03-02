@@ -126,6 +126,8 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.rows] 
      * @param {String|symbol} [option.event] 
+     * @param {Number} [option.index] 
+     * @param {Number} [option.amount] 
      * @returns {Emitter} self
      */
     unsubscribe(event = 'default', subscriber = null, option = null) {
@@ -139,17 +141,16 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.rows] 
      * @param {String|symbol} [option.event] 
+     * @param {Number} [option.index] 
+     * @param {Number} [option.amount] 
      * @returns {Emitter} self
      */
     del(event = 'default', subscriber = null, option = null) {
         if (event && !subscriber && (option === undefined || option === null)) {
             this.removeAllListeners(event);
-        }
-        option = option || {};
-        if (!subscriber) {
-            this.removeAllListeners(event);
             return this;
         }
+        option = option || {};
         if (Array.isArray(subscriber)) {
             for (let listener of subscriber) {
                 this.del(event, listener, option);
@@ -158,12 +159,18 @@ class Emitter extends EventEmitter {
             let listener = subscriber;
             if (!listener) {
                 let listeners = this.rawListeners(event);
-                listeners[option.index || 0];
+                let index = option.index || 0;
+                let amount = index + (option.amount || 0);
+                amount = amount >= listeners.length ? listeners.length - 1 : amount;
+                for (let i = index; i <= amount; i++) {
+                    this.del(event, listeners[i], option);
+                }
+            } else {
+                listener && this.removeListener(event, listener);
+                option.rows = option.rows || [];
+                option.rows.push(listener);
+                option.event = event;
             }
-            let res = listener && this.removeListener(event, listener);
-            option.rows = option.rows || [];
-            option.rows.push(listener);
-            option.event = event;
         }
         return this;
     }
