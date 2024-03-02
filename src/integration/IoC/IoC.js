@@ -94,6 +94,12 @@ class IoC {
         this.ctrls[opt.type][opt.id] = value;
     }
 
+    del(opt = {}) {
+        opt = this.fill(opt);
+        this.ctrls[opt.type] = this.ctrls[opt.type] || {};
+        delete this.ctrls[opt.type][opt.id];
+    }
+
     /**
      * @description Inversion of Control Pattern (IoC)
      * @param {Object} opt The input data.
