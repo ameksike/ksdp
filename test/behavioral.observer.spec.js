@@ -204,7 +204,6 @@ describe('Observer', () => {
         expect(state.value3).toBe(3);
         target.emit("onwrite", "default", [5]);
         expect(state.value2).toBe(5);
-
     });
 
 

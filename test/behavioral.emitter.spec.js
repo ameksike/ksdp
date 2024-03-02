@@ -251,8 +251,7 @@ describe('Emitter', () => {
         expect(target.count("onread")).toBe(counter);
     });
 
-
-    it('prepend Listener', () => {
+    it('prepend listener mode', () => {
         const target = new KsDp.behavioral.Emitter();
         let counter = 0;
 
@@ -297,5 +296,36 @@ describe('Emitter', () => {
         expect(target.get("onread")[0].value).toBe(3);
         expect(target.count("onread")).toBe(counter);
         expect(counter).toBe(4);
+    });
+    
+    it('once listener mode', () => {
+        const target = new KsDp.behavioral.Emitter();
+        let counterOnce = 0;
+        let counterPre = 0;
+
+        target.subscribe((drv, data) => {
+            expect(drv.constructor.name).toBe("Emitter");
+            expect(data).toBeInstanceOf(Object);
+            expect(data.value !== undefined).toBe(true);
+            data.value += 1;
+            counterOnce++;
+        }, "onread", { mode: "once" });
+
+        target.subscribe((drv, data) => {
+            expect(drv.constructor.name).toBe("Emitter");
+            expect(data).toBeInstanceOf(Object);
+            expect(data.value !== undefined).toBe(true);
+            data.value += 2;
+            counterPre++;
+        }, "onread", { mode: "prepend" });
+
+        target.emit("onread", { value: 5 });
+        target.emit("onread", { value: 5 });
+        target.emit("onread", { value: 5 });
+
+        expect(target.get("onread")[0].value).toBe(7);
+        expect(target.count("onread")).toBe(1);
+        expect(counterOnce).toBe(1);
+        expect(counterPre).toBe(3);
     });
 });
