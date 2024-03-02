@@ -36,7 +36,7 @@ declare class Observer {
      */
     count(event?: string, scope?: string): number;
     /**
-     * @description Getting the Number of Subscriptions for an Event
+     * @description Getting the Subscriptions for an Event
      * @param {String} event
      * @param {String} scope
      * @returns {Array} list
