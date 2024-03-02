@@ -43,7 +43,7 @@ class Emitter extends EventEmitter {
      * @param {Array} [option.args] 
      * @returns {*} listener
      */
-    #getListener(subscriber, event = 'default', option = null) {
+    decorate(subscriber, event = 'default', option = null) {
         let args = option?.args || [];
         let listener = subscriber instanceof Function ? (...arg) => subscriber(...arg, ...args) : null;
         !listener && subscriber[event] instanceof Function && (listener = (...arg) => subscriber[event](...arg, ...args));
@@ -58,8 +58,7 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.args] 
      * @param {Array} [option.rows] 
-     * @param {Boolean} [option.once] 
-     * @param {Array|Object|Function} [option.pre] 
+     * @param {String} [option.mode] 
      * @param {String|symbol} [option.event] 
      * @returns {Emitter} self
      */
@@ -68,39 +67,31 @@ class Emitter extends EventEmitter {
         if (!subscriber) {
             return this;
         }
+        // add Listener
         if (Array.isArray(subscriber)) {
             for (let listener of subscriber) {
                 this.set(listener, event, option);
             }
         } else {
             // decorate the listener
-            let listener = this.#getListener(subscriber, event, option);
+            let listener = this.decorate(subscriber, event, option);
             if (!listener) {
                 return this;
             }
             // define the mode 
-            if (option?.once) {
+            if (option.mode === 'once') {
                 this.once(event, listener);
+            } else if (option.mode === 'prepend') {
+                this.prependListener(event, listener);
             } else {
                 this.on(event, listener);
-            }
-            // prepend Listener
-            if (option?.pre) {
-                if (Array.isArray(option.pre)) {
-                    for (let pre of option.pre) {
-                        let preListener = this.#getListener(pre, event, option);
-                        preListener && this.prependListener(event, preListener);
-                    }
-                } else {
-                    let preListener = this.#getListener(option.pre, event, option);
-                    preListener && this.prependListener(event, preListener);
-                }
             }
             // track actions 
             option.rows = option.rows || [];
             option.rows.push(listener);
             option.event = event;
         }
+
         return this;
     }
 
@@ -111,9 +102,8 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.args] 
      * @param {Array} [option.rows] 
-     * @param {Boolean} [option.once] 
+     * @param {String} [option.mode] 
      * @param {String|symbol} [option.event] 
-     * @param {Array|Object|Function} [option.pre] 
      * @returns {Emitter} self
      */
     add(subscriber, event = 'default', option = null) {
@@ -127,9 +117,8 @@ class Emitter extends EventEmitter {
      * @param {Object} [option] 
      * @param {Array} [option.args] 
      * @param {Array} [option.rows] 
-     * @param {Boolean} [option.once] 
+     * @param {String} [option.mode] 
      * @param {String|symbol} [option.event] 
-     * @param {Array|Object|Function} [option.pre] 
      * @returns {Emitter} self
      */
     subscribe(subscriber, event = 'default', option = null) {

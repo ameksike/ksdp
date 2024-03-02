@@ -251,4 +251,51 @@ describe('Emitter', () => {
         expect(target.count("onread")).toBe(counter);
     });
 
+
+    it('prepend Listener', () => {
+        const target = new KsDp.behavioral.Emitter();
+        let counter = 0;
+
+        target.subscribe([
+            {
+                onread(drv, data) {
+                    expect(drv.constructor.name).toBe("Emitter");
+                    expect(data).toBeInstanceOf(Object);
+                    expect(data.value !== undefined).toBe(true);
+                    data.value = 1;
+                    counter++;
+                }
+            },
+            {
+                on(drv, data) {
+                    expect(drv.constructor.name).toBe("Emitter");
+                    expect(data).toBeInstanceOf(Object);
+                    expect(data.value !== undefined).toBe(true);
+                    data.value = 2;
+                    counter++;
+                }
+            },
+            (drv, data) => {
+                expect(drv.constructor.name).toBe("Emitter");
+                expect(data).toBeInstanceOf(Object);
+                expect(data.value !== undefined).toBe(true);
+                data.value = 3;
+                counter++;
+            }
+        ], "onread");
+
+        target.subscribe((drv, data) => {
+            expect(drv.constructor.name).toBe("Emitter");
+            expect(data).toBeInstanceOf(Object);
+            expect(data.value !== undefined).toBe(true);
+            data.value = 4;
+            counter++;
+        }, "onread", { mode: "prepend" });
+
+        target.emit("onread", { value: 5 });
+
+        expect(target.get("onread")[0].value).toBe(3);
+        expect(target.count("onread")).toBe(counter);
+        expect(counter).toBe(4);
+    });
 });

@@ -9,22 +9,31 @@ declare class Emitter extends EventEmitter {
      */
     get(key?: string | symbol): any;
     /**
+     * @description get the listener decorator
+     * @param {*} subscriber
+     * @param {String|symbol} [event]
+     * @param {Object} [option]
+     * @param {Array} [option.args]
+     * @returns {*} listener
+     */
+    decorate(subscriber: any, event?: string | symbol, option?: {
+        args?: any[];
+    }): any;
+    /**
      * @description subscribe a listener to an event
      * @param {Array|Object|Function} subscriber
      * @param {String|symbol} [event]
      * @param {Object} [option]
      * @param {Array} [option.args]
      * @param {Array} [option.rows]
-     * @param {Boolean} [option.once]
-     * @param {Array|Object|Function} [option.pre]
+     * @param {String} [option.mode]
      * @param {String|symbol} [option.event]
      * @returns {Emitter} self
      */
     set(subscriber: any[] | any | Function, event?: string | symbol, option?: {
         args?: any[];
         rows?: any[];
-        once?: boolean;
-        pre?: any[] | any | Function;
+        mode?: string;
         event?: string | symbol;
     }): Emitter;
     /**
@@ -34,17 +43,15 @@ declare class Emitter extends EventEmitter {
      * @param {Object} [option]
      * @param {Array} [option.args]
      * @param {Array} [option.rows]
-     * @param {Boolean} [option.once]
+     * @param {String} [option.mode]
      * @param {String|symbol} [option.event]
-     * @param {Array|Object|Function} [option.pre]
      * @returns {Emitter} self
      */
     add(subscriber: any[] | any | Function, event?: string | symbol, option?: {
         args?: any[];
         rows?: any[];
-        once?: boolean;
+        mode?: string;
         event?: string | symbol;
-        pre?: any[] | any | Function;
     }): Emitter;
     /**
      * @description alias for subscribe a listener to an event
@@ -53,17 +60,15 @@ declare class Emitter extends EventEmitter {
      * @param {Object} [option]
      * @param {Array} [option.args]
      * @param {Array} [option.rows]
-     * @param {Boolean} [option.once]
+     * @param {String} [option.mode]
      * @param {String|symbol} [option.event]
-     * @param {Array|Object|Function} [option.pre]
      * @returns {Emitter} self
      */
     subscribe(subscriber: any[] | any | Function, event?: string | symbol, option?: {
         args?: any[];
         rows?: any[];
-        once?: boolean;
+        mode?: string;
         event?: string | symbol;
-        pre?: any[] | any | Function;
     }): Emitter;
     /**
      * @description alias for subscribe a listener to an event
