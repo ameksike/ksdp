@@ -202,6 +202,7 @@ class IoC {
             case 'package':
                 out = require(opt.name);
                 out = this.inherit.namespace(out, opt.namespace || opt.name);
+                out = this.setDI(out, opt);
                 break;
 
             case 'lib':
