@@ -1,4 +1,7 @@
 export = IoC;
+/**
+ * @typedef {import('../../types').TOptionIoC} TOptionIoC
+ */
 declare class IoC {
     constructor(opt?: any);
     opt: {};
@@ -26,31 +29,10 @@ declare class IoC {
     }): this;
     /**
      * @description Fill payload
-     * @param {Object} opt The input data.
-     * @param {String} [opt.name] [OPTIONAL] DEFAULT['DefaultService']
-     * @param {String} [opt.type] [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib']
-     * @param {String} [opt.module] [OPTIONAL] DEFAULT['app']
-     * @param {String} [opt.dependency] [OPTIONAL] DEFAULT[null]
-     * @param {Object} [opt.options] [OPTIONAL] DEFAULT[null] only for opt.type ['instance', 'action', 'raw']
-     * @param {String} [opt.source] [OPTIONAL] DEFAULT['default'] only for opt.type 'alias'
-     * @param {Object} [opt.params] [OPTIONAL] DEFAULT[null] only for opt.type 'action'
-     * @param {String} [opt.path] [OPTIONAL] DEFAULT[@opt.type]
-     * @param {String} [opt.file] [OPTIONAL]
-     * @param {String} [opt.id] [OPTIONAL]
+     * @param {TOptionIoC|String} opt The input data.
      * @returns {Object}
      */
-    fill(opt: {
-        name?: string;
-        type?: string;
-        module?: string;
-        dependency?: string;
-        options?: any;
-        source?: string;
-        params?: any;
-        path?: string;
-        file?: string;
-        id?: string;
-    }): any;
+    fill(opt: TOptionIoC | string): any;
     /**
      * @description register a resource
      * @param {Object|String|Function|Array} value
@@ -81,33 +63,10 @@ declare class IoC {
     unregister(opt?: any | string | Function | any[], out?: any): IoC;
     /**
      * @description Inversion of Control Pattern (IoC)
-     * @param {Object} opt The input data.
-     * @param {String} [opt.name] [OPTIONAL] DEFAULT['DefaultService']
-     * @param {String} [opt.namespace] [OPTIONAL]
-     * @param {String} [opt.type] [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib', 'package']
-     * @param {String} [opt.module] [OPTIONAL] DEFAULT['app']
-     * @param {String} [opt.dependency] [OPTIONAL] DEFAULT[null]
-     * @param {Object} [opt.options] [OPTIONAL] DEFAULT[null] only for opt.type ['instance', 'action', 'raw']
-     * @param {String} [opt.source] [OPTIONAL] DEFAULT['default'] only for opt.type 'alias'
-     * @param {Object} [opt.params] [OPTIONAL] DEFAULT[null] only for opt.type 'action'
-     * @param {String} [opt.path] [OPTIONAL] DEFAULT[@opt.type]
-     * @param {String} [opt.file] [OPTIONAL]
-     * @param {String} [opt.id] [OPTIONAL]
-     * @returns {Object}
+     * @param {String|TOptionIoC} opt The input data.
+     * @returns {Object} resource
      */
-    get(opt?: {
-        name?: string;
-        namespace?: string;
-        type?: string;
-        module?: string;
-        dependency?: string;
-        options?: any;
-        source?: string;
-        params?: any;
-        path?: string;
-        file?: string;
-        id?: string;
-    }): any;
+    get(opt?: string | TOptionIoC): any;
     /**
      * @description Service Locator Pattern (SL)
      * @param {Object} opt
@@ -146,4 +105,8 @@ declare class IoC {
      */
     setDI(obj: any, opt: any): any;
 }
+declare namespace IoC {
+    export { TOptionIoC };
+}
 import Factory = require("../../creational/Factory");
+type TOptionIoC = import('../../types').TOptionIoC;

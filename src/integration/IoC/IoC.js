@@ -12,6 +12,9 @@ const Factory = require('../../creational/Factory');
 const inherit = require('../../inherit');
 const _path = require('path');
 
+/**
+ * @typedef {import('../../types').TOptionIoC} TOptionIoC
+ */
 class IoC {
 
     constructor(opt = null) {
@@ -42,17 +45,7 @@ class IoC {
 
     /**
      * @description Fill payload
-     * @param {Object} opt The input data.
-     * @param {String} [opt.name] [OPTIONAL] DEFAULT['DefaultService']  
-     * @param {String} [opt.type] [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib']
-     * @param {String} [opt.module] [OPTIONAL] DEFAULT['app']  
-     * @param {String} [opt.dependency] [OPTIONAL] DEFAULT[null]  
-     * @param {Object} [opt.options] [OPTIONAL] DEFAULT[null] only for opt.type ['instance', 'action', 'raw']    
-     * @param {String} [opt.source] [OPTIONAL] DEFAULT['default'] only for opt.type 'alias'   
-     * @param {Object} [opt.params] [OPTIONAL] DEFAULT[null] only for opt.type 'action'  
-     * @param {String} [opt.path] [OPTIONAL] DEFAULT[@opt.type]    
-     * @param {String} [opt.file] [OPTIONAL]    
-     * @param {String} [opt.id] [OPTIONAL]    
+     * @param {TOptionIoC|String} opt The input data.  
      * @returns {Object}
      */
     fill(opt) {
@@ -72,7 +65,7 @@ class IoC {
             case 'package':
             case 'lib':
                 cfg.id = cfg.id || (cfg.type + ':' + cfg.name + (cfg.namespace ? '.' + cfg.namespace : ''));
-                cfg.params = opt.options || cfg.params;
+                cfg.params = cfg.options || cfg.params;
                 break;
 
             case 'dependency':
@@ -153,30 +146,19 @@ class IoC {
 
     /**
      * @description Inversion of Control Pattern (IoC)
-     * @param {Object} opt The input data.
-     * @param {String} [opt.name] [OPTIONAL] DEFAULT['DefaultService']  
-     * @param {String} [opt.namespace] [OPTIONAL]   
-     * @param {String} [opt.type] [OPTIONAL] DEFAULT['instance'] VALUES['module', 'type', 'instance', 'action', 'raw', 'alias', 'lib', 'package']
-     * @param {String} [opt.module] [OPTIONAL] DEFAULT['app']  
-     * @param {String} [opt.dependency] [OPTIONAL] DEFAULT[null]  
-     * @param {Object} [opt.options] [OPTIONAL] DEFAULT[null] only for opt.type ['instance', 'action', 'raw']    
-     * @param {String} [opt.source] [OPTIONAL] DEFAULT['default'] only for opt.type 'alias'   
-     * @param {Object} [opt.params] [OPTIONAL] DEFAULT[null] only for opt.type 'action'  
-     * @param {String} [opt.path] [OPTIONAL] DEFAULT[@opt.type]    
-     * @param {String} [opt.file] [OPTIONAL]    
-     * @param {String} [opt.id] [OPTIONAL]    
-     * @returns {Object}
+     * @param {String|TOptionIoC} opt The input data.
+     * @returns {Object} resource
      */
     get(opt = {}) {
-        opt = this.fill(opt);
-        if (opt.name === this.opt.name) {
+        let cfg = this.fill(opt);
+        if (cfg.name === this.opt.name) {
             return this;
         }
-        this.ctrls[opt.type] = this.ctrls[opt.type] || {};
-        if (!this.ctrls[opt.type][opt.id]) {
-            this.ctrls[opt.type][opt.id] = this.process(opt);
+        this.ctrls[cfg.type] = this.ctrls[cfg.type] || {};
+        if (!this.ctrls[cfg.type][cfg.id]) {
+            this.ctrls[cfg.type][cfg.id] = this.process(cfg);
         }
-        return this.ctrls[opt.type][opt.id];
+        return this.ctrls[cfg.type][cfg.id];
     }
 
     /**
