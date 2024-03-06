@@ -146,8 +146,8 @@ class IoC {
 
     /**
      * @description Inversion of Control Pattern (IoC)
-     * @param {TOptionIoC|String} opt The input data.
-     * @returns {Object}
+     * @param {String|TOptionIoC} opt The input data.
+     * @returns {Object} resource
      */
     get(opt = {}) {
         let cfg = this.fill(opt);

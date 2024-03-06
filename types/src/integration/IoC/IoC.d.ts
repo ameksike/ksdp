@@ -63,10 +63,10 @@ declare class IoC {
     unregister(opt?: any | string | Function | any[], out?: any): IoC;
     /**
      * @description Inversion of Control Pattern (IoC)
-     * @param {TOptionIoC|String} opt The input data.
-     * @returns {Object}
+     * @param {String|TOptionIoC} opt The input data.
+     * @returns {Object} resource
      */
-    get(opt?: TOptionIoC | string): any;
+    get(opt?: string | TOptionIoC): any;
     /**
      * @description Service Locator Pattern (SL)
      * @param {Object} opt
