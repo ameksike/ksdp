@@ -13,7 +13,7 @@ module.exports = {
         Proxy: require('./src/structural/Proxy')
     },
     integration: {
-        IoC: require('./src/integration/IoC/IoC'),
+        IoC: require('./src/integration/IoC'),
         Dip: require('./src/integration/Dip'),
         hook: {
             Main: require('./src/integration/hook'),

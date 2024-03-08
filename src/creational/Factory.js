@@ -97,8 +97,11 @@ class Factory {
         }
         try {
             const Cls = payload.cls;
-            const Prm = this.asList(payload.params);
-            return (Cls instanceof Function) ? new Cls(...Prm) : Cls;
+            if (!(Cls instanceof Function)) {
+                return Cls;
+            }
+            const params = this.asList(payload.params);
+            return new Cls(...params);
         } catch (error) {
             this.log({
                 src: "ksdp:creational:Factory:build",

@@ -1,5 +1,5 @@
 # KsDp library 
-Design Patterns Library or core base library containing elements group of reusable Object-Oriented Design and functional programming. It is an attempt to combine implementations of: GoF, GRASP, IoC, SL, SOLID, DRY, KISS, etc. 
+Design Patterns Library or core base library containing elements group of reusable Object-Oriented Design and functional programming. It is an attempt to combine implementations of: GoF, GRASP, IoC, SL, DI, SOLID, DRY, KISS, SoC, etc. 
 
 This library belong to the Ksike ecosystem:
 - [KsMf](https://www.npmjs.com/package/ksmf) - Microframework (WEB, REST API, CLI, Proxy, etc)
@@ -8,6 +8,7 @@ This library belong to the Ksike ecosystem:
 - [KsHook](https://www.npmjs.com/package/kshook) - Event Driven Library
 - [KsEval](https://www.npmjs.com/package/kseval) - Expression Evaluator Library 
 - [KsWC](https://www.npmjs.com/package/kswc) - Web API deployment Library
+- [KsTpl](https://www.npmjs.com/package/kstpl) - Template Engine
 
 
 ### Install from [npm package](https://www.npmjs.com/package/ksdp)

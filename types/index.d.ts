@@ -16,7 +16,7 @@ export namespace structural {
     let Proxy: typeof import("./src/structural/Proxy");
 }
 export namespace integration {
-    let IoC: typeof import("./src/integration/IoC/IoC");
+    let IoC: typeof import("./src/integration/IoC");
     let Dip: typeof import("./src/integration/Dip");
     namespace hook {
         let Main: typeof import("./src/integration/hook");

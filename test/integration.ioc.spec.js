@@ -236,3 +236,73 @@ describe('Module', () => {
         done();
     });
 });
+
+describe('Compiler/Analyzer', () => {
+    class MyAnalyzer extends KsDp.integration.IoC.cls.analyzer.Native {
+        run(opt) {
+            return super.run({
+                name: "PersonController",
+                module: "mymodule",
+                path: 'controller',
+                dependency: {
+                    "srvPerson": {
+                        name: "PersonService",
+                        module: "mymodule",
+                        path: 'service',
+                        params: ["demo", 55]
+                    }
+                }
+            });
+        }
+    }
+
+    class MyCompiler extends KsDp.integration.IoC.cls.compiler.Native {
+        run(opt) {
+            return this.ioc?.get({
+                name: "PersonController",
+                module: "mymodule",
+                path: 'controller',
+                dependency: {
+                    "srvPerson": {
+                        name: "PersonService",
+                        module: "mymodule",
+                        path: 'service',
+                        params: ["demo", 55]
+                    }
+                }
+            });
+        }
+    }
+
+    it("check the correct interfaces", () => {
+        expect(KsDp.integration.IoC).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.default).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.compiler.Native).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.analyzer.Native).toBeInstanceOf(Function);
+    });
+
+    it("set new Compiler", () => {
+        const controller0 = ioc.get({ type: "myc" });
+        ioc.compiler.set(MyCompiler, "myc");
+        ioc.compiler.set(new MyCompiler(ioc), "mycObj");
+        const controller1 = ioc.get({ type: "myc" });
+        const controller2 = ioc.get({ type: "mycObj" });
+
+        expect(controller0).toBe(null);
+        expect(controller1).toBeInstanceOf(Object);
+        expect(controller1.getInfo()).toBe('PersonController');
+        expect(controller1.getName()).toBe('demo');
+        expect(controller2.getName()).toBe('demo');
+    });
+
+    it("set new Analyzer", () => {
+        const controller0 = ioc.get({ type: "mya" });
+        ioc.analyzer.set(MyAnalyzer, "mya");
+        const controller1 = ioc.get({ type: "mya" });
+
+        expect(controller0).toBe(null);
+        expect(controller1).toBeInstanceOf(Object);
+        expect(controller1.getInfo()).toBe('PersonController');
+        expect(controller1.getName()).toBe('demo');
+    });
+});
