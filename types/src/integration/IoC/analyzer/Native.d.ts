@@ -19,6 +19,10 @@ declare class Native {
      */
     constructor(ioc?: TIoC | null);
     /**
+     * @returns {TIoC}
+     */
+    get ioc(): import("../IoC");
+    /**
      * @description Fill payload
      * @param {TOptionIoC|String} opt The input data.
      * @returns {Object}

@@ -121,3 +121,8 @@ console.log(
 ```
 
 To dig into more complex solutions like this, see the [proxy section](structural.proxy.md) and check its integration with the Strategy pattern. It is also possible to check some implementations here: [KsDB](https://github.com/ameksike/ksdb), [KsCryp](https://github.com/ameksike/kscryp)
+
+You might be interested in the following topics:
+- [Hook](./integration.hook.md) is a publish/subscribe pattern, which allows a number of observer objects to see an event.
+- [DI](./integration.di.md) Dependency Injection is a technique in which an object receives other objects that it depends on.
+- [IoC](./integration.ioc.md) Inversion of Control inverts the flow of control as compared to traditional control flow.

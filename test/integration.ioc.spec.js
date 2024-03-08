@@ -256,9 +256,9 @@ describe('Compiler/Analyzer', () => {
         }
     }
 
-    class MyCompiler {
+    class MyCompiler extends KsDp.integration.IoC.cls.compiler.Native {
         run(opt) {
-            return ioc.get({
+            return this.ioc?.get({
                 name: "PersonController",
                 module: "mymodule",
                 path: 'controller',
@@ -270,7 +270,7 @@ describe('Compiler/Analyzer', () => {
                         params: ["demo", 55]
                     }
                 }
-            })
+            });
         }
     }
 
@@ -283,7 +283,7 @@ describe('Compiler/Analyzer', () => {
 
     it("set new Compiler", () => {
         const controller0 = ioc.get({ type: "myc" });
-        ioc.compiler.set(new MyCompiler(), "myc");
+        ioc.compiler.set(MyCompiler, "myc");
         const controller1 = ioc.get({ type: "myc" });
 
         expect(controller0).toBe(null);
@@ -294,7 +294,7 @@ describe('Compiler/Analyzer', () => {
 
     it("set new Analyzer", () => {
         const controller0 = ioc.get({ type: "mya" });
-        ioc.analyzer.set(new MyAnalyzer(), "mya");
+        ioc.analyzer.set(MyAnalyzer, "mya");
         const controller1 = ioc.get({ type: "mya" });
 
         expect(controller0).toBe(null);

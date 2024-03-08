@@ -8,12 +8,22 @@ declare class IoC {
      * @param {TIoC|null} [ioc]
      */
     constructor(ioc?: TIoC | null);
-    inherit: {
+    /**
+     * @returns {Inherit}
+     */
+    get inherit(): {
         imitate: typeof import("../../../inherit/imitate");
         namespace: typeof import("../../../inherit/namespace");
         ns: typeof import("../../../inherit/namespace");
     };
-    factory: Factory;
+    /**
+     * @returns {Factory}
+     */
+    get factory(): Factory;
+    /**
+     * @returns {TIoC}
+     */
+    get ioc(): import("../IoC");
     /**
      * @description Service Locator Pattern (SL)
      * @param {Object} opt
