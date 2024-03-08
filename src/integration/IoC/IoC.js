@@ -1,12 +1,12 @@
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		09/11/2019
- * @copyright  	Copyright (c) 2019-2050
- * @description Inversion of Control (IoC)
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        09/11/2019
+ * @copyright   Copyright (c) 2019-2050
+ * @description Native Compiler 
  * @dependency  Factory
- * @license    	GPL
- * @version    	1.0
+ * @license     GPL
+ * @version     1.0
  **/
 
 const Strategy = require('../../behavioral/Strategy');

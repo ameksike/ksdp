@@ -1,15 +1,17 @@
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		09/11/2019
- * @copyright  	Copyright (c) 2019-2050
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        09/11/2019
+ * @copyright   Copyright (c) 2019-2050
  * @description Native Compiler 
  * @dependency  Factory
- * @license    	GPL
- * @version    	1.0
+ * @license     GPL
+ * @version     1.0
+ * @requires    Factory
+ * @requires    Inherit
  **/
 const Factory = require('../../../creational/Factory');
-const inherit = require('../../../inherit');
+const Inherit = require('../../../inherit');
 const _path = require('path');
 
 /**
@@ -19,17 +21,48 @@ const _path = require('path');
 class IoC {
 
     /**
+     * @type {Inherit}
+     */
+    #inherit;
+
+    /**
+     * @returns {Inherit}
+     */
+    get inherit() {
+        return this.#inherit;
+    }
+
+    /**
+     * @type {Factory}
+     */
+    #factory;
+
+    /**
+     * @returns {Factory}
+     */
+    get factory() {
+        return this.#factory;
+    }
+
+    /**
      * @type {TIoC}
      */
-    ioc;
+    #ioc;
+
+    /**
+     * @returns {TIoC}
+     */
+    get ioc() {
+        return this.#ioc;
+    }
 
     /**
      * @param {TIoC|null} [ioc] 
      */
     constructor(ioc = null) {
-        this.ioc = ioc;
-        this.inherit = inherit;
-        this.factory = new Factory();
+        this.#ioc = ioc;
+        this.#inherit = Inherit;
+        this.#factory = new Factory();
     }
 
     /**

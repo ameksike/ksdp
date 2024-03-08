@@ -17,13 +17,20 @@ class Native {
     /**
      * @type {TIoC}
      */
-    ioc;
+    #ioc;
+
+    /**
+     * @returns {TIoC}
+     */
+    get ioc() {
+        return this.#ioc;
+    }
 
     /**
      * @param {TIoC|null} [ioc] 
      */
-    constructor(ioc) {
-        this.ioc = ioc;
+    constructor(ioc = null) {
+        this.#ioc = ioc;
     }
 
     /**
