@@ -142,7 +142,9 @@ class Strategy {
             const name = alias || payload.name || 'Default';
             this.ctrl[type] = this.ctrl[type] || {};
             if (!payload.safe || (payload.safe && !this.ctrl[type][name])) {
-                const resorce = payload.target || payload;
+                let resorce = payload.target || payload;
+                resorce = resorce instanceof Function ? { cls: resorce } : resorce;
+                resorce.params = this.params || [...this.params, ...resorce.params];
                 this.ctrl[type][name] = this.factory.build(resorce);
             }
             return this.ctrl[type][name];
