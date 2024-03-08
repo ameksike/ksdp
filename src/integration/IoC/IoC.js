@@ -37,8 +37,16 @@ class IoC {
         this.opt = {};
         this.ctrls = {};
         this.error = null;
-        this.#analyzer = new Strategy({ path: _path.resolve(__dirname), default: 'analyzer' });
-        this.#compiler = new Strategy({ path: _path.resolve(__dirname), default: 'compiler' });
+        this.#analyzer = new Strategy({
+            path: _path.resolve(__dirname),
+            default: 'analyzer',
+            params: [this]
+        });
+        this.#compiler = new Strategy({
+            path: _path.resolve(__dirname),
+            default: 'compiler',
+            params: [this]
+        });
         this.configure(opt);
     }
 

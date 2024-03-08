@@ -21,13 +21,13 @@ class IoC {
     /**
      * @type {TIoC}
      */
-    #ioc;
+    ioc;
 
     /**
      * @param {TIoC|null} [ioc] 
      */
     constructor(ioc = null) {
-        this.#ioc = ioc;
+        this.ioc = ioc;
         this.inherit = inherit;
         this.factory = new Factory();
     }
@@ -43,7 +43,7 @@ class IoC {
         let dirPack = (name) => require?.resolve && _path.dirname(require.resolve(name));
         switch (opt.type) {
             case 'module':
-                opt.file = opt.file || _path.join(this.#ioc?.opt?.path, opt.name);
+                opt.file = opt.file || _path.join(this.ioc?.opt?.path, opt.name);
                 out = this.instance(opt);
                 out && (out._ = { type: 'module', path: _path.resolve(opt.file) });
                 break;
@@ -68,11 +68,11 @@ class IoC {
                 break;
 
             case 'alias':
-                out = this.#ioc?.get(opt.source);
+                out = this.ioc?.get(opt.source);
                 break;
 
             default:
-                path = isPack(opt) ? dirPack(opt.module) : this.#ioc?.opt?.path;
+                path = isPack(opt) ? dirPack(opt.module) : this.ioc?.opt?.path;
                 path = !isPack(opt) && opt.module ? _path.join(path, opt.module) : path;
                 path = opt.path ? _path.join(path, opt.path) : path;
 
@@ -96,8 +96,8 @@ class IoC {
         try {
             return this.factory.load(opt);
         } catch (error) {
-            if (this.#ioc?.error?.on instanceof Function) {
-                this.#ioc.error.on(error);
+            if (this.ioc?.error?.on instanceof Function) {
+                this.ioc.error.on(error);
             }
             return null;
         }
@@ -122,8 +122,8 @@ class IoC {
             }
             return obj;
         } catch (error) {
-            if (this.#ioc?.error?.on instanceof Function) {
-                this.#ioc.error.on(error);
+            if (this.ioc?.error?.on instanceof Function) {
+                this.ioc.error.on(error);
             }
             return null;
         }
@@ -160,7 +160,7 @@ class IoC {
             return obj;
         }
         for (let i in opt.dependency) {
-            obj[i] = this.#ioc?.get(opt.dependency[i]);
+            obj[i] = this.ioc?.get(opt.dependency[i]);
         }
         return obj;
     }

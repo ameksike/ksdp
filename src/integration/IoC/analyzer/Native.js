@@ -17,13 +17,13 @@ class Native {
     /**
      * @type {TIoC}
      */
-    #ioc;
+    ioc;
 
     /**
      * @param {TIoC|null} [ioc] 
      */
     constructor(ioc) {
-        this.#ioc = ioc;
+        this.ioc = ioc;
     }
 
     /**
@@ -32,7 +32,7 @@ class Native {
      * @returns {Object}
      */
     run(opt) {
-        const cfg = opt instanceof Object ? opt : (this.#ioc?.opt?.src[opt] || {
+        const cfg = opt instanceof Object ? opt : (this.ioc?.opt?.src[opt] || {
             name: opt
         });
         cfg.name = cfg.name || (typeof (opt) === 'string' ? opt : 'DefaultService');
