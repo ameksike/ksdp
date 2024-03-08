@@ -9,7 +9,7 @@
  * @version    	1.0
  **/
 const Factory = require('../creational/Factory');
-const _path = require("path");
+const _path = require('path');
 
 /**
  * @typedef {Object} StrategyOption
@@ -69,12 +69,11 @@ class Strategy {
             const path = payload.path || this.path;
             const name = payload.name || 'Default';
             this.ctrl[type] = this.ctrl[type] || {};
-
             if (!this.ctrl[type][name]) {
                 const Stg = name.charAt(0).toUpperCase() + name.slice(1);
                 this.ctrl[type][name] = this.factory.get({
                     name: Stg,
-                    file: _path.join(path, type, Stg + ".js"),
+                    file: _path.join(path, type, Stg + '.js'),
                     params: payload.params
                 });
             }
@@ -82,7 +81,7 @@ class Strategy {
         }
         catch (error) {
             this.log({
-                src: "ksdp:behavioral:Strategy:get",
+                src: 'ksdp:behavioral:Strategy:get',
                 data: payload,
                 error
             });
@@ -93,9 +92,10 @@ class Strategy {
     /**
      * @description Get strategy Instance
      * @param {(String|String[]|StrategyOption|Array<StrategyOption>)} payload
+     * @param {(String|String[]|StrategyOption|Array<StrategyOption>)|null} [alt]
      * @return {Object|Array<Object>} Strategy Instance
      */
-    get(payload = {}) {
+    get(payload = {}, alt = null) {
         try {
             if (Array.isArray(payload)) {
                 const out = [];
@@ -104,11 +104,15 @@ class Strategy {
                 }
                 return out;
             }
-            return this.getOne(payload);
+            let res = this.getOne(payload);
+            if (res) {
+                return res;
+            }
+            return alt && this.get(alt);
         }
         catch (error) {
             this.log({
-                src: "ksdp:behavioral:Strategy:get",
+                src: 'ksdp:behavioral:Strategy:get',
                 data: payload,
                 error
             });
@@ -119,10 +123,10 @@ class Strategy {
     /**
      * @description Set strategy
      * @param {StrategyOption|Array<StrategyOption>} payload 
-     * @param {String} [alias=""]
+     * @param {String} [alias='']
      * @return {Object|Array<Object>} Strategy Instance
      */
-    set(payload = {}, alias = "") {
+    set(payload = {}, alias = '') {
         try {
             if (!payload) {
                 return null;
@@ -145,7 +149,7 @@ class Strategy {
         }
         catch (error) {
             this.log({
-                src: "ksdp:behavioral:Strategy:set",
+                src: 'ksdp:behavioral:Strategy:set',
                 data: payload,
                 error
             });

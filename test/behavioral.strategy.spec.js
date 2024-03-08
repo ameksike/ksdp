@@ -1,5 +1,3 @@
-
-const KsDp = require('..');
 let target = null;
 
 describe('Strategy', () => {
