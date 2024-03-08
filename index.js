@@ -13,7 +13,17 @@ module.exports = {
         Proxy: require('./src/structural/Proxy')
     },
     integration: {
-        IoC: require('./src/integration/IoC/IoC'),
+        IoC: (class extends require('./src/integration/IoC/IoC') {
+            static cls = {
+                default: require('./src/integration/IoC/IoC'),
+                analyzer: {
+                    Native: require('./src/integration/IoC/analyzer/Native')
+                },
+                compiler: {
+                    Native: require('./src/integration/IoC/compiler/Native')
+                }
+            }
+        }),
         Dip: require('./src/integration/Dip'),
         hook: {
             Main: require('./src/integration/hook'),

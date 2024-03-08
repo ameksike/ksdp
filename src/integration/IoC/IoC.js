@@ -158,11 +158,12 @@ class IoC {
         const cfg = opt instanceof Object ? opt : (this.opt.src[opt] || {
             name: opt
         });
+        const drvDef = { name: 'Native', params: [this] };
         cfg.name = cfg.name || (typeof (opt) === 'string' ? opt : 'DefaultService');
         cfg.type = cfg.type || 'instance';
         cfg.source = cfg.source || 'default';
         cfg.namespace = cfg.namespace || '';
-        let driver = this.analyzer.get(cfg.type, { name: 'Native', params: [this] });
+        let driver = this.analyzer.get(cfg.type || drvDef, drvDef);
         return driver?.run(opt);
     }
 }
