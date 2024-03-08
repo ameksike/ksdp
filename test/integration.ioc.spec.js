@@ -284,12 +284,15 @@ describe('Compiler/Analyzer', () => {
     it("set new Compiler", () => {
         const controller0 = ioc.get({ type: "myc" });
         ioc.compiler.set(MyCompiler, "myc");
+        ioc.compiler.set(new MyCompiler(ioc), "mycObj");
         const controller1 = ioc.get({ type: "myc" });
+        const controller2 = ioc.get({ type: "mycObj" });
 
         expect(controller0).toBe(null);
         expect(controller1).toBeInstanceOf(Object);
         expect(controller1.getInfo()).toBe('PersonController');
         expect(controller1.getName()).toBe('demo');
+        expect(controller2.getName()).toBe('demo');
     });
 
     it("set new Analyzer", () => {

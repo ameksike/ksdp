@@ -138,14 +138,14 @@ class Strategy {
                 }
                 return out;
             }
-            const type = payload.type || this.default;
+            const type = (typeof payload.type === "string" && payload.type) || this.default;
             const name = alias || payload.name || 'Default';
             this.ctrl[type] = this.ctrl[type] || {};
             if (!payload.safe || (payload.safe && !this.ctrl[type][name])) {
                 let resorce = payload.target || payload;
-                resorce = resorce instanceof Function ? { cls: resorce } : resorce;
-                resorce.params = this.params || [...this.params, ...resorce.params];
-                this.ctrl[type][name] = this.factory.build(resorce);
+                let target = resorce instanceof Function ? { cls: resorce } : resorce;
+                resorce instanceof Function && (target.params = this.params || [...this.params, ...resorce.params]);
+                this.ctrl[type][name] = this.factory.build(target);
             }
             return this.ctrl[type][name];
         }
