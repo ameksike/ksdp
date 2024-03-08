@@ -46,13 +46,14 @@ declare class Strategy {
     /**
      * @description Get strategy Instance
      * @param {(String|String[]|StrategyOption|Array<StrategyOption>)} payload
+     * @param {(String|String[]|StrategyOption|Array<StrategyOption>)|null} [alt]
      * @return {Object|Array<Object>} Strategy Instance
      */
-    get(payload?: (string | string[] | StrategyOption | Array<StrategyOption>)): any | Array<any>;
+    get(payload?: (string | string[] | StrategyOption | Array<StrategyOption>), alt?: (string | string[] | StrategyOption | Array<StrategyOption>) | null): any | Array<any>;
     /**
      * @description Set strategy
      * @param {StrategyOption|Array<StrategyOption>} payload
-     * @param {String} [alias=""]
+     * @param {String} [alias='']
      * @return {Object|Array<Object>} Strategy Instance
      */
     set(payload?: StrategyOption | Array<StrategyOption>, alias?: string): any | Array<any>;

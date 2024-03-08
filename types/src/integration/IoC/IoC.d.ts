@@ -4,15 +4,17 @@ export = IoC;
  */
 declare class IoC {
     constructor(opt?: any);
+    /**
+     * @returns {Strategy}
+     */
+    get compiler(): Strategy;
+    /**
+     * @returns {Strategy}
+     */
+    get analyzer(): Strategy;
     opt: {};
     ctrls: {};
     error: any;
-    factory: Factory;
-    inherit: {
-        imitate: typeof import("../../inherit/imitate");
-        namespace: typeof import("../../inherit/namespace");
-        ns: typeof import("../../inherit/namespace");
-    };
     /**
      * @description Configure Lib
      * @param {Object} [opt] The input data.
@@ -28,11 +30,11 @@ declare class IoC {
         error?: any;
     }): this;
     /**
-     * @description Fill payload
-     * @param {TOptionIoC|String} opt The input data.
-     * @returns {Object}
+     * @description Inversion of Control Pattern (IoC)
+     * @param {String|TOptionIoC} opt The input data.
+     * @returns {Object} resource
      */
-    fill(opt: TOptionIoC | string): any;
+    get(opt?: string | TOptionIoC): any;
     /**
      * @description register a resource
      * @param {Object|String|Function|Array} value
@@ -62,51 +64,21 @@ declare class IoC {
      */
     unregister(opt?: any | string | Function | any[], out?: any): IoC;
     /**
-     * @description Inversion of Control Pattern (IoC)
-     * @param {String|TOptionIoC} opt The input data.
-     * @returns {Object} resource
-     */
-    get(opt?: string | TOptionIoC): any;
-    /**
      * @description Service Locator Pattern (SL)
      * @param {Object} opt
      * @returns result
      */
     process(opt: any): any;
     /**
-     * @description Factory Pattern load Type
-     * @param {Object} opt
-     * @returns {*} result
+     * @description Fill payload
+     * @param {TOptionIoC|String} opt The input data.
+     * @returns {Object}
      */
-    type(opt: any): any;
-    /**
-     * @description Factory Pattern
-     * @param {Object} opt
-     * @returns {Object} result
-     */
-    instance(opt: any): any;
-    /**
-     * @description excecute action from object
-     * @param {Object} opt
-     * @returns {*}
-     */
-    action(opt: any): any;
-    /**
-     * @description get dependency
-     * @param {Object} opt
-     * @returns {Object} result
-     */
-    dependency(opt: any): any;
-    /**
-     * @description Dependency Injection Pattern (DI)
-     * @param {Object} obj
-     * @param {Object} opt
-     * @returns {Object} result
-     */
-    setDI(obj: any, opt: any): any;
+    fill(opt: TOptionIoC | string): any;
+    #private;
 }
 declare namespace IoC {
     export { TOptionIoC };
 }
-import Factory = require("../../creational/Factory");
+import Strategy = require("../../behavioral/Strategy");
 type TOptionIoC = import('../../types').TOptionIoC;

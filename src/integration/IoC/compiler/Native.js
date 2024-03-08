@@ -13,7 +13,7 @@ const inherit = require('../../../inherit');
 const _path = require('path');
 
 /**
- * @typedef {import('../../types').TOptionIoC} TOptionIoC
+ * @typedef {import('../../../types').TOptionIoC} TOptionIoC
  * @typedef {import('../IoC')} TIoC
  */
 class IoC {
@@ -68,7 +68,7 @@ class IoC {
                 break;
 
             case 'alias':
-                out = this.get(opt.source);
+                out = this.#ioc?.get(opt.source);
                 break;
 
             default:

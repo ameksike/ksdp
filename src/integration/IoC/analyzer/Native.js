@@ -10,7 +10,7 @@
  **/
 
 /**
- * @typedef {import('../../types').TOptionNative} TOptionNative
+ * @typedef {import('../../../types').TOptionIoC} TOptionIoC
  * @typedef {import('../IoC')} TIoC
  */
 class Native {
@@ -25,10 +25,10 @@ class Native {
     constructor(ioc) {
         this.#ioc = ioc;
     }
-    
+
     /**
      * @description Fill payload
-     * @param {TOptionNative|String} opt The input data.  
+     * @param {TOptionIoC|String} opt The input data.  
      * @returns {Object}
      */
     run(opt) {
