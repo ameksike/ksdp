@@ -160,7 +160,7 @@ const data = controller.getPath();
 
 ## Extending the library
 
-In the KsDp library, the interface for Inversion of Control (IoC) is extended through the use of analysers and compilers, which allow for the extension of support in cases where there are unsupported types or configurations initially.
+In the KsDp library, the interface for Inversion of Control (IoC) is extended through the use of analysers and compilers, which allow for the extension of support in cases where there are unsupported types or configurations initially. Keep in mind that both the **Analyzer** and the **Compiler** behave like a **Strategy**, for more information about this refer to the following [section](./behavioral.strategy.md).
 
 ### Analyzers
 
@@ -172,7 +172,6 @@ Create your custom Analyzer, in the following example we will extend from the na
 const Analizer = KsDp.integration.IoC.cls.analyzer.Native;
 ```
 ```Js
-const Analizer = KsDp.integration.IoC.cls.analyzer.Native;
 class MyAnalyzer extends Analizer {
     run(opt) {
         return super.run({
@@ -248,8 +247,8 @@ const controller = helper.get({ type: "custom_compiler" });
 const name = controller.getName();
 ```
 
-
 By leveraging analysers and compilers, the IoC interface in the KsDp library becomes highly flexible and extensible. Developers can customize the behaviour of the IoC container by providing custom analysers and compilers tailored to their specific requirements. This approach allows for seamless integration with various types of resources, configurations, and actions, enhancing the overall versatility and usability of the IoC functionality provided by the KsDp library.
+
 
 You might be interested in the following topics:
 
