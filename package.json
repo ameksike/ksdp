@@ -4,6 +4,13 @@
   "description": "Ksike Design Patterns",
   "main": "index.js",
   "types": "types/index.d.ts",
+  "files": [
+    "src/*",
+    "types/*",
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
