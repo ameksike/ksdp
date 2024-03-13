@@ -3,7 +3,16 @@
   "version": "1.3.2",
   "description": "Ksike Design Patterns",
   "types": "types/index.d.ts",
+  "exports": "./index.js",
   "main": "./index.js",
+  "type": "commonjs",
+  "files": [
+    "src/*",
+    "types/*",
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
