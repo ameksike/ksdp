@@ -164,7 +164,8 @@ class Observer {
             return this;
         }
         for (let i in this.evs[scope][event]) {
-            this.process(this.evs[scope][event][i], event, params);
+            let handler = this.evs[scope][event][i];
+            handler && this.process(handler, event, params);
         }
         return this;
     }
@@ -178,9 +179,9 @@ class Observer {
      */
     process(subscriber, event, params = []) {
         const target = this.helper ? this.helper.get(subscriber) : subscriber;
-        const action = (target instanceof Function) && target || target[event] || target?.on;
+        const action = ((target instanceof Function) && target) || (target && target[event]) || target?.on;
         const scope = (target instanceof Function) ? {} : target;
-        if (target && typeof (action) === 'function') {
+        if (target && action && typeof (action) === 'function') {
             return action.apply(scope, params);
         }
         return target;
