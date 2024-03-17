@@ -94,7 +94,7 @@ class Loader {
      * @returns {Promise<Object|null>} module
      */
     async retry(module, option) {
-		option = option || {};
+        option = option || {};
         option.strict = true;
         let mod = this.loadSync(module, option);
         if (mod) {
@@ -146,7 +146,7 @@ class Loader {
      * @returns {URL} URL
      */
     getURL(file) {
-        let protocol = /http(s)*:\/\//.test(file) ? file : 'file:///';
+        let protocol = /http(s)*:\/\//.test(file) ? file : 'file://';
         return new URL(protocol + file);
     }
 
