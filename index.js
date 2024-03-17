@@ -1,4 +1,7 @@
 module.exports = {
+    common: {
+        Loader: require('./src/common/loader')
+    },
     inherit: require('./src/inherit'),
     creational: {
         Factory: require('./src/creational/Factory')

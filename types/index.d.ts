@@ -1,3 +1,6 @@
+export namespace common {
+    let Loader: typeof import("./src/common/loader");
+}
 export let inherit: {
     imitate: typeof import("./src/inherit/imitate");
     namespace: typeof import("./src/inherit/namespace");
