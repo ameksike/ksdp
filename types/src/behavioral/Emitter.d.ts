@@ -1,6 +1,6 @@
 /// <reference types="node" />
 export = Emitter;
-declare class Emitter extends EventEmitter {
+declare class Emitter extends EventEmitter<[never]> {
     constructor();
     /**
      * @description get data by event
@@ -104,6 +104,14 @@ declare class Emitter extends EventEmitter {
         index?: number;
         count?: number;
     }): Emitter;
+    /**
+     * @description trigger an event
+     * @override
+     * @param {String|symbol} event
+     * @param {...any} [args]
+     * @returns {Boolean} res
+     */
+    override emit(event: string | symbol, ...args?: any[]): boolean;
     /**
      * @description Getting the Number of Subscriptions for an Event
      * @param {String|symbol} event
