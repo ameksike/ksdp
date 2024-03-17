@@ -1,3 +1,6 @@
+/**
+ * @typedef {import('../types').TLoaderOption} TLoaderOption
+ */
 const _path = require('path');
 const _fs = require('fs');
 class Loader {
@@ -20,17 +23,12 @@ class Loader {
     /**
      * @description load Node.Js modules (CJS, EMS)
      * @param {String} module - module name or path
-     * @param {Object} [option] - configuration options
-     * @param {Boolean} [option.auto] - export only the default 
-     * @param {Boolean} [option.fill] - include the default property as the original definition
-     * @param {Boolean} [option.force] - force to clean the cache before load the module
-     * @param {Boolean} [option.retry] - retry loading module on error
-     * @param {Object|null} [option.default] - default value to return if there is an error
-     * @param {Object|null} [option.error] - error description if there is an error 
+     * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
     async load(module, option = {}) {
         option = option || {};
+        option.retry = option.retry === undefined ? 1 : option.retry;
         try {
             if (option.force) {
                 delete this.cache[module];
@@ -48,7 +46,8 @@ class Loader {
         }
         catch (error) {
             option.error = option.error || error;
-            if (option.retry || option.retry === undefined) {
+            if (option.retry > 0) {
+                option.retry = 0;
                 return this.retry(module, option);
             } else {
                 return option.default || null;
@@ -59,12 +58,7 @@ class Loader {
     /**
      * @description load Node.Js CJS module
      * @param {String} module - module name or path
-     * @param {Object} [option] - configuration options
-     * @param {Boolean} [option.auto] - export only the default 
-     * @param {Boolean} [option.fill] - include the default property as the original definition
-     * @param {Boolean} [option.force] - force to clean the cache before load the module
-     * @param {Object|null} [option.default] - default value to return if there is an error
-     * @param {Object|null} [option.error] - error description if there is an error 
+     * @param {TLoaderOption} [option] - configuration options
      * @returns {Object} module
      */
     loadSync(module, option = {}) {
@@ -79,7 +73,11 @@ class Loader {
                 delete require.cache[require.resolve(module)];
             }
             if (!this.cache[key]) {
-                this.cache[key] = require(module);
+                let tmp = require(module);
+                if (Object.keys(tmp).length === 0 && option.strict) {
+                    throw new Error('Invalid empty module');
+                }
+                this.cache[key] = tmp;
             }
             return this.cache[key];
         }
@@ -92,22 +90,20 @@ class Loader {
     /**
      * @description retry loading the module looking for an alternative path
      * @param {String} module - module name or path
-     * @param {Object} [option] - configuration options
-     * @param {Boolean} [option.auto] - export only the default 
-     * @param {Boolean} [option.fill] - include the default property as the original definition
-     * @param {Boolean} [option.force] - force to clean the cache before load the module
-     * @param {Boolean} [option.retry] - retry loading module on error
-     * @param {Object|null} [option.default] - default value to return if there is an error
-     * @param {Object|null} [option.error] - error description if there is an error 
+     * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
     async retry(module, option) {
+		option = option || {};
+        option.strict = true;
         let mod = this.loadSync(module, option);
         if (mod) {
+            option.type = 'cjs';
             return mod;
         }
         mod = await this.resolve(module);
         if (mod) {
+            option.type = 'mjs';
             return this.load(mod, option);
         }
     }

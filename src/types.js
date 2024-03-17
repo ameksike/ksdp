@@ -15,4 +15,16 @@
  * @property {any} [data] 
  */
 
+/**
+ * @typedef {Object} TLoaderOption
+ * @property {String} [type] - module type cjs|mjs
+ * @property {Boolean} [auto] - export only the default 
+ * @property {Boolean} [fill] - include the default property as the original definition
+ * @property {Boolean} [force] - force to clean the cache before load the module
+ * @property {Boolean} [strict] - additional validation to check empty object
+ * @property {Number} [retry] - retry loading module on error
+ * @property {Object} [default] - default value to return if there is an error
+ * @property {Object} [error] - error description if there is an error 
+ */
+
 module.exports = {};

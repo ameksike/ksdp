@@ -11,61 +11,24 @@ declare class Loader {
     /**
      * @description load Node.Js modules (CJS, EMS)
      * @param {String} module - module name or path
-     * @param {Object} [option] - configuration options
-     * @param {Boolean} [option.auto] - export only the default
-     * @param {Boolean} [option.fill] - include the default property as the original definition
-     * @param {Boolean} [option.force] - force to clean the cache before load the module
-     * @param {Boolean} [option.retry] - retry loading module on error
-     * @param {Object|null} [option.default] - default value to return if there is an error
-     * @param {Object|null} [option.error] - error description if there is an error
+     * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
-    load(module: string, option?: {
-        auto?: boolean;
-        fill?: boolean;
-        force?: boolean;
-        retry?: boolean;
-        default?: any | null;
-        error?: any | null;
-    }): Promise<any | null>;
+    load(module: string, option?: TLoaderOption): Promise<any | null>;
     /**
      * @description load Node.Js CJS module
      * @param {String} module - module name or path
-     * @param {Object} [option] - configuration options
-     * @param {Boolean} [option.auto] - export only the default
-     * @param {Boolean} [option.fill] - include the default property as the original definition
-     * @param {Boolean} [option.force] - force to clean the cache before load the module
-     * @param {Object|null} [option.default] - default value to return if there is an error
-     * @param {Object|null} [option.error] - error description if there is an error
+     * @param {TLoaderOption} [option] - configuration options
      * @returns {Object} module
      */
-    loadSync(module: string, option?: {
-        auto?: boolean;
-        fill?: boolean;
-        force?: boolean;
-        default?: any | null;
-        error?: any | null;
-    }): any;
+    loadSync(module: string, option?: TLoaderOption): any;
     /**
      * @description retry loading the module looking for an alternative path
      * @param {String} module - module name or path
-     * @param {Object} [option] - configuration options
-     * @param {Boolean} [option.auto] - export only the default
-     * @param {Boolean} [option.fill] - include the default property as the original definition
-     * @param {Boolean} [option.force] - force to clean the cache before load the module
-     * @param {Boolean} [option.retry] - retry loading module on error
-     * @param {Object|null} [option.default] - default value to return if there is an error
-     * @param {Object|null} [option.error] - error description if there is an error
+     * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
-    retry(module: string, option?: {
-        auto?: boolean;
-        fill?: boolean;
-        force?: boolean;
-        retry?: boolean;
-        default?: any | null;
-        error?: any | null;
-    }): Promise<any | null>;
+    retry(module: string, option?: TLoaderOption): Promise<any | null>;
     /**
      * @description search for an alternative module path
      * @param {String} module - module name or path
@@ -98,3 +61,7 @@ declare class Loader {
      */
     getKey(module: any | string, option: any): string;
 }
+declare namespace Loader {
+    export { TLoaderOption };
+}
+type TLoaderOption = import('../types').TLoaderOption;
