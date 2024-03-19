@@ -1,6 +1,6 @@
 /// <reference types="node" />
 export = Emitter;
-declare class Emitter extends EventEmitter<[never]> {
+declare class Emitter extends EventEmitter {
     constructor();
     /**
      * @description get data by event
