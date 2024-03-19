@@ -183,9 +183,8 @@ class Emitter extends EventEmitter {
 
     /**
      * @description trigger an event
-     * @override
      * @param {String|symbol} event
-     * @param {...any} [args] 
+     * @param {...any} args 
      * @returns {Boolean} res
      */
     emit(event, ...args) {

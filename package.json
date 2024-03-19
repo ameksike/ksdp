@@ -1,6 +1,6 @@
 {
   "name": "ksdp",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Ksike Design Patterns",
   "types": "types/index.d.ts",
   "exports": "./index.js",
