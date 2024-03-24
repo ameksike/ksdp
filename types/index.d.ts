@@ -8,6 +8,7 @@ export let inherit: {
 };
 export namespace creational {
     let Factory: typeof import("./src/creational/Factory");
+    let FactoryAsync: typeof import("./src/creational/FactoryAsync");
 }
 export namespace behavioral {
     let Strategy: typeof import("./src/behavioral/Strategy");

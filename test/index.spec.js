@@ -20,6 +20,7 @@ describe('Load KsDp Lib', () => {
         expect(KsDp.integration.hook.notifier.NotifierBase).toBeInstanceOf(Function);
         expect(KsDp.integration.hook.notifier.IoC).toBeInstanceOf(Function);
         expect(KsDp.creational.Factory).toBeInstanceOf(Function);
+        expect(KsDp.creational.FactoryAsync).toBeInstanceOf(Function);
         expect(KsDp.behavioral.Observer).toBeInstanceOf(Function);
         expect(KsDp.behavioral.Command).toBeInstanceOf(Function);
         expect(KsDp.behavioral.Strategy).toBeInstanceOf(Function);

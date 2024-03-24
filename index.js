@@ -4,7 +4,8 @@ module.exports = {
     },
     inherit: require('./src/inherit'),
     creational: {
-        Factory: require('./src/creational/Factory')
+        Factory: require('./src/creational/Factory'),
+        FactoryAsync: require('./src/creational/FactoryAsync'),
     },
     behavioral: {
         Strategy: require('./src/behavioral/Strategy'),
