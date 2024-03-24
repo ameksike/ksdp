@@ -9,6 +9,7 @@ module.exports = {
     },
     behavioral: {
         StrategyAsync: require('./src/behavioral/StrategyAsync'),
+        ChainAsync: require('./src/behavioral/ChainAsync'),
         Strategy: require('./src/behavioral/Strategy'),
         Observer: require('./src/behavioral/Observer'),
         Emitter: require('./src/behavioral/Emitter'),

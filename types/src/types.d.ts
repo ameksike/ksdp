@@ -74,3 +74,9 @@ export type TLoaderOption = {
      */
     error?: any;
 };
+export type TDelegate = {
+    action: any;
+    params: Array<any>;
+    scope: any;
+    index: string | number;
+};
