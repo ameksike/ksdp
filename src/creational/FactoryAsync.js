@@ -2,7 +2,7 @@
  * @author      Antonio Membrides Espinosa
  * @email       tonykssa@gmail.com
  * @date        24/03/2024
- * @description Factory pattern
+ * @description Factory pattern with support for ESM and CJS
  * @copyright   Copyright (c) 2019-2050
  * @license     GPL
  * @version     1.0

@@ -11,6 +11,7 @@ export namespace creational {
     let FactoryAsync: typeof import("./src/creational/FactoryAsync");
 }
 export namespace behavioral {
+    let StrategyAsync: typeof import("./src/behavioral/StrategyAsync");
     let Strategy: typeof import("./src/behavioral/Strategy");
     let Observer: typeof import("./src/behavioral/Observer");
     let Emitter: typeof import("./src/behavioral/Emitter");

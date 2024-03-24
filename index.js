@@ -8,6 +8,7 @@ module.exports = {
         FactoryAsync: require('./src/creational/FactoryAsync'),
     },
     behavioral: {
+        StrategyAsync: require('./src/behavioral/StrategyAsync'),
         Strategy: require('./src/behavioral/Strategy'),
         Observer: require('./src/behavioral/Observer'),
         Emitter: require('./src/behavioral/Emitter'),
