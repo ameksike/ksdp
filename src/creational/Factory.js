@@ -1,11 +1,11 @@
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		07/10/2019
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        07/10/2019
  * @description Factory pattern
- * @copyright  	Copyright (c) 2019-2050
- * @license    	GPL
- * @version    	1.0
+ * @copyright   Copyright (c) 2019-2050
+ * @license     GPL
+ * @version     1.0
  **/
 
 const inherit = require("../inherit");

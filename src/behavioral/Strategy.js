@@ -1,12 +1,12 @@
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
  * @description Strategy pattern
- * @date		07/10/2019
- * @copyright  	Copyright (c) 2019-2050
+ * @date        07/10/2019
+ * @copyright   Copyright (c) 2019-2050
  * @dependency  Factory
- * @license    	CPL
- * @version    	1.0
+ * @license     CPL
+ * @version     1.0
  **/
 const Factory = require('../creational/Factory');
 const _path = require('path');
