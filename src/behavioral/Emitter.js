@@ -1,11 +1,11 @@
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		07/10/2019
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        07/10/2019
  * @description Observer pattern [https://nodejs.org/api/events.html]
- * @copyright  	Copyright (c) 2019-2050
- * @license    	GPL
- * @version    	1.0
+ * @copyright   Copyright (c) 2019-2050
+ * @license     GPL
+ * @version     1.0
  * @link        https://nodejs.org/api/events.html
  **/
 const { EventEmitter, captureRejectionSymbol } = require('events');

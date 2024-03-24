@@ -1,24 +1,41 @@
 /**
  * @author      Antonio Membrides Espinosa
  * @email       tonykssa@gmail.com
- * @date        07/10/2019
- * @description Factory pattern
+ * @date        24/03/2024
+ * @description Factory pattern with support for ESM and CJS
  * @copyright   Copyright (c) 2019-2050
  * @license     GPL
  * @version     1.0
  **/
 
 const inherit = require("../inherit");
+const Loader = require("../common/loader");
 
 /**
  * @typedef {Object} BuildOption
  * @property {*} cls - taget Class.
  * @property {Array} params - params for taget constructor.
  */
-class Factory {
+class FactoryAsync {
 
+    /**
+     * @type {Object}
+     */
+    loader;
+
+    /**
+     * @type {Object}
+     */
+    logger;
+
+    /**
+     * @param {Object} [payload]
+     * @param {Object} [payload.logger] 
+     * @param {Object} [payload.loader] 
+     */
     constructor(payload) {
         this.logger = payload?.logger || console;
+        this.loader = payload?.loader || new Loader();
     }
 
     /**
@@ -37,17 +54,17 @@ class Factory {
      * @param {String} [payload.namespace] taget name
      * @param {String} [payload.file] taget file path
      * @param {String} [payload.search] 
-     * @return {*} Class
+     * @return {Promise<any>} Class
      */
-    load(payload) {
+    async load(payload) {
         try {
-            const content = this.require(payload.file);
+            const content = await this.require(payload.file);
             if (!content?.data) return null;
             const Src = content.data;
             return inherit.namespace(Src, payload.namespace || payload.name);
         } catch (error) {
             this.log({
-                src: "ksdp:creational:Factory:load",
+                src: "ksdp:creational:FactoryAsync:load",
                 data: payload,
                 error
             });
@@ -58,11 +75,12 @@ class Factory {
     /**
      * @description require a file or list of them
      * @param {String|Array<String>} file 
-     * @returns {Object} result - The output object.
+     * @param {Object} [option] 
+     * @returns {Promise<Object>} result - The output object.
      * @property {Object} [result.data] - data content.
      * @property {String} [result.file] - file path.
      */
-    require(file) {
+    async require(file, option = undefined) {
         try {
             if (Array.isArray(file)) {
                 for (let i of file) {
@@ -74,7 +92,7 @@ class Factory {
 
             } else {
                 return {
-                    data: require(file),
+                    data: await this.loader?.load(file, option),
                     file
                 };
             }
@@ -104,7 +122,7 @@ class Factory {
             return new Cls(...params);
         } catch (error) {
             this.log({
-                src: "ksdp:creational:Factory:build",
+                src: "ksdp:creational:FactoryAsync:build",
                 data: payload,
                 error
             });
@@ -119,13 +137,13 @@ class Factory {
      * @param {String} [payload.file] taget File Path
      * @param {Object} [payload.params] params for taget constructor
      * @param {*} [payload.cls] class or object
-     * @return {Object} Instance
+     * @return {Promise<Object>} Instance
      */
-    get(payload = null) {
+    async get(payload = null) {
         if (!payload) {
             return null;
         }
-        payload.cls = payload.cls || this.load(payload);
+        payload.cls = payload.cls || await this.load(payload);
         if (!payload.cls) {
             return null;
         }
@@ -141,4 +159,4 @@ class Factory {
     }
 }
 
-module.exports = Factory;
+module.exports = FactoryAsync;

@@ -27,4 +27,11 @@
  * @property {Object} [error] - error description if there is an error 
  */
 
+/**
+ * @typedef {Object} TDelegate
+ * @property {Object} action
+ * @property {Array<any>} params
+ * @property {Object} scope
+ * @property {String|Number} index
+ */
 module.exports = {};
