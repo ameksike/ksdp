@@ -50,8 +50,9 @@ declare class ChainAsync {
      * @description run the chain
      * @param {Array<any>} params
      * @param {Object} scope
+     * @returns {Promise<any>}
      */
-    run(params: Array<any>, scope: any): Promise<void>;
+    run(params: Array<any>, scope: any): Promise<any>;
     #private;
 }
 declare namespace ChainAsync {

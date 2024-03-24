@@ -120,16 +120,24 @@ class ChainAsync {
      * @description run the chain 
      * @param {Array<any>} params 
      * @param {Object} scope 
+     * @returns {Promise<any>}
      */
     async run(params, scope) {
+        let res = null;
+        let ops = 0;
         for (let i in this.store) {
             let delegate = this.store[i];
             if (delegate) {
                 params && (delegate.params = [...delegate.params, ...params]);
                 scope && (delegate.scope = scope);
-                await this.exec(delegate);
+                res = await this.exec(delegate);
+                if (res?.stop) {
+                    break;
+                }
             }
+            ops++;
         }
+        return { ...res, ops };
     }
 }
 
