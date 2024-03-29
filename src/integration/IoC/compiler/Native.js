@@ -82,7 +82,7 @@ class IoC {
                 break;
 
             case 'raw':
-                out = opt.options || opt.data;
+                out = opt.options || opt.data || opt;
                 break;
 
             case 'package':
