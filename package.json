@@ -24,15 +24,15 @@
     "url": "git+https://github.com/ameksike/ksdp.git"
   },
   "keywords": [
-    "Design",
-    "Patterns",
     "IoC",
     "DI",
     "DP",
     "OOP",
-    "Integration",
     "Hooks",
     "SOLID",
+    "Design",
+    "Patterns",
+    "Integration",
     "Design Principles",
     "Inversion of Control",
     "Dependency Inversion",
