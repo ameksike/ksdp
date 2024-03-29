@@ -82,7 +82,7 @@ class IoC {
                 break;
 
             case 'raw':
-                out = opt.options || opt.data || opt;
+                out = opt.options || opt.data;
                 break;
 
             case 'package':
@@ -92,11 +92,16 @@ class IoC {
                 break;
 
             case 'lib':
-                out = require(opt.name);
+                let mod = opt.file || opt.name;
+                if (opt.file) {
+                    opt.file = this.ioc?.opt?.path ? opt.file.replace('./', this.ioc.opt.path) : opt.file;
+                    mod = _path.resolve(opt.file);
+                }
+                out = require(mod);
                 out = this.inherit.namespace(out, opt.namespace || opt.name);
                 out = this.factory.build({ cls: out, ...opt });
                 out = this.setDI(out, opt);
-                out && (out._ = { type: 'lib', path: dirPack(opt.name) });
+                out && !opt?.file && (out._ = { type: 'lib', path: dirPack(opt.name) });
                 out?.init instanceof Function && out.init();
                 break;
 
