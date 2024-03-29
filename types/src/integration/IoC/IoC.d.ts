@@ -36,6 +36,13 @@ declare class IoC {
      */
     get(opt?: string | TOptionIoC): any;
     /**
+     * @description add a new config item
+     * @param {Object|Array} option
+     * @param {String} index
+     * @returns {IoC} self
+     */
+    add(option: any | any[], index?: string): IoC;
+    /**
      * @description register a resource
      * @param {Object|String|Function|Array} value
      * @param {Object} [opt]
