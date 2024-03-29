@@ -85,6 +85,28 @@ class IoC {
     }
 
     /**
+     * @description add a new config item 
+     * @param {Object|Array} option 
+     * @param {String} index 
+     * @returns {IoC} self
+     */
+    add(option, index = null) {
+        if (Array.isArray(option)) {
+            for (let item of option) {
+                item && this.add(item, index);
+            }
+        } else {
+            if (!this.opt?.src) {
+                this.opt = this.opt || {};
+                this.opt.src = this.opt.src || {};
+            }
+            let key = index || option?.name || 'default';
+            this.opt.src[key] = option;
+        }
+        return this;
+    }
+
+    /**
      * @description register a resource
      * @param {Object|String|Function|Array} value 
      * @param {Object} [opt] 

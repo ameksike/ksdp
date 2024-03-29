@@ -1,14 +1,14 @@
 /**
  * @author      Antonio Membrides Espinosa
  * @email       tonykssa@gmail.com
- * @description Strategy pattern
- * @date        07/10/2019
+ * @description Strategy pattern with support for ESM and CJS
+ * @date        24/03/2024
  * @copyright   Copyright (c) 2019-2050
  * @dependency  Factory
  * @license     CPL
  * @version     1.0
  **/
-const Factory = require('../creational/Factory');
+const Factory = require('../creational/FactoryAsync');
 const _path = require('path');
 
 /**
@@ -20,7 +20,7 @@ const _path = require('path');
  * @property {Boolean|Number} [safe] - Single param for Strategy constructor.
  * @property {*} [target] - Class or Object
  */
-class Strategy {
+class StrategyAsync {
 
     constructor(payload) {
         this.ctrl = {};
@@ -39,7 +39,7 @@ class Strategy {
      * @param {Object} [payload.params]  
      * @param {Console} [payload.logger]  
      * @param {String} [payload.path]  
-     * @return {Strategy} self
+     * @return {StrategyAsync} self
      */
     configure(payload = {}) {
         this.default = payload?.default || payload?.name || this.default;
@@ -60,9 +60,9 @@ class Strategy {
     /**
       * @description Get strategy Instance
       * @param {(String|StrategyOption)} payload
-      * @return {Object} Strategy Instance
+      * @return {Promise<Object>} Strategy Instance
       */
-    getOne(payload = {}) {
+    async #getOne(payload = {}) {
         try {
             payload = typeof (payload) === 'string' ? { name: payload } : payload;
             const type = payload.type || this.default;
@@ -71,7 +71,7 @@ class Strategy {
             this.ctrl[type] = this.ctrl[type] || {};
             if (!this.ctrl[type][name]) {
                 const Stg = name.charAt(0).toUpperCase() + name.slice(1);
-                this.ctrl[type][name] = this.factory.get({
+                this.ctrl[type][name] = await this.factory.get({
                     name: Stg,
                     file: _path.join(path, type, Stg + '.js'),
                     params: payload.params
@@ -81,7 +81,7 @@ class Strategy {
         }
         catch (error) {
             this.log({
-                src: 'ksdp:behavioral:Strategy:get',
+                src: 'ksdp:behavioral:StrategyAsync:get',
                 data: payload,
                 error
             });
@@ -93,18 +93,18 @@ class Strategy {
      * @description Get strategy Instance
      * @param {(String|String[]|StrategyOption|Array<StrategyOption>)} payload
      * @param {(String|String[]|StrategyOption|Array<StrategyOption>)|null} [alt]
-     * @return {Object|Array<Object>} Strategy Instance
+     * @return {Promise<Object|Array<Object>>} Strategy Instance
      */
-    get(payload = {}, alt = null) {
+    async get(payload = {}, alt = null) {
         try {
             if (Array.isArray(payload)) {
                 const out = [];
                 for (let item of payload) {
-                    out.push(this.getOne(item));
+                    out.push(await this.#getOne(item));
                 }
                 return out;
             }
-            let res = this.getOne(payload);
+            let res = await this.#getOne(payload);
             if (res) {
                 return res;
             }
@@ -112,7 +112,7 @@ class Strategy {
         }
         catch (error) {
             this.log({
-                src: 'ksdp:behavioral:Strategy:get',
+                src: 'ksdp:behavioral:StrategyAsync:get',
                 data: payload,
                 error
             });
@@ -124,9 +124,9 @@ class Strategy {
      * @description Set strategy
      * @param {StrategyOption|Array<StrategyOption>} payload 
      * @param {String} [alias='']
-     * @return {Object|Array<Object>} Strategy Instance
+     * @return {Promise<Object|Array<Object>>} Strategy Instance
      */
-    set(payload = {}, alias = '') {
+    async set(payload = {}, alias = '') {
         try {
             if (!payload) {
                 return null;
@@ -147,11 +147,11 @@ class Strategy {
                 resorce instanceof Function && (target.params = this.params || [...this.params, ...resorce.params]);
                 this.ctrl[type][name] = this.factory.build(target);
             }
-            return this.ctrl[type][name];
+            return Promise.resolve(this.ctrl[type][name]);
         }
         catch (error) {
             this.log({
-                src: 'ksdp:behavioral:Strategy:set',
+                src: 'ksdp:behavioral:StrategyAsync:set',
                 data: payload,
                 error
             });
@@ -160,4 +160,4 @@ class Strategy {
     }
 }
 
-module.exports = Strategy;
+module.exports = StrategyAsync;

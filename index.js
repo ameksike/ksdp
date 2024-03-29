@@ -4,9 +4,12 @@ module.exports = {
     },
     inherit: require('./src/inherit'),
     creational: {
-        Factory: require('./src/creational/Factory')
+        Factory: require('./src/creational/Factory'),
+        FactoryAsync: require('./src/creational/FactoryAsync'),
     },
     behavioral: {
+        StrategyAsync: require('./src/behavioral/StrategyAsync'),
+        ChainAsync: require('./src/behavioral/ChainAsync'),
         Strategy: require('./src/behavioral/Strategy'),
         Observer: require('./src/behavioral/Observer'),
         Emitter: require('./src/behavioral/Emitter'),

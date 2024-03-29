@@ -2,6 +2,7 @@ const KsDp = require('../..');
 
 class Algorism {
     constructor() {
+        this.name = "Strategy.Algorism";
         this.strategy = new KsDp.behavioral.Strategy({ 
             path: __dirname, 
             default: 'encode' 

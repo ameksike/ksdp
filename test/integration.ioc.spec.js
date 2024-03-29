@@ -79,6 +79,42 @@ describe('CRUD', () => {
 
 });
 
+describe('LIB', () => {
+    ioc.add([
+        {
+            "name": "strategy.lib",
+            "file": "./strategy.class.js",
+            "type": "lib"
+        },
+        {
+            "name": "strategy.obj",
+            "file": "./myobject.js",
+            "type": "lib",
+            "dependency": {
+                "service": "strategy.lib"
+            }
+        }
+    ]);
+
+    it("local class", () => {
+        const res = ioc.get("strategy.lib");
+        expect(res).toBeInstanceOf(Object);
+        expect(res.name).toBe("Strategy.Algorism");
+        expect(res.encode).toBeInstanceOf(Function);
+    });
+
+    it("local object", () => {
+        const res = ioc.get("strategy.obj");
+        expect(res).toBeInstanceOf(Object);
+        expect(res.name).toBe("demo");
+        expect(res.getName).toBeInstanceOf(Function);
+        expect(res.getName()).toBe("demo-*");
+        expect(res.service).toBeInstanceOf(Object);
+        expect(res.service.name).toBe("Strategy.Algorism");
+        expect(res.service.encode).toBeInstanceOf(Function);
+    });
+});
+
 describe('Dependency', () => {
 
     it("invalid key", (done) => {
