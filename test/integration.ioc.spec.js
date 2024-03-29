@@ -89,7 +89,10 @@ describe('LIB', () => {
         {
             "name": "strategy.obj",
             "file": "./myobject.js",
-            "type": "lib"
+            "type": "lib",
+            "dependency": {
+                "service": "strategy.lib"
+            }
         }
     ]);
 
@@ -106,6 +109,9 @@ describe('LIB', () => {
         expect(res.name).toBe("demo");
         expect(res.getName).toBeInstanceOf(Function);
         expect(res.getName()).toBe("demo-*");
+        expect(res.service).toBeInstanceOf(Object);
+        expect(res.service.name).toBe("Strategy.Algorism");
+        expect(res.service.encode).toBeInstanceOf(Function);
     });
 });
 
