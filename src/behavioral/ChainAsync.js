@@ -128,6 +128,7 @@ class ChainAsync {
         for (let i in this.store) {
             let delegate = this.store[i];
             if (delegate) {
+                ops++;
                 params && (delegate.params = [...delegate.params, ...params]);
                 scope && (delegate.scope = scope);
                 res = await this.exec(delegate);
@@ -135,7 +136,6 @@ class ChainAsync {
                     break;
                 }
             }
-            ops++;
         }
         return { ...res, ops };
     }
