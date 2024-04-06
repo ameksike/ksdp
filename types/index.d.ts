@@ -5,6 +5,8 @@ export let inherit: {
     imitate: typeof import("./src/inherit/imitate");
     namespace: typeof import("./src/inherit/namespace");
     ns: typeof import("./src/inherit/namespace");
+    isClass: (target: any) => boolean;
+    className: (target: any) => string;
 };
 export namespace creational {
     let Factory: typeof import("./src/creational/Factory");

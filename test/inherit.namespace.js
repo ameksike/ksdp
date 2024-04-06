@@ -38,3 +38,38 @@ describe('Namespace', () => {
         done();
     });
 });
+
+
+describe('Inherit Names/Types', () => {
+
+    it("Class name resolution", () => {
+        class ClsA { }
+        class ClsB extends ClsA { }
+        expect(KsDp.inherit.className({ age: 123 })).toBe("Object");
+        expect(KsDp.inherit.className(ClsA)).toBe("ClsA");
+        expect(KsDp.inherit.className(new ClsA())).toBe("ClsA");
+        expect(KsDp.inherit.className(ClsB)).toBe("ClsB");
+        expect(KsDp.inherit.className(new ClsB())).toBe("ClsB");
+        expect(KsDp.inherit.className(ClsB.prototype)).toBe("ClsB");
+        expect(KsDp.inherit.className(function () { })).toBe("");
+        expect(KsDp.inherit.className(() => { })).toBe("");
+        expect(KsDp.inherit.className(class { })).toBe("");
+        expect(KsDp.inherit.className(function Demo() { })).toBe("Demo");
+    });
+
+    it("Class identification", () => {
+        class ClsA { }
+        class ClsB extends ClsA { }
+        expect(KsDp.inherit.isClass({ age: 123 })).toBe(false);
+        expect(KsDp.inherit.isClass(ClsA)).toBe(true);
+        expect(KsDp.inherit.isClass(new ClsA())).toBe(false);
+        expect(KsDp.inherit.isClass(ClsB)).toBe(true);
+        expect(KsDp.inherit.isClass(new ClsB())).toBe(false);
+        expect(KsDp.inherit.isClass(ClsB.prototype)).toBe(false);
+        expect(KsDp.inherit.isClass(function () { })).toBe(false);
+        expect(KsDp.inherit.isClass(() => { })).toBe(false);
+        expect(KsDp.inherit.isClass(class { })).toBe(true);
+        expect(KsDp.inherit.isClass(function Demo() { })).toBe(false);
+    });
+
+});
