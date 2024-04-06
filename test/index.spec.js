@@ -12,6 +12,9 @@ describe('Load KsDp Lib', () => {
         expect(KsDp.behavioral).toBeInstanceOf(Object);
         expect(KsDp.integration).toBeInstanceOf(Object);
         expect(KsDp.integration.IoC).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.Sync).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.Async).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.Default).toBeInstanceOf(Function);
         expect(KsDp.integration.Dip).toBeInstanceOf(Function);
         expect(KsDp.integration.hook.Main).toBeInstanceOf(Function);
         expect(KsDp.integration.hook.processor.ProcessorBase).toBeInstanceOf(Function);

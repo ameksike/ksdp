@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) 2019-2050
  * @description Native Compiler 
  * @dependency  Factory
- * @license     GPL
+ * @license     LGPL
  * @version     1.0
  * @requires    Factory
  * @requires    Inherit
@@ -18,7 +18,7 @@ const _path = require('path');
  * @typedef {import('../../../types').TOptionIoC} TOptionIoC
  * @typedef {import('../IoC')} TIoC
  */
-class IoC {
+class Native {
 
     /**
      * @type {Inherit}
@@ -204,4 +204,4 @@ class IoC {
     }
 }
 
-module.exports = IoC;
+module.exports = Native;

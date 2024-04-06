@@ -36,6 +36,6 @@ declare class Command {
 declare namespace Command {
     export { List };
 }
-type List = any[] | {
+type List = ({
     [name: string]: any;
-};
+} | any[]);

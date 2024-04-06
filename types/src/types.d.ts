@@ -33,6 +33,10 @@ export type TOptionIoC = {
      */
     params?: string;
     /**
+     * DEFAULT[singleton]
+     */
+    mode?: string;
+    /**
      * DEFAULT[type]
      */
     path?: string;

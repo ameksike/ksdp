@@ -1,9 +1,9 @@
-export = Native;
+export = NativeAsync;
 /**
  * @typedef {import('../../../types').TOptionIoC} TOptionIoC
  * @typedef {import('../IoC')} TIoC
  */
-declare class Native {
+declare class NativeAsync {
     /**
      * @param {TIoC|null} [ioc]
      */
@@ -29,43 +29,37 @@ declare class Native {
      * @param {Object} opt
      * @returns result
      */
-    run(opt: any): any;
-    /**
-     * @description Factory Pattern load Type
-     * @param {Object} opt
-     * @returns {*} result
-     */
-    type(opt: any): any;
+    run(opt: any): Promise<any>;
     /**
      * @description Factory Pattern
      * @param {Object} opt
-     * @returns {Object} result
+     * @returns {Promise<Object>} result
      */
-    instance(opt: any): any;
+    instance(opt: any): Promise<any>;
     /**
      * @description excecute action from object
      * @param {Object} opt
-     * @returns {*}
+     * @returns {Promise<any>}
      */
-    action(opt: any): any;
+    action(opt: any): Promise<any>;
     /**
      * @description get dependency
      * @param {Object} opt
-     * @returns {Object} result
+     * @returns {Promise<Object>} result
      */
-    dependency(opt: any): any;
+    dependency(opt: any): Promise<any>;
     /**
      * @description Dependency Injection Pattern (DI)
      * @param {Object} obj
      * @param {Object} opt
-     * @returns {Object} result
+     * @returns {Promise<Object>} result
      */
-    setDI(obj: any, opt: any): any;
+    setDI(obj: any, opt: any): Promise<any>;
     #private;
 }
-declare namespace Native {
+declare namespace NativeAsync {
     export { TOptionIoC, TIoC };
 }
-import Factory = require("../../../creational/Factory");
+import Factory = require("../../../creational/FactoryAsync");
 type TOptionIoC = import('../../../types').TOptionIoC;
 type TIoC = import('../IoC');

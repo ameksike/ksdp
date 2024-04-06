@@ -136,6 +136,6 @@ declare class Observer {
 declare namespace Observer {
     export { List };
 }
-type List = any[] | {
+type List = ({
     [name: string]: any;
-};
+} | any[]);

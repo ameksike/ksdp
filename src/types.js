@@ -9,7 +9,8 @@
  * @property {String} [source] DEFAULT['default'] only for type 'alias'   
  * @property {Object} [propertys] DEFAULT[null] only for type 'action'  
  * @property {String} [params] [OPTIONAL] DEFAULT[null] only for opt.type 'action'  
- * @property {String} [path] DEFAULT[type]   
+ * @property {String} [mode] DEFAULT[singleton] 
+ * @property {String} [path] DEFAULT[type] 
  * @property {String} [file]    
  * @property {String} [id]   
  * @property {any} [data] 
