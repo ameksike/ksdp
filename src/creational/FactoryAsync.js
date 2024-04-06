@@ -89,7 +89,6 @@ class FactoryAsync {
                         return content;
                     }
                 }
-
             } else {
                 return {
                     data: await this.loader?.load(file, option),

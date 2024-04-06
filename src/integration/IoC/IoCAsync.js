@@ -1,7 +1,7 @@
 /**
  * @author      Antonio Membrides Espinosa
  * @email       tonykssa@gmail.com
- * @date        09/11/2019
+ * @date        05/10/2023
  * @copyright   Copyright (c) 2019-2050
  * @description IoC, LS, DI
  * @requires    Strategy
@@ -9,12 +9,12 @@
  * @version     1.0
  **/
 
-const Strategy = require('../../behavioral/Strategy');
+const Strategy = require('../../behavioral/StrategyAsync');
 const _path = require('path')
 /**
  * @typedef {import('../../types').TOptionIoC} TOptionIoC
  */
-class IoC {
+class IoCAsync {
 
     #analyzer;
     #compiler;
@@ -70,19 +70,21 @@ class IoC {
     /**
      * @description Inversion of Control Pattern (IoC)
      * @param {String|TOptionIoC} opt The input data.
-     * @returns {Object} resource
+     * @returns {Promise<Object>} resource
      */
-    get(opt = {}) {
-        let cfg = this.fill(opt);
+    async get(opt = {}) {
+        let cfg = await this.fill(opt);
         if (cfg.name === this.opt.name) {
             return this;
         }
+
         if (cfg.mode === 'transient') {
-            return this.process(cfg);
+            return await this.process(cfg);
         }
+
         this.ctrls[cfg.type] = this.ctrls[cfg.type] || {};
         if (!this.ctrls[cfg.type][cfg.id]) {
-            this.ctrls[cfg.type][cfg.id] = this.process(cfg);
+            this.ctrls[cfg.type][cfg.id] = await this.process(cfg);
         }
         return this.ctrls[cfg.type][cfg.id];
     }
@@ -91,7 +93,7 @@ class IoC {
      * @description add a new config item 
      * @param {Object|Array} option 
      * @param {String} index 
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
     add(option, index = null) {
         if (Array.isArray(option)) {
@@ -106,14 +108,14 @@ class IoC {
             let key = index || option?.name || 'default';
             this.opt.src[key] = option;
         }
-        return this;
+        return Promise.resolve(this);
     }
 
     /**
      * @description register a resource
      * @param {Object|String|Function|Array} value 
      * @param {Object} [opt] 
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
     set(value, opt = {}) {
         opt = this.fill(opt);
@@ -127,14 +129,14 @@ class IoC {
             this.ctrls[opt.type][opt.id] = value;
             opt.rows.push(value);
         }
-        return this;
+        return Promise.resolve(this);
     }
 
     /**
      * @description remove a resource
      * @param {Object|String|Function|Array} opt 
      * @param {Object} [out] 
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
     del(opt, out = {}) {
         out = out || {};
@@ -149,14 +151,14 @@ class IoC {
             out.rows.push(this.ctrls[opt.type][opt.id]);
             delete this.ctrls[opt.type][opt.id];
         }
-        return this;
+        return Promise.resolve(this);
     }
 
     /**
      * @description alias for register a resource
      * @param {Object|String|Function|Array} value 
      * @param {Object} [opt] 
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
     register(value, opt = {}) {
         return this.set(value, opt);
@@ -166,7 +168,7 @@ class IoC {
      * @description alias for remove a resource
      * @param {Object|String|Function|Array} opt 
      * @param {Object} out 
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
     unregister(opt = {}, out = {}) {
         return this.del(opt, out);
@@ -175,19 +177,19 @@ class IoC {
     /**
      * @description Service Locator Pattern (SL)
      * @param {Object} opt 
-     * @returns result
+     * @returns {Promise<any>} result
      */
-    process(opt) {
-        let driver = this.compiler.get(opt.type, { name: 'Native', params: [this] });
-        return driver?.run(opt);
+    async process(opt) {
+        let driver = await this.compiler.get(opt.type, { name: 'NativeAsync', params: [this] });
+        return await driver?.run(opt);
     }
 
     /**
      * @description Fill payload
      * @param {TOptionIoC|String} opt The input data.  
-     * @returns {Object}
+     * @returns {Promise<TOptionIoC>} option
      */
-    fill(opt) {
+    async fill(opt) {
         const cfg = opt instanceof Object ? opt : (this.opt.src[opt] || {
             name: opt
         });
@@ -196,9 +198,9 @@ class IoC {
         cfg.type = cfg.type || 'instance';
         cfg.source = cfg.source || 'default';
         cfg.namespace = cfg.namespace || '';
-        let driver = this.analyzer.get(cfg.type || drvDef, drvDef);
+        let driver = await this.analyzer.get(cfg.type || drvDef, drvDef);
         return driver?.run(opt);
     }
 }
 
-module.exports = IoC;
+module.exports = IoCAsync;

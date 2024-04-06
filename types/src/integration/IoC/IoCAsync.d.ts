@@ -1,8 +1,8 @@
-export = IoC;
+export = IoCAsync;
 /**
  * @typedef {import('../../types').TOptionIoC} TOptionIoC
  */
-declare class IoC {
+declare class IoCAsync {
     constructor(opt?: any);
     /**
      * @returns {Strategy}
@@ -32,60 +32,60 @@ declare class IoC {
     /**
      * @description Inversion of Control Pattern (IoC)
      * @param {String|TOptionIoC} opt The input data.
-     * @returns {Object} resource
+     * @returns {Promise<Object>} resource
      */
-    get(opt?: string | TOptionIoC): any;
+    get(opt?: string | TOptionIoC): Promise<any>;
     /**
      * @description add a new config item
      * @param {Object|Array} option
      * @param {String} index
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
-    add(option: any | any[], index?: string): IoC;
+    add(option: any | any[], index?: string): Promise<IoCAsync>;
     /**
      * @description register a resource
      * @param {Object|String|Function|Array} value
      * @param {Object} [opt]
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
-    set(value: any | string | Function | any[], opt?: any): IoC;
+    set(value: any | string | Function | any[], opt?: any): Promise<IoCAsync>;
     /**
      * @description remove a resource
      * @param {Object|String|Function|Array} opt
      * @param {Object} [out]
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
-    del(opt: any | string | Function | any[], out?: any): IoC;
+    del(opt: any | string | Function | any[], out?: any): Promise<IoCAsync>;
     /**
      * @description alias for register a resource
      * @param {Object|String|Function|Array} value
      * @param {Object} [opt]
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
-    register(value: any | string | Function | any[], opt?: any): IoC;
+    register(value: any | string | Function | any[], opt?: any): Promise<IoCAsync>;
     /**
      * @description alias for remove a resource
      * @param {Object|String|Function|Array} opt
      * @param {Object} out
-     * @returns {IoC} self
+     * @returns {Promise<IoCAsync>} self
      */
-    unregister(opt?: any | string | Function | any[], out?: any): IoC;
+    unregister(opt?: any | string | Function | any[], out?: any): Promise<IoCAsync>;
     /**
      * @description Service Locator Pattern (SL)
      * @param {Object} opt
-     * @returns result
+     * @returns {Promise<any>} result
      */
-    process(opt: any): any;
+    process(opt: any): Promise<any>;
     /**
      * @description Fill payload
      * @param {TOptionIoC|String} opt The input data.
-     * @returns {Object}
+     * @returns {Promise<TOptionIoC>} option
      */
-    fill(opt: TOptionIoC | string): any;
+    fill(opt: TOptionIoC | string): Promise<TOptionIoC>;
     #private;
 }
-declare namespace IoC {
+declare namespace IoCAsync {
     export { TOptionIoC };
 }
-import Strategy = require("../../behavioral/Strategy");
+import Strategy = require("../../behavioral/StrategyAsync");
 type TOptionIoC = import('../../types').TOptionIoC;

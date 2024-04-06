@@ -312,7 +312,9 @@ describe('Compiler/Analyzer', () => {
 
     it("check the correct interfaces", () => {
         expect(KsDp.integration.IoC).toBeInstanceOf(Function);
-        expect(KsDp.integration.IoC.cls.default).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.Default).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.Async).toBeInstanceOf(Function);
+        expect(KsDp.integration.IoC.cls.Sync).toBeInstanceOf(Function);
         expect(KsDp.integration.IoC.cls.compiler.Native).toBeInstanceOf(Function);
         expect(KsDp.integration.IoC.cls.analyzer.Native).toBeInstanceOf(Function);
     });
