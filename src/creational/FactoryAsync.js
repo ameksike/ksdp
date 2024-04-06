@@ -114,7 +114,7 @@ class FactoryAsync {
         }
         try {
             const Cls = payload.cls;
-            if (!(Cls instanceof Function)) {
+            if (!inherit.isClass(Cls)) {
                 return Cls;
             }
             const params = this.asList(payload.params);

@@ -15,6 +15,8 @@ declare class NativeAsync {
         imitate: typeof import("../../../inherit/imitate");
         namespace: typeof import("../../../inherit/namespace");
         ns: typeof import("../../../inherit/namespace");
+        isClass: (target: any) => boolean;
+        className: (target: any) => string;
     };
     /**
      * @returns {Factory}
