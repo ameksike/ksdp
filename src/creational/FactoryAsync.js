@@ -58,7 +58,7 @@ class FactoryAsync {
      */
     async load(payload) {
         try {
-            const content = await this.require(payload.file);
+            const content = await this.require(payload.file || payload.name);
             if (!content?.data) return null;
             const Src = content.data;
             return inherit.namespace(Src, payload.namespace || payload.name);
@@ -110,10 +110,10 @@ class FactoryAsync {
     build(payload = null) {
         if (!payload) return null;
         if (!payload.cls) {
-            payload = { cls: payload };
+            payload = { cls: payload?.default instanceof Function ? payload?.default : payload };
         }
         try {
-            const Cls = payload.cls;
+            const Cls = payload.cls?.default instanceof Function ? payload.cls?.default : payload.cls;
             if (!inherit.isClass(Cls)) {
                 return Cls;
             }
