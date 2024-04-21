@@ -58,9 +58,12 @@ class FactoryAsync {
      */
     async load(payload) {
         try {
-            const content = await this.require(payload.file || payload.name);
+            let content = await this.require(payload.file || payload.name);
             if (!content?.data) return null;
-            const Src = content.data;
+            let Src = content.data;
+            if (Src?.type === 'mjs') {
+                Src = Src?.default || Src;
+            }
             return inherit.namespace(Src, payload.namespace || payload.name);
         } catch (error) {
             this.log({
@@ -113,11 +116,14 @@ class FactoryAsync {
             payload = { cls: payload?.default instanceof Function ? payload?.default : payload };
         }
         try {
-            const Cls = payload.cls?.default instanceof Function ? payload.cls?.default : payload.cls;
+            let Cls = payload.cls?.default instanceof Function ? payload.cls?.default : payload.cls;
+            if (payload.cls?.type === 'mjs') {
+                Cls = Cls?.default || Cls;
+            }
             if (!inherit.isClass(Cls)) {
                 return Cls;
             }
-            const params = this.asList(payload.params);
+            let params = this.asList(payload.params);
             return new Cls(...params);
         } catch (error) {
             this.log({

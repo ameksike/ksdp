@@ -189,7 +189,7 @@ class Emitter extends EventEmitter {
      */
     emit(event, ...args) {
         this.#data[event] = args;
-        return super.emit(event, this, ...args);
+        return super.emit(event, ...args, this);
     }
 
     /**
