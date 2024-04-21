@@ -37,15 +37,18 @@ class IoCAsync {
         this.opt = {};
         this.ctrls = {};
         this.error = null;
+        this.logger = opt?.logger || null;
+
         this.#analyzer = new Strategy({
             path: _path.resolve(__dirname),
             default: 'analyzer',
-            params: [this]
+            params: [this, this.logger]
         });
+
         this.#compiler = new Strategy({
             path: _path.resolve(__dirname),
             default: 'compiler',
-            params: [this]
+            params: [this, this.logger]
         });
 
         this.configure(opt);
@@ -88,6 +91,7 @@ class IoCAsync {
         this.opt.name = opt.name || this.opt.name || 'IoC';
         this.opt.path = opt.path || this.opt.path || __dirname + '/../../../';
         this.error = opt.error || this.error;
+        this.logger = opt.logger || this.logger;
         return this;
     }
 

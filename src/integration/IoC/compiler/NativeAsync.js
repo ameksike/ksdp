@@ -58,11 +58,12 @@ class NativeAsync {
 
     /**
      * @param {TIoC|null} [ioc] 
+     * @param {Object|null} [logger] 
      */
-    constructor(ioc = null) {
+    constructor(ioc = null, logger = null) {
         this.#ioc = ioc;
         this.#inherit = Inherit;
-        this.#factory = new Factory();
+        this.#factory = new Factory({ logger });
     }
 
     /**
