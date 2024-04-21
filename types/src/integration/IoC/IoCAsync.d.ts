@@ -16,6 +16,10 @@ declare class IoCAsync {
     ctrls: {};
     error: any;
     /**
+     * @description register Native alias
+     */
+    init(): Promise<void>;
+    /**
      * @description Configure Lib
      * @param {Object} [opt] The input data.
      * @param {String} [opt.name] Alias for it lib

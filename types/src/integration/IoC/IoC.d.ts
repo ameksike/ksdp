@@ -16,6 +16,10 @@ declare class IoC {
     ctrls: {};
     error: any;
     /**
+     * @description register Native alias
+     */
+    init(): void;
+    /**
      * @description Configure Lib
      * @param {Object} [opt] The input data.
      * @param {String} [opt.name] Alias for it lib

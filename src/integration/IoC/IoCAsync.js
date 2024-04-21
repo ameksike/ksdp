@@ -47,7 +47,31 @@ class IoCAsync {
             default: 'compiler',
             params: [this]
         });
+
         this.configure(opt);
+    }
+
+    /**
+     * @description register Native alias 
+     */
+    async init() {
+        if (this.#compiler?.ctrl?.compiler?.lib && this.#analyzer?.ctrl?.analyzer?.lib) {
+            return;
+        }
+        let [natAnalizer, natCompiler] = await Promise.all([
+            this.analyzer.get({ name: 'Native', params: [this] }),
+            this.compiler.get({ name: 'NativeAsync', params: [this] })
+        ]);
+        await Promise.all([
+            this.#analyzer.set(natAnalizer, 'lib'),
+            this.#analyzer.set(natAnalizer, 'module'),
+            this.#analyzer.set(natAnalizer, 'package'),
+            this.#analyzer.set(natAnalizer, 'instance'),
+            this.#compiler.set(natCompiler, 'lib'),
+            this.#compiler.set(natCompiler, 'module'),
+            this.#compiler.set(natCompiler, 'package'),
+            this.#compiler.set(natCompiler, 'instance'),
+        ]);
     }
 
     /**
@@ -117,19 +141,20 @@ class IoCAsync {
      * @param {Object} [opt] 
      * @returns {Promise<IoCAsync>} self
      */
-    set(value, opt = {}) {
-        opt = this.fill(opt);
+    async set(value, opt = {}) {
+        opt = await this.fill(opt);
         opt.rows = opt.rows || [];
         if (Array.isArray(value)) {
             for (let item of value) {
-                item?.value && this.set(item.value, { opt, ...this.fill(item.option) });
+                let fill = await this.fill(item.option);
+                item?.value && this.set(item.value, { opt, ...fill });
             }
         } else {
             this.ctrls[opt.type] = this.ctrls[opt.type] || {};
             this.ctrls[opt.type][opt.id] = value;
             opt.rows.push(value);
         }
-        return Promise.resolve(this);
+        return this;
     }
 
     /**
@@ -138,7 +163,7 @@ class IoCAsync {
      * @param {Object} [out] 
      * @returns {Promise<IoCAsync>} self
      */
-    del(opt, out = {}) {
+    async del(opt, out = {}) {
         out = out || {};
         out.rows = opt.rows || [];
         if (Array.isArray(opt)) {
@@ -146,12 +171,12 @@ class IoCAsync {
                 this.del(item, out);
             }
         } else {
-            opt = this.fill(opt);
+            opt = await this.fill(opt);
             this.ctrls[opt.type] = this.ctrls[opt.type] || {};
             out.rows.push(this.ctrls[opt.type][opt.id]);
             delete this.ctrls[opt.type][opt.id];
         }
-        return Promise.resolve(this);
+        return this;
     }
 
     /**
@@ -180,6 +205,7 @@ class IoCAsync {
      * @returns {Promise<any>} result
      */
     async process(opt) {
+        await this.init();
         let driver = await this.compiler.get(opt.type, { name: 'NativeAsync', params: [this] });
         return await driver?.run(opt);
     }
@@ -190,14 +216,11 @@ class IoCAsync {
      * @returns {Promise<TOptionIoC>} option
      */
     async fill(opt) {
+        await this.init();
         const cfg = opt instanceof Object ? opt : (this.opt.src[opt] || {
             name: opt
         });
         const drvDef = { name: 'Native', params: [this] };
-        cfg.name = cfg.name || (typeof (opt) === 'string' ? opt : 'DefaultService');
-        cfg.type = cfg.type || 'instance';
-        cfg.source = cfg.source || 'default';
-        cfg.namespace = cfg.namespace || '';
         let driver = await this.analyzer.get(cfg.type || drvDef, drvDef);
         return driver?.run(opt);
     }

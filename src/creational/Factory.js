@@ -80,6 +80,11 @@ class Factory {
             }
         }
         catch (error) {
+            this.log({
+                src: "ksdp:creational:Factory:require",
+                data: { file },
+                error
+            });
             return null;
         }
     }

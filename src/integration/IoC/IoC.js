@@ -51,6 +51,25 @@ class IoC {
     }
 
     /**
+     * @description register Native alias 
+     */
+    init() {
+        if (this.#compiler?.ctrl?.compiler?.lib && this.#analyzer?.ctrl?.analyzer?.lib) {
+            return;
+        }
+        let natAnalizer = this.analyzer.get({ name: 'Native', params: [this] });
+        let natCompiler = this.compiler.get({ name: 'Native', params: [this] });
+        this.#analyzer.set(natAnalizer, 'lib');
+        this.#analyzer.set(natAnalizer, 'module');
+        this.#analyzer.set(natAnalizer, 'package');
+        this.#analyzer.set(natAnalizer, 'instance');
+        this.#compiler.set(natCompiler, 'lib');
+        this.#compiler.set(natCompiler, 'module');
+        this.#compiler.set(natCompiler, 'package');
+        this.#compiler.set(natCompiler, 'instance');
+    }
+
+    /**
      * @description Configure Lib
      * @param {Object} [opt] The input data.
      * @param {String} [opt.name] Alias for it lib
@@ -178,6 +197,7 @@ class IoC {
      * @returns result
      */
     process(opt) {
+        this.init();
         let driver = this.compiler.get(opt.type, { name: 'Native', params: [this] });
         return driver?.run(opt);
     }
@@ -188,14 +208,11 @@ class IoC {
      * @returns {Object}
      */
     fill(opt) {
+        this.init();
         const cfg = opt instanceof Object ? opt : (this.opt.src[opt] || {
             name: opt
         });
         const drvDef = { name: 'Native', params: [this] };
-        cfg.name = cfg.name || (typeof (opt) === 'string' ? opt : 'DefaultService');
-        cfg.type = cfg.type || 'instance';
-        cfg.source = cfg.source || 'default';
-        cfg.namespace = cfg.namespace || '';
         let driver = this.analyzer.get(cfg.type || drvDef, drvDef);
         return driver?.run(opt);
     }
