@@ -10,7 +10,7 @@ describe('Emitter', () => {
         let data = target.get("default");
 
         target.set({
-            default(drv, data) {
+            default(data, drv) {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -18,14 +18,14 @@ describe('Emitter', () => {
         });
 
         target.subscribe({
-            on(drv, data) {
+            on(data, drv) {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
             }
         });
 
-        target.add((drv, data) => {
+        target.add((data, drv) => {
             expect(drv.constructor.name).toBe("Emitter");
             expect(data).toBeInstanceOf(Object);
             expect(data.value !== undefined).toBe(true);
@@ -47,7 +47,7 @@ describe('Emitter', () => {
 
         target.subscribe([
             {
-                default(drv, data) {
+                default(data, drv) {
                     counter++;
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
@@ -55,14 +55,14 @@ describe('Emitter', () => {
                 }
             },
             {
-                on(drv, data) {
+                on(data, drv) {
                     counter++;
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
                 }
             },
-            (drv, data) => {
+            (data, drv) => {
                 counter++;
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
@@ -87,7 +87,7 @@ describe('Emitter', () => {
 
         target.set(
             [{
-                onread(drv, data) {
+                onread(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
@@ -95,14 +95,14 @@ describe('Emitter', () => {
                 }
             },
             {
-                on(drv, data) {
+                on(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
                     counter++;
                 }
             },
-            (drv, data) => {
+            (data, drv) => {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -124,7 +124,7 @@ describe('Emitter', () => {
         let optSub = {};
         let optUns = {};
         const list1 = {
-            onread(drv, data) {
+            onread(data, drv) {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -132,7 +132,7 @@ describe('Emitter', () => {
             }
         };
         const list2 = {
-            on(drv, data) {
+            on(data, drv) {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -140,7 +140,7 @@ describe('Emitter', () => {
                 data.value = 2;
             }
         }
-        const list3 = (drv, data) => {
+        const list3 = (data, drv) => {
             expect(drv.constructor.name).toBe("Emitter");
             expect(data).toBeInstanceOf(Object);
             expect(data.value !== undefined).toBe(true);
@@ -170,7 +170,7 @@ describe('Emitter', () => {
         let optUns = { index: 1, count: 2 };
         let listeners = [
             {
-                onread(drv, data) {
+                onread(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
@@ -179,7 +179,7 @@ describe('Emitter', () => {
                 }
             },
             {
-                on(drv, data) {
+                on(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
@@ -187,7 +187,7 @@ describe('Emitter', () => {
                     data.value = 2;
                 }
             },
-            (drv, data) => {
+            (data, drv) => {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -219,7 +219,7 @@ describe('Emitter', () => {
 
         target.subscribe([
             {
-                onread(drv, data) {
+                onread(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
@@ -227,7 +227,7 @@ describe('Emitter', () => {
                 }
             },
             {
-                on(drv, data) {
+                on(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
@@ -235,7 +235,7 @@ describe('Emitter', () => {
                     data.value = 2;
                 }
             },
-            (drv, data) => {
+            (data, drv) => {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -257,7 +257,7 @@ describe('Emitter', () => {
 
         target.subscribe([
             {
-                onread(drv, data) {
+                onread(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
@@ -266,7 +266,7 @@ describe('Emitter', () => {
                 }
             },
             {
-                on(drv, data) {
+                on(data, drv) {
                     expect(drv.constructor.name).toBe("Emitter");
                     expect(data).toBeInstanceOf(Object);
                     expect(data.value !== undefined).toBe(true);
@@ -274,7 +274,7 @@ describe('Emitter', () => {
                     counter++;
                 }
             },
-            (drv, data) => {
+            (data, drv) => {
                 expect(drv.constructor.name).toBe("Emitter");
                 expect(data).toBeInstanceOf(Object);
                 expect(data.value !== undefined).toBe(true);
@@ -283,7 +283,7 @@ describe('Emitter', () => {
             }
         ], "onread");
 
-        target.subscribe((drv, data) => {
+        target.subscribe((data, drv) => {
             expect(drv.constructor.name).toBe("Emitter");
             expect(data).toBeInstanceOf(Object);
             expect(data.value !== undefined).toBe(true);
@@ -303,7 +303,7 @@ describe('Emitter', () => {
         let counterOnce = 0;
         let counterPre = 0;
 
-        target.subscribe((drv, data) => {
+        target.subscribe((data, drv) => {
             expect(drv.constructor.name).toBe("Emitter");
             expect(data).toBeInstanceOf(Object);
             expect(data.value !== undefined).toBe(true);
@@ -311,7 +311,7 @@ describe('Emitter', () => {
             counterOnce++;
         }, "onread", { mode: "once" });
 
-        target.subscribe((drv, data) => {
+        target.subscribe((data, drv) => {
             expect(drv.constructor.name).toBe("Emitter");
             expect(data).toBeInstanceOf(Object);
             expect(data.value !== undefined).toBe(true);
