@@ -84,6 +84,7 @@ class IoCAsync {
      * @param {Object} [opt.src] Data source 
      * @param {String} [opt.path] Search path 
      * @param {Object} [opt.error] Error Handler 
+     * @param {Object} [opt.logger] logger Handler 
      */
     configure(opt = null) {
         opt = opt || {};

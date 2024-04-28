@@ -77,6 +77,10 @@ export type TLoaderOption = {
      * - error description if there is an error
      */
     error?: any;
+    /**
+     * - factory mode
+     */
+    mode?: any;
 };
 export type TDelegate = {
     action: any;
