@@ -53,14 +53,19 @@ class FactoryAsync {
      * @param {String} [payload.name] taget name
      * @param {String} [payload.namespace] taget name
      * @param {String} [payload.file] taget file path
+     * @param {String} [payload.mode] factory mode
      * @param {String} [payload.search] 
      * @return {Promise<any>} Class
      */
     async load(payload) {
         try {
-            const content = await this.require(payload.file);
+            let options = { mode: payload?.mode };
+            let content = await this.require(payload.file || payload.name, options);
             if (!content?.data) return null;
-            const Src = content.data;
+            let Src = content.data;
+            if (Src?.type === 'mjs') {
+                Src = Src?.default || Src;
+            }
             return inherit.namespace(Src, payload.namespace || payload.name);
         } catch (error) {
             this.log({
@@ -110,14 +115,17 @@ class FactoryAsync {
     build(payload = null) {
         if (!payload) return null;
         if (!payload.cls) {
-            payload = { cls: payload };
+            payload = { cls: payload?.default instanceof Function ? payload?.default : payload };
         }
         try {
-            const Cls = payload.cls;
+            let Cls = payload.cls?.default instanceof Function ? payload.cls?.default : payload.cls;
+            if (payload.cls?.type === 'mjs') {
+                Cls = Cls?.default || Cls;
+            }
             if (!inherit.isClass(Cls)) {
                 return Cls;
             }
-            const params = this.asList(payload.params);
+            let params = this.asList(payload.params);
             return new Cls(...params);
         } catch (error) {
             this.log({

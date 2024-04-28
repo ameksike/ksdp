@@ -1,5 +1,6 @@
 export = Loader;
 declare class Loader {
+    constructor(payload: any);
     /**
      * @type {Object}
      */
@@ -8,13 +9,14 @@ declare class Loader {
      * @type {Array<String>}
      */
     files: Array<string>;
+    logger: any;
     /**
      * @description load Node.Js modules (CJS, EMS)
-     * @param {String} module - module name or path
+     * @param {String} mod - module name or path
      * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
-    load(module: string, option?: TLoaderOption): Promise<any | null>;
+    load(mod: string, option?: TLoaderOption): Promise<any | null>;
     /**
      * @description load Node.Js CJS module
      * @param {String} module - module name or path
@@ -22,6 +24,7 @@ declare class Loader {
      * @returns {Object} module
      */
     loadSync(module: string, option?: TLoaderOption): any;
+    isValid(tmp: any, option: any): boolean;
     /**
      * @description retry loading the module looking for an alternative path
      * @param {String} module - module name or path

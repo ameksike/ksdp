@@ -26,6 +26,7 @@
  * @property {Number} [retry] - retry loading module on error
  * @property {Object} [default] - default value to return if there is an error
  * @property {Object} [error] - error description if there is an error 
+ * @property {Object} [mode] - factory mode
  */
 
 /**

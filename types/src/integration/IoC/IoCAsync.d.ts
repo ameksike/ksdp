@@ -15,6 +15,11 @@ declare class IoCAsync {
     opt: {};
     ctrls: {};
     error: any;
+    logger: any;
+    /**
+     * @description register Native alias
+     */
+    init(): Promise<void>;
     /**
      * @description Configure Lib
      * @param {Object} [opt] The input data.
@@ -22,12 +27,14 @@ declare class IoCAsync {
      * @param {Object} [opt.src] Data source
      * @param {String} [opt.path] Search path
      * @param {Object} [opt.error] Error Handler
+     * @param {Object} [opt.logger] logger Handler
      */
     configure(opt?: {
         name?: string;
         src?: any;
         path?: string;
         error?: any;
+        logger?: any;
     }): this;
     /**
      * @description Inversion of Control Pattern (IoC)

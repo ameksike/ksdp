@@ -15,41 +15,48 @@ class Loader {
      */
     files;
 
-    constructor() {
+    constructor(payload) {
         this.cache = {};
         this.files = ['index.js', 'index.mjs', 'index.cjs'];
+        this.logger = payload?.logger;
     }
 
     /**
      * @description load Node.Js modules (CJS, EMS)
-     * @param {String} module - module name or path
+     * @param {String} mod - module name or path
      * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
-    async load(module, option = {}) {
+    async load(mod, option = {}) {
         option = option || {};
         option.retry = option.retry === undefined ? 1 : option.retry;
         try {
+            option.force = option.force ?? option.mode === 'transient';
             if (option.force) {
-                delete this.cache[module];
+                delete this.cache[mod];
             }
-            let key = this.getKey(module, option);
+            let key = this.getKey(mod, option);
             if (!this.cache[key]) {
-                let tmp = await import(module);
+                let tmp = await import(mod);
                 if (tmp.default?.name && (option.fill || option.fill === undefined)) {
                     let def = tmp.default.name;
-                    tmp = { [def]: tmp.default, ...tmp };
+                    tmp = { [def]: tmp.default, ...tmp, type: 'mjs' };
+                }
+                if (!Object.isExtensible(tmp)) {
+                    tmp = { type: 'mjs', ...tmp };
+                } else {
+                    tmp.type = tmp.type || 'mjs';
                 }
                 this.cache[key] = tmp;
             }
             return option.auto ? this.cache[key].default : this.cache[key];
         }
         catch (error) {
-            option.error = option.error || error;
             if (option.retry > 0) {
                 option.retry = 0;
-                return this.retry(module, option);
+                return this.retry(mod, option);
             } else {
+                this.logger?.warn instanceof Function && this.logger.warn({ src: 'KsDp:Loader:load', error });
                 return option.default || null;
             }
         }
@@ -74,7 +81,7 @@ class Loader {
             }
             if (!this.cache[key]) {
                 let tmp = require(module);
-                if (Object.keys(tmp).length === 0 && option.strict) {
+                if (!this.isValid(tmp, option)) {
                     throw new Error('Invalid empty module');
                 }
                 this.cache[key] = tmp;
@@ -82,8 +89,24 @@ class Loader {
             return this.cache[key];
         }
         catch (error) {
+            this.logger?.warn instanceof Function && this.logger.warn({ src: 'KsDp:Loader:loadSync', error });
             option.error = error;
             return option.default || null;
+        }
+    }
+
+    isValid(tmp, option) {
+        try {
+            if (!tmp) {
+                return false;
+            }
+            if (tmp?.prototype && !Object.keys(Object.getOwnPropertyDescriptors(tmp?.prototype)) && option?.strict) {
+                return false;
+            }
+            return true;
+        }
+        catch (error) {
+            return false;
         }
     }
 
@@ -120,6 +143,7 @@ class Loader {
             return file ? this.getURL(file) : null;
         }
         catch (error) {
+            this.logger?.warn instanceof Function && this.logger.warn({ src: 'KsDp:Loader:resolve', error });
             return error
         }
     }

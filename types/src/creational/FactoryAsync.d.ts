@@ -34,6 +34,7 @@ declare class FactoryAsync {
      * @param {String} [payload.name] taget name
      * @param {String} [payload.namespace] taget name
      * @param {String} [payload.file] taget file path
+     * @param {String} [payload.mode] factory mode
      * @param {String} [payload.search]
      * @return {Promise<any>} Class
      */
@@ -41,6 +42,7 @@ declare class FactoryAsync {
         name?: string;
         namespace?: string;
         file?: string;
+        mode?: string;
         search?: string;
     }): Promise<any>;
     /**

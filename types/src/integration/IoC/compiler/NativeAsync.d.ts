@@ -6,8 +6,9 @@ export = NativeAsync;
 declare class NativeAsync {
     /**
      * @param {TIoC|null} [ioc]
+     * @param {Object|null} [logger]
      */
-    constructor(ioc?: TIoC | null);
+    constructor(ioc?: TIoC | null, logger?: any | null);
     /**
      * @returns {Inherit}
      */

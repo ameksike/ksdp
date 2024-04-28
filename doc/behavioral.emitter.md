@@ -12,18 +12,18 @@ The KsDp.behavioral.Emitter class allows listeners to subscribe to events using 
 **Anonymous Function:** You can define a subscriber as an anonymous function that directly captures the event. When the event is emitted, the anonymous function is executed, receiving the emitted data as parameters.
 
 ```Js
-emitter.add((emitter, val1, val2) => { /* ... */ }, "onread");
+emitter.add((val1, val2, emitter) => { /* ... */ }, "onread");
 
-emitter.add(function(emitter, val1, val2){ /* ... */ }, "my_event");
+emitter.add(function(val1, val2, emitter){ /* ... */ }, "my_event");
 
-emitter.subscribe(function(emitter, val1, val2){ /* ... */ }, "my_event");
+emitter.subscribe(function(val1, val2, emitter){ /* ... */ }, "my_event");
 ```
 
 **Object with a method named as event name:** You can define a subscriber as an object with a method as event name to be captured. When the event is emitted, the event name is used to determine the appropriate action and the corresponding method is executed, receiving the emitted data as parameters.
 
 ```Js
 const listener = {
-    onread(emitter, val) {
+    onread(val, emitter) {
         /* ... */
     }
 }
@@ -37,7 +37,7 @@ emitter.subscribe(listener, "onread");
 
 ```Js
 const listener = {
-    on(emitter, val) {
+    on(val, emitter) {
         /* ... */
     }
 }
@@ -49,16 +49,16 @@ emitter.add(listener, "onread");
 ```js
 emitter.subscribe([
   {
-    default(emitter, data) {
+    default(data, emitter) {
       console.log(data.value === 5);
     },
   },
   {
-    on(emitter, data) {
+    on(data, emitter) {
       console.log(data.value === 5);
     },
   },
-  (emitter, data) => {
+  (data, emitter) => {
     console.log(data.value === 5);
   },
 ]);
@@ -72,9 +72,9 @@ Additionally, listeners can emit events directly from within their own event han
 
 ```Js
 const listener = {
-    on(_emitter, val) {
+    on(val, _emitter) {
         /* ... */
-        _emitter.add((_emitter_, val) => {/* ... */}, "onread");
+        _emitter.add((val, _emitter_) => {/* ... */}, "onread");
     }
 }
 emitter.add(listener, "onread");
