@@ -31,6 +31,7 @@ class Loader {
         option = option || {};
         option.retry = option.retry === undefined ? 1 : option.retry;
         try {
+            option.force = option.force ?? option.mode === 'transient';
             if (option.force) {
                 delete this.cache[mod];
             }

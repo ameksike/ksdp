@@ -53,12 +53,14 @@ class FactoryAsync {
      * @param {String} [payload.name] taget name
      * @param {String} [payload.namespace] taget name
      * @param {String} [payload.file] taget file path
+     * @param {String} [payload.mode] factory mode
      * @param {String} [payload.search] 
      * @return {Promise<any>} Class
      */
     async load(payload) {
         try {
-            let content = await this.require(payload.file || payload.name);
+            let options = { mode: payload?.mode };
+            let content = await this.require(payload.file || payload.name, options);
             if (!content?.data) return null;
             let Src = content.data;
             if (Src?.type === 'mjs') {
