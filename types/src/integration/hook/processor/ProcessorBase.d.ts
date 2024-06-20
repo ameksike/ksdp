@@ -22,4 +22,4 @@ declare class ProcessorBase {
 declare namespace ProcessorBase {
     export { TList };
 }
-type TList = import('../types').TList;
+type TList = import("../types").TList;

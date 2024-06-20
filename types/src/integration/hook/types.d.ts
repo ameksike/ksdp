@@ -39,4 +39,4 @@ export type TEmission = {
     date?: number | Date;
     target?: TSubscription;
 };
-export type THook = import('./index');
+export type THook = import("./index");

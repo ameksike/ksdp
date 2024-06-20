@@ -95,9 +95,9 @@ declare namespace Hook {
 }
 import Strategy = require("../../behavioral/Strategy");
 import Command = require("../../behavioral/Command");
-type TEvent = import('./types').TEvent;
-type TSubscription = import('./types').TSubscription;
-type TList = import('./types').TList;
+type TEvent = import("./types").TEvent;
+type TSubscription = import("./types").TSubscription;
+type TList = import("./types").TList;
 type TListEmitted = {
     [x: string]: Promise<any[]>;
 } | {};

@@ -45,8 +45,8 @@ declare class SubscriberBase {
 declare namespace SubscriberBase {
     export { THook, TEmission, TSubscription, TEvent, TList };
 }
-type THook = import('../types').THook;
-type TEmission = import('../types').TEmission;
-type TSubscription = import('../types').TSubscription;
-type TEvent = import('../types').TEvent;
-type TList = import('../types').TList;
+type THook = import("../types").THook;
+type TEmission = import("../types").TEmission;
+type TSubscription = import("../types").TSubscription;
+type TEvent = import("../types").TEvent;
+type TList = import("../types").TList;

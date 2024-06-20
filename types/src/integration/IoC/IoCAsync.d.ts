@@ -95,4 +95,4 @@ declare namespace IoCAsync {
     export { TOptionIoC };
 }
 import Strategy = require("../../behavioral/StrategyAsync");
-type TOptionIoC = import('../../types').TOptionIoC;
+type TOptionIoC = import("../../types").TOptionIoC;

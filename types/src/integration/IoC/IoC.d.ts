@@ -92,4 +92,4 @@ declare namespace IoC {
     export { TOptionIoC };
 }
 import Strategy = require("../../behavioral/Strategy");
-type TOptionIoC = import('../../types').TOptionIoC;
+type TOptionIoC = import("../../types").TOptionIoC;

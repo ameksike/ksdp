@@ -32,6 +32,6 @@ declare class Ioc {
 declare namespace Ioc {
     export { THook, TSubscription, TList };
 }
-type THook = import('../types').THook;
-type TSubscription = import('../types').TSubscription;
-type TList = import('../types').TList;
+type THook = import("../types").THook;
+type TSubscription = import("../types").TSubscription;
+type TList = import("../types").TList;
