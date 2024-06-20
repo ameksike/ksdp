@@ -111,7 +111,7 @@ class Hook {
         for (let i in targets) {
             let target = targets[i];
             let result = this.process(target, subscriber, payload);
-            out.push(result);
+            result !== null && result !== undefined && out.push(result);
         }
         return Promise.all(out);
     }
