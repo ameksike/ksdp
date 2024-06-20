@@ -33,5 +33,5 @@ declare class Native {
 declare namespace Native {
     export { TOptionIoC, TIoC };
 }
-type TOptionIoC = import('../../../types').TOptionIoC;
-type TIoC = import('../IoC');
+type TOptionIoC = import("../../../types").TOptionIoC;
+type TIoC = import("../IoC");

@@ -67,4 +67,4 @@ declare class Loader {
 declare namespace Loader {
     export { TLoaderOption };
 }
-type TLoaderOption = import('../types').TLoaderOption;
+type TLoaderOption = import("../types").TLoaderOption;

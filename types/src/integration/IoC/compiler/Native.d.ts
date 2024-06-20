@@ -15,8 +15,8 @@ declare class Native {
         imitate: typeof import("../../../inherit/imitate");
         namespace: typeof import("../../../inherit/namespace");
         ns: typeof import("../../../inherit/namespace");
-        isClass: (target: any) => boolean;
-        className: (target: any) => string;
+        isClass: (target: any | Function) => boolean;
+        className: (target: any | Function) => string;
     };
     /**
      * @returns {Factory}
@@ -69,5 +69,5 @@ declare namespace Native {
     export { TOptionIoC, TIoC };
 }
 import Factory = require("../../../creational/Factory");
-type TOptionIoC = import('../../../types').TOptionIoC;
-type TIoC = import('../IoC');
+type TOptionIoC = import("../../../types").TOptionIoC;
+type TIoC = import("../IoC");

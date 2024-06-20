@@ -6,6 +6,9 @@ export = Hook;
  * @typedef {Object<string, Promise<any[]>>|{}} TListEmitted
  */
 declare class Hook {
+    /**
+     * @param {*} cfg
+     */
     constructor(cfg: any);
     /**
      * @returns {Strategy}
@@ -24,6 +27,10 @@ declare class Hook {
      */
     get cmd(): Command;
     logger: any;
+    /**
+     * @param {*} cfg
+     * @returns
+     */
     configure(cfg: any): this;
     /**
      * @description Trigger hooks notification
@@ -38,6 +45,13 @@ declare class Hook {
      * @return {Promise<Array>}
      */
     run(payload: TSubscription, name?: string): Promise<any[]>;
+    /**
+     * @description Process a subscription
+     * @param {Object} target
+     * @param {Object} payload
+     * @returns {*}
+     */
+    process(target: any, subscriber: any, payload: any): any;
     /**
      * @description Save subscription
      * @param {TSubscription} payload
@@ -81,9 +95,9 @@ declare namespace Hook {
 }
 import Strategy = require("../../behavioral/Strategy");
 import Command = require("../../behavioral/Command");
-type TEvent = import('./types').TEvent;
-type TSubscription = import('./types').TSubscription;
-type TList = import('./types').TList;
+type TEvent = import("./types").TEvent;
+type TSubscription = import("./types").TSubscription;
+type TList = import("./types").TList;
 type TListEmitted = {
     [x: string]: Promise<any[]>;
 } | {};

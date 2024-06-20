@@ -53,6 +53,9 @@ class Hook {
         return this.#cmd;
     }
 
+    /**
+     * @param {*} cfg 
+     */
     constructor(cfg) {
         this.#processor = new Strategy({ path: cfg.path, default: 'processor' });
         this.#notifier = new Strategy({ path: cfg.path, default: 'notifier' });
@@ -64,6 +67,10 @@ class Hook {
         this.configure(cfg);
     }
 
+    /**
+     * @param {*} cfg 
+     * @returns 
+     */
     configure(cfg) {
         this.notifier.configure(cfg);
         this.subscriber.configure(cfg);
@@ -103,28 +110,122 @@ class Hook {
         let out = [];
         for (let i in targets) {
             let target = targets[i];
-            let notifier = this.notifier.get(target?.notifier || target?.target);
-            if (notifier) {
-                notifier.hook = this;
-                let pld = { scope: null, ...payload, target, date: Date.now(), hook: this };
-                pld.data = pld.data || {};
-                if (pld?.target?.expression && pld.target.processor) {
-                    let processor = this.processor.get(pld.target.processor);
-                    if (processor) {
-                        let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data], processor);
-                        if (!resprd?.result) {
-                            continue;
-                        }
-                    }
-                }
-                let predat = subscriber?.format instanceof Function ? subscriber.format(pld) : pld;
-                let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope);
-                let insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
-                let posres = this.cmd?.run(pld?.onPosTrigger, [insres?.result], pld?.scope);
-                out.push(posres?.result || insres?.result);
-            }
+            let result = this.process(target, subscriber, payload);
+            out.push(result);
         }
         return Promise.all(out);
+    }
+
+    /**
+     * @description Process a subscription 
+     * @param {Object} target 
+     * @param {Object} payload 
+     * @returns {*}
+     */
+    process(target, subscriber, payload) {
+        try {
+            // Load the notifier
+            let notifier = this.notifier.get(target?.notifier || target?.target);
+            let param = payload.target?.param;
+            // Check the notifier
+            if (!notifier) {
+                this.logger?.warn({
+                    src: 'Ksdp:Hook:Run:CheckNotifier',
+                    error: 'Notifier not found',
+                    data: {
+                        event_id: target?.id,
+                        event_name: target?.event,
+                        notifier: target?.notifier
+                    }
+                });
+                return null;
+            }
+            // Define the custom data for the event processing 
+            let pld = { scope: null, ...payload, target, date: Date.now(), hook: this };
+            pld.data = pld.data || {};
+            pld.mode = 1;
+            // Evaluate the expression
+            if (pld?.target?.expression && pld.target.processor) {
+                let opts = {};
+                let processor = this.processor.get(pld.target.processor);
+                // Check the expression based on the processor
+                if (processor) {
+                    let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data, opts], processor);
+                    let error = resprd?.error || opts.error;
+                    if (!resprd?.result) {
+                        // Loading the alternate notifier and parameters
+                        if (pld.target.notifier_alt || pld.target.param_alt) {
+                            let notifierAlt = this.notifier.get(pld.target.notifier_alt);
+                            if (!notifierAlt) {
+                                this.logger?.warn({
+                                    src: 'Ksdp:Hook:Run:CheckNotifierAlt',
+                                    error: 'Notifier not found',
+                                    data: {
+                                        event_id: pld?.target?.id,
+                                        event_name: pld?.target?.event,
+                                        notifier: pld.target.notifier_alt
+                                    }
+                                });
+                            } else {
+                                notifier = notifierAlt;
+                                pld.mode = 0;
+                            }
+                            param = pld.target.param_alt || param;
+                        }
+                        else return null;
+                    }
+                    error && this.logger?.warn({
+                        src: 'Ksdp:Hook:Run:CheckExpression',
+                        error: error.message,
+                        data: {
+                            event_id: pld?.target?.id,
+                            event_name: pld?.target?.event,
+                            event_expression: pld?.target?.expression,
+                            event_payload: pld.data
+                        }
+                    });
+                }
+            }
+            // Parameter mapping
+            if (param) {
+                let opts = {};
+                let processor = this.processor.get(pld.target.processor || 'Native');
+                let resprd = pld.data && this.cmd?.run(processor?.run, [param, pld.data, opts], processor);
+                let error = resprd?.error || opts.error;
+                resprd?.result && (pld.data = resprd?.result);
+                error && this.logger?.warn({
+                    src: 'Ksdp:Hook:Run:MapParams',
+                    error: error.message,
+                    data: {
+                        event_id: pld.target?.id,
+                        event_name: pld.target?.event,
+                        event_param: pld.target?.param,
+                        event_payload: pld.data
+                    }
+                });
+            }
+            // Inject the hook library
+            notifier.hook = this;
+            // Run notifier action 
+            let predat = subscriber?.format instanceof Function ? subscriber.format(pld) : pld;
+            let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope);
+            let insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
+            let posres = this.cmd?.run(pld?.onPosTrigger, [insres?.result], pld?.scope);
+            return posres?.result || insres?.result;
+        }
+        catch (error) {
+            this.logger?.warn({
+                src: 'Ksdp:Hook:Process',
+                error: error.message,
+                data: {
+                    event_id: target?.id,
+                    event_name: target?.event,
+                    notifier: target?.notifier || target?.target
+                }
+            });
+            return null;
+        }
+
     }
 
     /**
