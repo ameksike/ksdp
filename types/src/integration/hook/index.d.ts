@@ -6,6 +6,9 @@ export = Hook;
  * @typedef {Object<string, Promise<any[]>>|{}} TListEmitted
  */
 declare class Hook {
+    /**
+     * @param {*} cfg
+     */
     constructor(cfg: any);
     /**
      * @returns {Strategy}
@@ -24,6 +27,10 @@ declare class Hook {
      */
     get cmd(): Command;
     logger: any;
+    /**
+     * @param {*} cfg
+     * @returns
+     */
     configure(cfg: any): this;
     /**
      * @description Trigger hooks notification

@@ -53,6 +53,9 @@ class Hook {
         return this.#cmd;
     }
 
+    /**
+     * @param {*} cfg 
+     */
     constructor(cfg) {
         this.#processor = new Strategy({ path: cfg.path, default: 'processor' });
         this.#notifier = new Strategy({ path: cfg.path, default: 'notifier' });
@@ -64,6 +67,10 @@ class Hook {
         this.configure(cfg);
     }
 
+    /**
+     * @param {*} cfg 
+     * @returns 
+     */
     configure(cfg) {
         this.notifier.configure(cfg);
         this.subscriber.configure(cfg);
