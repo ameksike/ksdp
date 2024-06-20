@@ -109,13 +109,42 @@ class Hook {
                 let pld = { scope: null, ...payload, target, date: Date.now(), hook: this };
                 pld.data = pld.data || {};
                 if (pld?.target?.expression && pld.target.processor) {
+                    let opts = {};
                     let processor = this.processor.get(pld.target.processor);
                     if (processor) {
-                        let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data], processor);
+                        let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data, opts], processor);
+                        let error = resprd?.error || opts.error;
                         if (!resprd?.result) {
                             continue;
                         }
+                        error && this.logger?.warn({
+                            src: 'Ksdp:Hook:Run:CheckExpression',
+                            error: error.message,
+                            data: {
+                                event_id: pld?.target?.id,
+                                event_name: pld?.target?.event,
+                                event_expression: pld?.target?.expression,
+                                event_payload: pld.data
+                            }
+                        });
                     }
+                }
+                if (pld?.target?.param) {
+                    let opts = {};
+                    let processor = this.processor.get(pld.target.processor || 'Native');
+                    let resprd = pld.data && this.cmd?.run(processor?.run, [pld.target.param, pld.data, opts], processor);
+                    let error = resprd?.error || opts.error;
+                    resprd?.result && (pld.data = resprd?.result);
+                    error && this.logger?.warn({
+                        src: 'Ksdp:Hook:Run:MapParams',
+                        error: error.message,
+                        data: {
+                            event_id: pld.target?.id,
+                            event_name: pld.target?.event,
+                            event_param: pld.target?.param,
+                            event_payload: pld.data
+                        }
+                    });
                 }
                 let predat = subscriber?.format instanceof Function ? subscriber.format(pld) : pld;
                 let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope);
