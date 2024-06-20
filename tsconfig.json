@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "ES2022",
+      "module": "commonjs",
+      "declaration": true,
+      "allowJs": true,
+      "checkJs": true,
+      "emitDeclarationOnly": true,
+      "outDir": "./types",
+      "strict": true,
+      "baseUrl": ".",
+      "paths": {
+        "*": ["node_modules/*"]
+      }
+    },
+    "include": ["./src/**/*.js"],
+    "exclude": ["node_modules", "dist", "types", "test", "doc"]
+  }
+
