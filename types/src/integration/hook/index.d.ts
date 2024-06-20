@@ -39,6 +39,13 @@ declare class Hook {
      */
     run(payload: TSubscription, name?: string): Promise<any[]>;
     /**
+     * @description Process a subscription
+     * @param {Object} target
+     * @param {Object} payload
+     * @returns {*}
+     */
+    process(target: any, subscriber: any, payload: any): any;
+    /**
      * @description Save subscription
      * @param {TSubscription} payload
      * @returns {Promise<TSubscription>} subscribed
