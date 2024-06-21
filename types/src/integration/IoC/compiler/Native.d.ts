@@ -2,6 +2,7 @@ export = Native;
 /**
  * @typedef {import('../../../types').TOptionIoC} TOptionIoC
  * @typedef {import('../IoC')} TIoC
+ * @typedef {import('../../../types').TList} TList
  */
 declare class Native {
     /**
@@ -23,12 +24,12 @@ declare class Native {
      */
     get factory(): Factory;
     /**
-     * @returns {TIoC}
+     * @returns {TIoC|null}
      */
     get ioc(): import("../IoC");
     /**
      * @description Service Locator Pattern (SL)
-     * @param {Object} opt
+     * @param {any} opt
      * @returns result
      */
     run(opt: any): any;
@@ -41,15 +42,31 @@ declare class Native {
     /**
      * @description Factory Pattern
      * @param {Object} opt
-     * @returns {Object} result
+     * @param {String} [opt.name]
+     * @param {String} [opt.file]
+     * @param {any} [opt.params]
+     * @param {any} [opt.options]
+     * @param {any} [opt.dependency]
+     * @returns {any} result
      */
-    instance(opt: any): any;
+    instance(opt: {
+        name?: string;
+        file?: string;
+        params?: any;
+        options?: any;
+        dependency?: any;
+    }): any;
     /**
      * @description excecute action from object
      * @param {Object} opt
+     * @param {String} opt.action
+     * @param {any} opt.params
      * @returns {*}
      */
-    action(opt: any): any;
+    action(opt: {
+        action: string;
+        params: any;
+    }): any;
     /**
      * @description get dependency
      * @param {Object} opt
@@ -58,16 +75,20 @@ declare class Native {
     dependency(opt: any): any;
     /**
      * @description Dependency Injection Pattern (DI)
-     * @param {Object} obj
-     * @param {Object} opt
-     * @returns {Object} result
+     * @param {any} obj
+     * @param {Object} [opt]
+     * @param {TList} [opt.dependency]
+     * @returns {any} result
      */
-    setDI(obj: any, opt: any): any;
+    setDI(obj: any, opt?: {
+        dependency?: TList;
+    }): any;
     #private;
 }
 declare namespace Native {
-    export { TOptionIoC, TIoC };
+    export { TOptionIoC, TIoC, TList };
 }
 import Factory = require("../../../creational/Factory");
 type TOptionIoC = import("../../../types").TOptionIoC;
 type TIoC = import("../IoC");
+type TList = import("../../../types").TList;
