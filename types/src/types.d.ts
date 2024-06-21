@@ -1,6 +1,9 @@
+export type TList<T = any> = {
+    [name: string]: T;
+};
 export type TOptionIoC = {
     /**
-     * DEFAULT['DefaultService']
+     * DEFAULT['DefaultService'] Alias for it lib
      */
     name?: string;
     namespace?: string;
@@ -37,48 +40,53 @@ export type TOptionIoC = {
      */
     mode?: string;
     /**
-     * DEFAULT[type]
+     * DEFAULT[type] Search path
      */
     path?: string;
     file?: string;
+    /**
+     * Data source
+     */
     id?: string;
+    src?: TList;
+    error?: Error;
     data?: any;
 };
 export type TLoaderOption = {
     /**
-     * - module type cjs|mjs
+     * module type cjs|mjs
      */
     type?: string;
     /**
-     * - export only the default
+     * export only the default
      */
     auto?: boolean;
     /**
-     * - include the default property as the original definition
+     * include the default property as the original definition
      */
     fill?: boolean;
     /**
-     * - force to clean the cache before load the module
+     * force to clean the cache before load the module
      */
     force?: boolean;
     /**
-     * - additional validation to check empty object
+     * additional validation to check empty object
      */
     strict?: boolean;
     /**
-     * - retry loading module on error
+     * retry loading module on error
      */
     retry?: number;
     /**
-     * - default value to return if there is an error
+     * default value to return if there is an error
      */
     default?: any;
     /**
-     * - error description if there is an error
+     * error description if there is an error
      */
     error?: any;
     /**
-     * - factory mode
+     * factory mode
      */
     mode?: any;
 };
