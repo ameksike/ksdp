@@ -76,7 +76,9 @@ class Observer {
      * @return {Observer} self-reference
      */
     add(subscriber, event, scope = 'default', option = {}) {
-        option = { ...option, event, scope };
+        option = option || {};
+        option.event = event;
+        option.scope = scope;
         if (Array.isArray(subscriber)) {
             for (let listener of subscriber) {
                 delete option['index'];
