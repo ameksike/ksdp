@@ -17,6 +17,7 @@ const _path = require('path');
 /**
  * @typedef {import('../../../types').TOptionIoC} TOptionIoC
  * @typedef {import('../IoC')} TIoC
+ * @typedef {import('../../../types').TList} TList
  */
 class Native {
 
@@ -45,12 +46,12 @@ class Native {
     }
 
     /**
-     * @type {TIoC}
+     * @type {TIoC|null}
      */
     #ioc;
 
     /**
-     * @returns {TIoC}
+     * @returns {TIoC|null}
      */
     get ioc() {
         return this.#ioc;
@@ -58,25 +59,26 @@ class Native {
 
     /**
      * @param {TIoC|null} [ioc] 
+     * @param {Object|null} [logger] 
      */
-    constructor(ioc = null) {
+    constructor(ioc = null, logger = null) {
         this.#ioc = ioc;
         this.#inherit = Inherit;
-        this.#factory = new Factory();
+        this.#factory = new Factory({ logger });
     }
 
     /**
      * @description Service Locator Pattern (SL)
-     * @param {Object} opt 
+     * @param {any} opt 
      * @returns result
      */
     run(opt) {
         let path, out = null;
-        let isPack = (itm) => itm?.moduleType === "lib" || itm?.moduleType === "package";
-        let dirPack = (name) => require?.resolve && _path.dirname(require.resolve(name));
+        let isPack = (/** @type {{moduleType:String}} */ itm) => itm?.moduleType === "lib" || itm?.moduleType === "package";
+        let dirPack = (/** @type {String} */ name) => require?.resolve && _path.dirname(require.resolve(name));
         switch (opt.type) {
             case 'module':
-                opt.file = opt.file || _path.join(this.ioc?.opt?.path, opt.name);
+                opt.file = opt.file || _path.join(this.ioc?.opt?.path || '', opt.name);
                 out = this.instance(opt);
                 out && (out._ = { type: 'module', path: _path.resolve(opt.file) });
                 break;
@@ -97,10 +99,11 @@ class Native {
                     opt.file = this.ioc?.opt?.path ? opt.file.replace('./', this.ioc.opt.path) : opt.file;
                     mod = _path.resolve(opt.file);
                 }
+                /** @type {any} */
                 out = require(mod);
                 out = this.inherit.namespace(out, opt.namespace || opt.name);
                 out = this.factory.build({ cls: out, ...opt });
-                out = this.setDI(out, opt);
+                out = (out && this.setDI(out, opt)) || out;
                 out && !opt?.file && (out._ = { type: 'lib', path: dirPack(opt.name) });
                 out?.init instanceof Function && out.init();
                 break;
@@ -111,15 +114,16 @@ class Native {
 
             default:
                 path = isPack(opt) ? dirPack(opt.module) : this.ioc?.opt?.path;
-                path = !isPack(opt) && opt.module ? _path.join(path, opt.module) : path;
-                path = opt.path ? _path.join(path, opt.path) : path;
-
+                path = !isPack(opt) && opt.module ? _path.join(path || "", opt.module) : path;
+                path = opt.path ? _path.join(path || "", opt.path) : path;
                 opt.file = opt.file || [
-                    _path.join(path, opt.name + '.js'),
-                    _path.join(path, opt.name, 'index.js'),
-                    _path.join(path, opt.name, opt.name + '.js'),
+                    _path.join(path || "", opt.name + '.js'),
+                    _path.join(path || "", opt.name, 'index.js'),
+                    _path.join(path || "", opt.name, opt.name + '.js'),
                 ];
-                out = this[opt.type] ? this[opt.type](opt) : null;
+                /** @type {any} */
+                let _this = this;
+                out = _this[opt.type] ? _this[opt.type](opt) : null;
                 break;
         }
         return out;
@@ -144,18 +148,24 @@ class Native {
     /**
      * @description Factory Pattern
      * @param {Object} opt 
-     * @returns {Object} result
+     * @param {String} [opt.name] 
+     * @param {String} [opt.file] 
+     * @param {any} [opt.params] 
+     * @param {any} [opt.options]
+     * @param {any} [opt.dependency] 
+     * @returns {any} result
      */
     instance(opt) {
         try {
+            /** @type {any} */
             let obj = this.factory.get({
                 name: opt.name,
                 file: opt.file,
                 params: opt.options || opt.params
             });
             if (!obj) return null;
-            obj = this.setDI(obj, opt);
-            if (obj.init) {
+            obj = obj && this.setDI(obj, opt);
+            if (obj?.init instanceof Function) {
                 obj.init();
             }
             return obj;
@@ -170,6 +180,8 @@ class Native {
     /**
      * @description excecute action from object
      * @param {Object} opt 
+     * @param {String} opt.action 
+     * @param {any} opt.params 
      * @returns {*}
      */
     action(opt) {
@@ -189,9 +201,10 @@ class Native {
 
     /**
      * @description Dependency Injection Pattern (DI)
-     * @param {Object} obj 
-     * @param {Object} opt 
-     * @returns {Object} result
+     * @param {any} obj 
+     * @param {Object} [opt] 
+     * @param {TList} [opt.dependency] 
+     * @returns {any} result
      */
     setDI(obj, opt) {
         if (!opt?.dependency) {

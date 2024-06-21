@@ -9,14 +9,19 @@ export = Observer;
  * @version     1.0
  **/
 /**
- * @typedef {({[name:String]:Object} | Array)} List
+ * @typedef {({[name:String]:Object} | Array<any>)} List
  **/
+/**
+ * @typedef {Object} THelper
+ * @property {Function} get
+ */
 declare class Observer {
-    sts: {};
-    evs: {
-        default: {};
-    };
-    helper: any;
+    /** @type {any} **/
+    sts: any;
+    /** @type {any} **/
+    evs: any;
+    /** @type {THelper|null} */
+    helper: THelper | null;
     /**
      * @description configure lib
      * @param {Object} [opt]
@@ -39,44 +44,44 @@ declare class Observer {
      * @description Getting the Subscriptions for an Event
      * @param {String} event
      * @param {String} scope
-     * @returns {Array} list
+     * @returns {Array<any>} list
      */
-    listeners(event?: string, scope?: string): any[];
+    listeners(event?: string, scope?: string): Array<any>;
     /**
      * @description add an event on scope
-     * @param {Array|Object|Function} subscriber
+     * @param {Array<any>|Object|Function} subscriber
      * @param {String} [event]
      * @param {String} [scope='default']
      * @param {Object} [option]
      * @param {String} [option.event]
      * @param {String} [option.scope]
      * @param {Number} [option.index]
-     * @param {Array} [option.rows]
+     * @param {Array<any>} [option.rows]
      * @return {Observer} self-reference
      */
-    add(subscriber: any[] | any | Function, event?: string, scope?: string, option?: {
+    add(subscriber: Array<any> | any | Function, event?: string, scope?: string, option?: {
         event?: string;
         scope?: string;
         index?: number;
-        rows?: any[];
+        rows?: Array<any>;
     }): Observer;
     /**
      * @description alias for add an event on scope
-     * @param {Array|Object|Function} subscriber
+     * @param {Array<any>|Object|Function} subscriber
      * @param {String} [event]
      * @param {String} [scope='default']
      * @param {Object} [option]
      * @param {String} [option.event]
      * @param {String} [option.scope]
      * @param {Number} [option.index]
-     * @param {Array} [option.rows]
+     * @param {Array<any>} [option.rows]
      * @return {Observer} self-reference
      */
-    subscribe(subscriber: any[] | any | Function, event?: string, scope?: string, option?: {
+    subscribe(subscriber: Array<any> | any | Function, event?: string, scope?: string, option?: {
         event?: string;
         scope?: string;
         index?: number;
-        rows?: any[];
+        rows?: Array<any>;
     }): Observer;
     /**
      * @description alias for delete an event from scope
@@ -87,7 +92,7 @@ declare class Observer {
      * @param {String} [option.event]
      * @param {String} [option.scope]
      * @param {Number} [option.count]
-     * @param {Array} [option.rows]
+     * @param {Array<any>} [option.rows]
      * @return {Observer} self-reference
      */
     unsubscribe(event: string, scope?: string, option?: {
@@ -95,7 +100,7 @@ declare class Observer {
         event?: string;
         scope?: string;
         count?: number;
-        rows?: any[];
+        rows?: Array<any>;
     }): Observer;
     /**
      * @description delete an event from scope
@@ -106,7 +111,7 @@ declare class Observer {
      * @param {String} [option.event]
      * @param {String} [option.scope]
      * @param {Number} [option.count]
-     * @param {Array} [option.rows]
+     * @param {Array<any>} [option.rows]
      * @return {Observer} self-reference
      */
     del(event: string, scope?: string, option?: {
@@ -114,28 +119,31 @@ declare class Observer {
         event?: string;
         scope?: string;
         count?: number;
-        rows?: any[];
+        rows?: Array<any>;
     }): Observer;
     /**
      * @description emit an event on a scope with a params list
      * @param {String} event
      * @param {String} scope
-     * @param {Array} params
+     * @param {Array<any>} params
      * @return {Observer} self-reference
      */
-    emit(event: string, scope?: string, params?: any[]): Observer;
+    emit(event: string, scope?: string, params?: Array<any>): Observer;
     /**
      * @description process an event on a scope
      * @param {*} subscriber
      * @param {String} event
-     * @param {Array} params
+     * @param {Array<any>} params
      * @returns {*} target
      */
-    process(subscriber: any, event: string, params?: any[]): any;
+    process(subscriber: any, event: string, params?: Array<any>): any;
 }
 declare namespace Observer {
-    export { List };
+    export { List, THelper };
 }
 type List = ({
     [name: string]: any;
-} | any[]);
+} | Array<any>);
+type THelper = {
+    get: Function;
+};

@@ -1,13 +1,13 @@
 export = Native;
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		09/11/2019
- * @copyright  	Copyright (c) 2019-2050
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        09/11/2019
+ * @copyright   Copyright (c) 2019-2050
  * @description Native Analizer
  * @dependency  Factory
- * @license    	GPL
- * @version    	1.0
+ * @license     GPL
+ * @version     1.0
  **/
 /**
  * @typedef {import('../../../types').TOptionIoC} TOptionIoC
@@ -19,7 +19,7 @@ declare class Native {
      */
     constructor(ioc?: TIoC | null);
     /**
-     * @returns {TIoC}
+     * @returns {TIoC|null}
      */
     get ioc(): import("../IoC");
     /**

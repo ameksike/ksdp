@@ -2,32 +2,32 @@ export = FactoryAsync;
 /**
  * @typedef {Object} BuildOption
  * @property {*} cls - taget Class.
- * @property {Array} params - params for taget constructor.
+ * @property {Array<any>} params - params for taget constructor.
  */
 declare class FactoryAsync {
     /**
      * @param {Object} [payload]
-     * @param {Object} [payload.logger]
-     * @param {Object} [payload.loader]
+     * @param {Console|null} [payload.logger]
+     * @param {Loader} [payload.loader]
      */
     constructor(payload?: {
-        logger?: any;
-        loader?: any;
+        logger?: Console | null;
+        loader?: Loader;
     });
     /**
-     * @type {Object}
+     * @type {Loader}
      */
-    loader: any;
+    loader: Loader;
     /**
-     * @type {Object}
+     * @type {Console|null|undefined}
      */
-    logger: any;
+    logger: Console | null | undefined;
     /**
      * @description Get as array
      * @param {Object} payload The input data.
-     * @return {Array}
+     * @return {Array<any>}
      */
-    asList(payload: any): any[];
+    asList(payload: any): Array<any>;
     /**
      * @description Load Class
      * @param {Object} [payload] The input data.
@@ -49,18 +49,19 @@ declare class FactoryAsync {
      * @description require a file or list of them
      * @param {String|Array<String>} file
      * @param {Object} [option]
-     * @returns {Promise<Object>} result - The output object.
-     * @property {Object} [result.data] - data content.
-     * @property {String} [result.file] - file path.
+     * @returns {Promise<{data:Object|null; file: String}|null>} result - The output object.
      */
-    require(file: string | Array<string>, option?: any): Promise<any>;
+    require(file: string | Array<string>, option?: any): Promise<{
+        data: any | null;
+        file: string;
+    } | null>;
     /**
      * @description Get Instance
      * @param {BuildOption|*} payload taget Class
-     * @return {Object} Instance
+     * @return {Object|null} Instance
      * @example new (Function.prototype.bind.apply(Cls, Prm))
      */
-    build(payload?: BuildOption | any): any;
+    build(payload?: BuildOption | any): any | null;
     /**
      * @description Get Instance
      * @param {Object} [payload] The input data.
@@ -68,14 +69,14 @@ declare class FactoryAsync {
      * @param {String} [payload.file] taget File Path
      * @param {Object} [payload.params] params for taget constructor
      * @param {*} [payload.cls] class or object
-     * @return {Promise<Object>} Instance
+     * @return {Promise<Object|null>} Instance
      */
     get(payload?: {
         name?: string;
         file?: string;
         params?: any;
         cls?: any;
-    }): Promise<any>;
+    }): Promise<any | null>;
     /**
      * @description internal log handler
      */
@@ -84,6 +85,7 @@ declare class FactoryAsync {
 declare namespace FactoryAsync {
     export { BuildOption };
 }
+import Loader = require("../common/loader");
 type BuildOption = {
     /**
      * - taget Class.
@@ -92,5 +94,5 @@ type BuildOption = {
     /**
      * - params for taget constructor.
      */
-    params: any[];
+    params: Array<any>;
 };

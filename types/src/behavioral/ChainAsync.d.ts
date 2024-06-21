@@ -14,19 +14,19 @@ export = ChainAsync;
 declare class ChainAsync {
     /**
      * @param {Object} [option]
-     * @param {Object} [option.logger]
+     * @param {Console} [option.logger]
      * @param {Array<any>} [option.store]
      */
     constructor(option?: {
-        logger?: any;
+        logger?: Console;
         store?: Array<any>;
     });
     /**
-     * @type {Object}
+     * @type {Console|undefined}
      */
-    logger: any;
+    logger: Console | undefined;
     /**
-     * @type {Object}
+     * @type {any}
      */
     store: any;
     /**

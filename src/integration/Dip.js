@@ -1,11 +1,11 @@
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		09/11/2019
- * @copyright  	Copyright (c) 2019-2050
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        09/11/2019
+ * @copyright   Copyright (c) 2019-2050
  * @description Implement a Dependency Injection Pattern based on inheritance to abstract the Setter Injection type 
- * @license    	GPL
- * @version    	1.0
+ * @license     GPL
+ * @version     1.0
  **/
 class DIP {
 
@@ -38,8 +38,10 @@ class DIP {
     getMissingDependencies(list) {
         list = typeof (list) === "string" ? [list] : list;
         const missing = [];
+        /** @type {any} */
+        const _this = this;
         for (let dependency of list) {
-            !this[dependency] && missing.push(dependency);
+            !_this[dependency] && missing.push(dependency);
         }
         return missing;
     }
@@ -47,10 +49,10 @@ class DIP {
     /**
      * @description Check all requided dependencies and throw an error 
      * @param {Array<String>|String} list 
-     * @param {typeof Error} ErrorType 
+     * @param {typeof Error} [ErrorType] 
      * @returns {DIP} self-reference
      */
-    checkDependencies(list, ErrorType = null) {
+    checkDependencies(list, ErrorType) {
         const missing = this.getMissingDependencies(list);
         if (missing?.length > 0) {
             ErrorType = ErrorType || Error;

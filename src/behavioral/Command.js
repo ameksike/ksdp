@@ -10,10 +10,13 @@
 const inherit = require("../inherit");
 
 /**
- * @typedef {({[name:String]:Object} | Array)} List 
+ * @typedef {({[name:String]:Object} | Array<any>)} List 
  **/
 class Command {
 
+    /**
+     * @param {Object} [opt]
+     */
     constructor(opt) {
         this.configure(opt);
     }
@@ -23,15 +26,15 @@ class Command {
      * @param {Object} [opt]
      * @param {Function} [opt.factory] 
      */
-    configure(opt = null) {
-        this.factory = (opt?.factory instanceof Function) ? opt.factory : null;
+    configure(opt) {
+        this.factory = (opt?.factory instanceof Function) ? opt?.factory : null;
     }
 
     /**
      * @description run action with params on scope
-     * @param {String|Function} action 
-     * @param {List} params 
-     * @param {Object} scope 
+     * @param {String|Function|null|undefined} action 
+     * @param {List} [params] 
+     * @param {Object} [scope] 
      * @return {Object} result
      */
     run(action, params, scope) {
@@ -41,12 +44,12 @@ class Command {
                     result: action
                 };
             }
-            scope = this.getScope(scope);
+            let _scope = this.getScope(scope);
             if (typeof (action) === "string") {
-                action = scope[action] instanceof Function ? scope[action] : inherit.ns(scope, action);
+                action = _scope[action] instanceof Function ? _scope[action] : inherit.ns(_scope, action);
             }
             if (action instanceof Function) {
-                return { result: action.apply(scope, this.asList(params)) };
+                return { result: action.apply(_scope, this.asList(params)) };
             }
             return { error: new Error(`"${action}" does not exist`) };
         }
@@ -57,8 +60,8 @@ class Command {
 
     /**
      * @description Get as array
-     * @param {List} payload value 
-     * @return {Array} list
+     * @param {List} [payload] value 
+     * @return {Array<*>} list
      */
     asList(payload) {
         return (payload instanceof Array ? payload : [payload]);
@@ -66,7 +69,7 @@ class Command {
 
     /**
      * @description resolve scope
-     * @param {Object} scope 
+     * @param {Object} [scope] 
      */
     getScope(scope) {
         return this.factory ? this.factory(scope) : (scope || this);

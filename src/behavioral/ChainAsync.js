@@ -15,18 +15,18 @@
 class ChainAsync {
 
     /**
-     * @type {Object}
+     * @type {Console|undefined}
      */
     logger;
 
     /**
-     * @type {Object}
+     * @type {any}
      */
     store;
 
     /**
      * @param {Object} [option]
-     * @param {Object} [option.logger] 
+     * @param {Console} [option.logger] 
      * @param {Array<any>} [option.store] 
      */
     constructor(option) {
@@ -48,9 +48,9 @@ class ChainAsync {
                 }
                 return method.apply(scope || {}, [...params, next]);
             }
-            catch (error) {
+            catch (/** @type {any} */error) {
                 this.logger?.error({ src: 'KsDp:Chain:run', error });
-                next();
+                next(null);
             }
         });
     }

@@ -1,7 +1,7 @@
 /**
  * @description Namespace resolution 
- * @param {Object} src 
- * @param {String} name 
+ * @param {any} src 
+ * @param {String|null} name 
  * @param {Boolean} strict 
  */
 function namespace(src, name = null, strict = false) {

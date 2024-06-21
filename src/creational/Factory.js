@@ -13,18 +13,21 @@ const inherit = require("../inherit");
 /**
  * @typedef {Object} BuildOption
  * @property {*} cls - taget Class.
- * @property {Array} params - params for taget constructor.
+ * @property {Array<any>} params - params for taget constructor.
  */
 class Factory {
 
-    constructor(payload) {
-        this.logger = payload?.logger || console;
+    /**
+     * @param {*} payload 
+     */
+    constructor(payload = null) {
+        this.logger = payload?.logger;
     }
 
     /**
      * @description Get as array
      * @param {Object} payload The input data.
-     * @return {Array} 
+     * @return {Array<any>} 
      */
     asList(payload) {
         return (payload instanceof Array ? payload : [payload]);
@@ -41,10 +44,11 @@ class Factory {
      */
     load(payload) {
         try {
-            const content = this.require(payload.file);
+            /** @type {*} */
+            const content = payload?.file && this.require(payload.file);
             if (!content?.data) return null;
             const Src = content.data;
-            return inherit.namespace(Src, payload.namespace || payload.name);
+            return inherit.namespace(Src, payload?.namespace || payload?.name);
         } catch (error) {
             this.log({
                 src: "ksdp:creational:Factory:load",
@@ -58,9 +62,7 @@ class Factory {
     /**
      * @description require a file or list of them
      * @param {String|Array<String>} file 
-     * @returns {Object} result - The output object.
-     * @property {Object} [result.data] - data content.
-     * @property {String} [result.file] - file path.
+     * @returns {{data:Object; file: String}|null} result - The output object.
      */
     require(file) {
         try {
@@ -71,12 +73,9 @@ class Factory {
                         return content;
                     }
                 }
-
+                return null;
             } else {
-                return {
-                    data: require(file),
-                    file
-                };
+                return { data: require(file), file };
             }
         }
         catch (error) {
@@ -92,7 +91,7 @@ class Factory {
     /**
      * @description Get Instance
      * @param {BuildOption|*} payload taget Class
-     * @return {Object} Instance
+     * @return {Object|null} Instance
      * @example new (Function.prototype.bind.apply(Cls, Prm))
      */
     build(payload = null) {
@@ -124,9 +123,9 @@ class Factory {
      * @param {String} [payload.file] taget File Path
      * @param {Object} [payload.params] params for taget constructor
      * @param {*} [payload.cls] class or object
-     * @return {Object} Instance
+     * @return {Object|null} Instance
      */
-    get(payload = null) {
+    get(payload) {
         if (!payload) {
             return null;
         }

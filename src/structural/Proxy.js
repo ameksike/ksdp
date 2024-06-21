@@ -1,11 +1,11 @@
 /**
  * @description Extendable Proxy class implementation 
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		11/05/2020
- * @copyright  	Copyright (c) 2020-2050
- * @license    	GPL
- * @version    	1.0
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        11/05/2020
+ * @copyright   Copyright (c) 2020-2050
+ * @license     GPL
+ * @version     1.0
  **/
 class KsProxy {
 
@@ -15,20 +15,38 @@ class KsProxy {
 
     /**
      * @description Proxy builder
-     * @returns {Object}
+     * @returns {KsProxy}
      */
     build() {
         return new Proxy(this, {
+            /**
+             * @description Must be overridden in the child class to define how properties of the controlled class are set
+             * @virtual
+             * @param {any} target 
+             * @param {string | number | symbol} key 
+             * @param {*} value 
+             * @param {Object} receiver 
+             * @returns {boolean}
+             */
             set: (target, key, value, receiver) => {
                 if (typeof (key) === "symbol") {
-                    return null;
+                    return !!null;
                 }
                 if (this.#skip(target, key)) {
                     target[key] = value;
                 } else {
                     this.set(target, key, value, receiver)
                 }
+                return true;
             },
+            /**
+             * @description Must be overridden in the child class to define how methods or properties of the controlled class are read
+             * @virtual
+             * @param {Object} target 
+             * @param {string | number | symbol} key 
+             * @param {Object} receiver 
+             * @returns {*} value
+             */
             get: (target, key, receiver) => {
                 if (typeof (key) === "symbol") {
                     return null;
@@ -45,7 +63,7 @@ class KsProxy {
 
     /**
      * @description Define if it is possible to skip some properties and method from the target
-     * @param {Object} target 
+     * @param {any} target 
      * @param {String|Number} key 
      * @returns {Boolean}
      */
@@ -68,8 +86,8 @@ class KsProxy {
     /**
      * @description Must be overridden in the child class to define how properties of the controlled class are set
      * @virtual
-     * @param {Object} target 
-     * @param {String} key 
+     * @param {any} target 
+     * @param {string | number | symbol} key 
      * @param {*} value 
      * @param {Object} receiver 
      */

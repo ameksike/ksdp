@@ -6,9 +6,9 @@ export = NativeAsync;
 declare class NativeAsync {
     /**
      * @param {TIoC|null} [ioc]
-     * @param {Object|null} [logger]
+     * @param {Console|null} [logger]
      */
-    constructor(ioc?: TIoC | null, logger?: any | null);
+    constructor(ioc?: TIoC | null, logger?: Console | null);
     /**
      * @returns {Inherit}
      */
@@ -24,40 +24,59 @@ declare class NativeAsync {
      */
     get factory(): Factory;
     /**
-     * @returns {TIoC}
+     * @returns {TIoC|null}
      */
     get ioc(): import("../IoC");
     /**
      * @description Service Locator Pattern (SL)
-     * @param {Object} opt
+     * @param {any} opt
      * @returns result
      */
     run(opt: any): Promise<any>;
     /**
      * @description Factory Pattern
      * @param {Object} opt
-     * @returns {Promise<Object>} result
+     * @param {String} [opt.name]
+     * @param {String} [opt.file]
+     * @param {any} [opt.params]
+     * @param {any} [opt.options]
+     * @param {any} [opt.dependency]
+     * @returns {Promise<any>} result
      */
-    instance(opt: any): Promise<any>;
+    instance(opt: {
+        name?: string;
+        file?: string;
+        params?: any;
+        options?: any;
+        dependency?: any;
+    }): Promise<any>;
     /**
      * @description excecute action from object
      * @param {Object} opt
+     * @param {String} opt.action
+     * @param {any} opt.params
      * @returns {Promise<any>}
      */
-    action(opt: any): Promise<any>;
+    action(opt: {
+        action: string;
+        params: any;
+    }): Promise<any>;
     /**
      * @description get dependency
      * @param {Object} opt
-     * @returns {Promise<Object>} result
+     * @returns {Promise<Object|null>} result
      */
-    dependency(opt: any): Promise<any>;
+    dependency(opt: any): Promise<any | null>;
     /**
      * @description Dependency Injection Pattern (DI)
-     * @param {Object} obj
-     * @param {Object} opt
-     * @returns {Promise<Object>} result
+     * @param {any} obj
+     * @param {Object} [opt]
+     * @param {import('../../../types').TList} [opt.dependency]
+     * @returns {Promise<any>} result
      */
-    setDI(obj: any, opt: any): Promise<any>;
+    setDI(obj: any, opt?: {
+        dependency?: import("../../../types").TList;
+    }): Promise<any>;
     #private;
 }
 declare namespace NativeAsync {

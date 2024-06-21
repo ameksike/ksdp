@@ -3,6 +3,10 @@ export = Hook;
  * @typedef {import('./types').TEvent} TEvent
  * @typedef {import('./types').TSubscription} TSubscription
  * @typedef {import('./types').TList} TList
+ * @typedef {import('./types').TTarget} TTarget
+ * @typedef {import('./types').TSubscriber} TSubscriber
+ * @typedef {import('./types').TProcessor} TProcessor
+ * @typedef {import('./types').TResult} TResult
  * @typedef {Object<string, Promise<any[]>>|{}} TListEmitted
  */
 declare class Hook {
@@ -42,40 +46,41 @@ declare class Hook {
      * @description trigger hooks notification by subscriber
      * @param {TSubscription} payload
      * @param {String} [name=Memory]
-     * @return {Promise<Array>}
+     * @return {Promise<Array<any>>}
      */
-    run(payload: TSubscription, name?: string): Promise<any[]>;
+    run(payload: TSubscription, name?: string): Promise<Array<any>>;
     /**
      * @description Process a subscription
-     * @param {Object} target
+     * @param {TTarget} target
+     * @param {TSubscriber} subscriber
      * @param {Object} payload
      * @returns {*}
      */
-    process(target: any, subscriber: any, payload: any): any;
+    process(target: TTarget, subscriber: TSubscriber, payload: any): any;
     /**
      * @description Save subscription
      * @param {TSubscription} payload
-     * @returns {Promise<TSubscription>} subscribed
+     * @returns {Promise<TSubscription|null>} subscribed
      */
-    add(payload: TSubscription): Promise<TSubscription>;
+    add(payload: TSubscription): Promise<TSubscription | null>;
     /**
      * @description Save subscription
      * @param {TSubscription|Array<TSubscription>} payload
-     * @returns {Promise<TSubscription[]>} subscribed
+     * @returns {Promise<Array<TSubscription|null>>} subscribed
      */
-    subscribe(payload: TSubscription | Array<TSubscription>): Promise<TSubscription[]>;
+    subscribe(payload: TSubscription | Array<TSubscription>): Promise<Array<TSubscription | null>>;
     /**
      * @description Remove subscription
      * @param {TSubscription} payload
-     * @returns {Promise<TSubscription>} unsubscription
+     * @returns {Promise<TSubscription|null>} unsubscription
      */
-    remove(payload: TSubscription): Promise<TSubscription>;
+    remove(payload: TSubscription): Promise<TSubscription | null>;
     /**
      * @description Remove subscription
      * @param {TSubscription|Array<TSubscription>} payload
-     * @returns {Promise<TSubscription[]>} unsubscriptions
+     * @returns {Promise<Array<TSubscription|null>>} unsubscriptions
      */
-    unsubscribe(payload: TSubscription | Array<TSubscription>): Promise<TSubscription[]>;
+    unsubscribe(payload: TSubscription | Array<TSubscription>): Promise<Array<TSubscription | null>>;
     /**
      * @description get the subscriptions list
      * @param {TSubscription} [payload] - input data
@@ -91,13 +96,17 @@ declare class Hook {
     #private;
 }
 declare namespace Hook {
-    export { TEvent, TSubscription, TList, TListEmitted };
+    export { TEvent, TSubscription, TList, TTarget, TSubscriber, TProcessor, TResult, TListEmitted };
 }
 import Strategy = require("../../behavioral/Strategy");
 import Command = require("../../behavioral/Command");
 type TEvent = import("./types").TEvent;
 type TSubscription = import("./types").TSubscription;
 type TList = import("./types").TList;
+type TTarget = import("./types").TTarget;
+type TSubscriber = import("./types").TSubscriber;
+type TProcessor = import("./types").TProcessor;
+type TResult = import("./types").TResult;
 type TListEmitted = {
     [x: string]: Promise<any[]>;
 } | {};

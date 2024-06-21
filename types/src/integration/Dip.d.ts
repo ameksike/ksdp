@@ -1,12 +1,12 @@
 export = DIP;
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		09/11/2019
- * @copyright  	Copyright (c) 2019-2050
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        09/11/2019
+ * @copyright   Copyright (c) 2019-2050
  * @description Implement a Dependency Injection Pattern based on inheritance to abstract the Setter Injection type
- * @license    	GPL
- * @version    	1.0
+ * @license     GPL
+ * @version     1.0
  **/
 declare class DIP {
     /**
@@ -30,7 +30,7 @@ declare class DIP {
     /**
      * @description Check all requided dependencies and throw an error
      * @param {Array<String>|String} list
-     * @param {typeof Error} ErrorType
+     * @param {typeof Error} [ErrorType]
      * @returns {DIP} self-reference
      */
     checkDependencies(list: Array<string> | string, ErrorType?: typeof Error): DIP;

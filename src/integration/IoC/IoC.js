@@ -13,11 +13,18 @@ const Strategy = require('../../behavioral/Strategy');
 const _path = require('path')
 /**
  * @typedef {import('../../types').TOptionIoC} TOptionIoC
+ * @typedef {import('../../types').TList} TList
  */
+
 class IoC {
 
     #analyzer;
     #compiler;
+
+    /**
+     *  @type {TOptionIoC} 
+     */
+    opt;
 
     /**
      * @returns {Strategy}
@@ -33,8 +40,12 @@ class IoC {
         return this.#analyzer;
     }
 
+    /**
+     * @param {*} opt 
+     */
     constructor(opt = null) {
         this.opt = {};
+        /** @type {any} */
         this.ctrls = {};
         this.error = null;
         this.#analyzer = new Strategy({
@@ -57,7 +68,9 @@ class IoC {
         if (this.#compiler?.ctrl?.compiler?.lib && this.#analyzer?.ctrl?.analyzer?.lib) {
             return;
         }
+        /** @type {any} */
         let natAnalizer = this.analyzer.get({ name: 'Native', params: [this] });
+        /** @type {any} */
         let natCompiler = this.compiler.get({ name: 'Native', params: [this] });
         this.#analyzer.set(natAnalizer, 'lib');
         this.#analyzer.set(natAnalizer, 'module');
@@ -71,13 +84,9 @@ class IoC {
 
     /**
      * @description Configure Lib
-     * @param {Object} [opt] The input data.
-     * @param {String} [opt.name] Alias for it lib
-     * @param {Object} [opt.src] Data source 
-     * @param {String} [opt.path] Search path 
-     * @param {Object} [opt.error] Error Handler 
+     * @param {TOptionIoC} [opt] The input data.
      */
-    configure(opt = null) {
+    configure(opt) {
         opt = opt || {};
         this.opt.src = Object.assign(this.opt.src || {}, opt.src || {});
         this.opt.name = opt.name || this.opt.name || 'IoC';
@@ -92,6 +101,7 @@ class IoC {
      * @returns {Object} resource
      */
     get(opt = {}) {
+        /** @type {any} */
         let cfg = this.fill(opt);
         if (cfg.name === this.opt.name) {
             return this;
@@ -108,11 +118,11 @@ class IoC {
 
     /**
      * @description add a new config item 
-     * @param {Object|Array} option 
-     * @param {String} index 
+     * @param {TList|Array<any>} option 
+     * @param {String} [index] 
      * @returns {IoC} self
      */
-    add(option, index = null) {
+    add(option, index) {
         if (Array.isArray(option)) {
             for (let item of option) {
                 item && this.add(item, index);
@@ -122,7 +132,7 @@ class IoC {
                 this.opt = this.opt || {};
                 this.opt.src = this.opt.src || {};
             }
-            let key = index || option?.name || 'default';
+            let key = index || typeof option?.name === "string" && option?.name || 'default';
             this.opt.src[key] = option;
         }
         return this;
@@ -130,12 +140,12 @@ class IoC {
 
     /**
      * @description register a resource
-     * @param {Object|String|Function|Array} value 
-     * @param {Object} [opt] 
+     * @param {Object|String|Function|Array<any>} value 
+     * @param {Object} [option] 
      * @returns {IoC} self
      */
-    set(value, opt = {}) {
-        opt = this.fill(opt);
+    set(value, option = {}) {
+        let opt = this.fill(option) || {};
         opt.rows = opt.rows || [];
         if (Array.isArray(value)) {
             for (let item of value) {
@@ -151,29 +161,31 @@ class IoC {
 
     /**
      * @description remove a resource
-     * @param {Object|String|Function|Array} opt 
+     * @param {Object|String|Function|Array<any>} opt 
      * @param {Object} [out] 
+     * @param {Array<any>} [out.rows] 
      * @returns {IoC} self
      */
-    del(opt, out = {}) {
+    del(opt, out) {
         out = out || {};
-        out.rows = opt.rows || [];
+        out.rows = out.rows || [];
         if (Array.isArray(opt)) {
             for (let item of opt) {
                 this.del(item, out);
             }
         } else {
-            opt = this.fill(opt);
-            this.ctrls[opt.type] = this.ctrls[opt.type] || {};
-            out.rows.push(this.ctrls[opt.type][opt.id]);
-            delete this.ctrls[opt.type][opt.id];
+            /** @type {any} */
+            let _opt = this.fill(opt) || {};
+            this.ctrls[_opt.type] = this.ctrls[_opt.type] || {};
+            out.rows.push(this.ctrls[_opt.type][_opt.id]);
+            delete this.ctrls[_opt.type][_opt.id];
         }
         return this;
     }
 
     /**
      * @description alias for register a resource
-     * @param {Object|String|Function|Array} value 
+     * @param {Object|String|Function|Array<any>} value 
      * @param {Object} [opt] 
      * @returns {IoC} self
      */
@@ -183,7 +195,7 @@ class IoC {
 
     /**
      * @description alias for remove a resource
-     * @param {Object|String|Function|Array} opt 
+     * @param {Object|String|Function|Array<any>} opt 
      * @param {Object} out 
      * @returns {IoC} self
      */
@@ -194,25 +206,29 @@ class IoC {
     /**
      * @description Service Locator Pattern (SL)
      * @param {Object} opt 
+     * @param {(String|String[]|any)} opt.type 
      * @returns result
      */
     process(opt) {
         this.init();
-        let driver = this.compiler.get(opt.type, { name: 'Native', params: [this] });
+        /** @type {any} */
+        let driver = this.compiler.get(opt?.type, { name: 'Native', params: [this] });
         return driver?.run(opt);
     }
 
     /**
      * @description Fill payload
      * @param {TOptionIoC|String} opt The input data.  
-     * @returns {Object}
+     * @returns {any}
      */
     fill(opt) {
         this.init();
-        const cfg = opt instanceof Object ? opt : (this.opt.src[opt] || {
+        /** @type {any} */
+        const cfg = opt instanceof Object ? opt : (this.opt?.src && this.opt.src[opt] || {
             name: opt
         });
         const drvDef = { name: 'Native', params: [this] };
+        /** @type {any} */
         let driver = this.analyzer.get(cfg.type || drvDef, drvDef);
         return driver?.run(opt);
     }
