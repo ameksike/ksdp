@@ -9,6 +9,10 @@ declare class IoC {
      */
     constructor(opt?: any);
     /**
+     *  @type {TOptionIoC}
+     */
+    opt: TOptionIoC;
+    /**
      * @returns {Strategy}
      */
     get compiler(): Strategy;
@@ -16,8 +20,6 @@ declare class IoC {
      * @returns {Strategy}
      */
     get analyzer(): Strategy;
-    /** @type {TOptionIoC} */
-    opt: TOptionIoC;
     /** @type {any} */
     ctrls: any;
     error: any;

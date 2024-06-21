@@ -22,6 +22,11 @@ class IoC {
     #compiler;
 
     /**
+     *  @type {TOptionIoC} 
+     */
+    opt;
+
+    /**
      * @returns {Strategy}
      */
     get compiler() {
@@ -39,7 +44,6 @@ class IoC {
      * @param {*} opt 
      */
     constructor(opt = null) {
-        /** @type {TOptionIoC} */
         this.opt = {};
         /** @type {any} */
         this.ctrls = {};

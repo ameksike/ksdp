@@ -1,12 +1,12 @@
 /**
- * @author		Antonio Membrides Espinosa
- * @email		tonykssa@gmail.com
- * @date		09/11/2019
- * @copyright  	Copyright (c) 2019-2050
+ * @author      Antonio Membrides Espinosa
+ * @email       tonykssa@gmail.com
+ * @date        09/11/2019
+ * @copyright   Copyright (c) 2019-2050
  * @description Native Analizer 
  * @dependency  Factory
- * @license    	GPL
- * @version    	1.0
+ * @license     GPL
+ * @version     1.0
  **/
 
 /**
@@ -15,12 +15,12 @@
  */
 class Native {
     /**
-     * @type {TIoC}
+     * @type {TIoC|null}
      */
     #ioc;
 
     /**
-     * @returns {TIoC}
+     * @returns {TIoC|null}
      */
     get ioc() {
         return this.#ioc;
@@ -39,7 +39,8 @@ class Native {
      * @returns {Object}
      */
     run(opt) {
-        const cfg = opt instanceof Object ? opt : (this.ioc?.opt?.src[opt] || {
+        /** @type {any} */
+        const cfg = opt instanceof Object ? opt : ((this.ioc?.opt?.src && this.ioc.opt.src[opt]) || {
             name: opt
         });
         cfg.name = cfg.name || (typeof (opt) === 'string' ? opt : 'DefaultService');
