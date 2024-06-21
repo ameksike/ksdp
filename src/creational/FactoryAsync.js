@@ -24,7 +24,7 @@ class FactoryAsync {
     loader;
 
     /**
-     * @type {Console}
+     * @type {Console|null|undefined}
      */
     logger;
 
@@ -34,7 +34,7 @@ class FactoryAsync {
      * @param {Loader} [payload.loader] 
      */
     constructor(payload) {
-        this.logger = payload?.logger || console;
+        this.logger = payload?.logger;
         this.loader = payload?.loader || new Loader();
     }
 

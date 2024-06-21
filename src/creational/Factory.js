@@ -21,7 +21,7 @@ class Factory {
      * @param {*} payload 
      */
     constructor(payload = null) {
-        this.logger = payload?.logger || console;
+        this.logger = payload?.logger;
     }
 
     /**

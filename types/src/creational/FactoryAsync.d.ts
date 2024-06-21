@@ -19,9 +19,9 @@ declare class FactoryAsync {
      */
     loader: Loader;
     /**
-     * @type {Console}
+     * @type {Console|null|undefined}
      */
-    logger: Console;
+    logger: Console | null | undefined;
     /**
      * @description Get as array
      * @param {Object} payload The input data.
