@@ -83,7 +83,7 @@ export type TLoaderOption = {
     mode?: any;
 };
 export type TDelegate = {
-    action: any;
+    action: string | Function;
     params: Array<any>;
     scope: any;
     index: string | number;

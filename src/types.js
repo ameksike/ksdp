@@ -31,9 +31,9 @@
 
 /**
  * @typedef {Object} TDelegate
- * @property {Object} action
+ * @property {String|Function} action
  * @property {Array<any>} params
- * @property {Object} scope
+ * @property {any} scope
  * @property {String|Number} index
  */
 module.exports = {};
