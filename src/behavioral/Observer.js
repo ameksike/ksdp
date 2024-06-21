@@ -9,15 +9,22 @@
  **/
 
 /**
- * @typedef {({[name:String]:Object} | Array)} List 
+ * @typedef {({[name:String]:Object} | Array<any>)} List 
  **/
+/**
+ * @typedef {Object} THelper
+ * @property {Function} get
+ */
 class Observer {
 
     constructor() {
+        /** @type {any} **/
         this.sts = {};
+        /** @type {any} **/
         this.evs = {
             "default": {}
         };
+        /** @type {THelper|null} */
         this.helper = null;
     }
 
@@ -28,7 +35,7 @@ class Observer {
      * @param {Object} [opt.evs] 
      * @returns {Observer} self-reference
      */
-    configure(opt = null) {
+    configure(opt) {
         this.sts = opt?.sts || this.sts;
         this.evs = opt?.evs || this.evs;
         return this;
@@ -49,7 +56,7 @@ class Observer {
      * @description Getting the Subscriptions for an Event
      * @param {String} event
      * @param {String} scope
-     * @returns {Array} list
+     * @returns {Array<any>} list
      */
     listeners(event = 'default', scope = 'default') {
         this.evs[scope] = this.evs[scope] || {};
@@ -58,20 +65,18 @@ class Observer {
 
     /**
      * @description add an event on scope
-     * @param {Array|Object|Function} subscriber 
+     * @param {Array<any>|Object|Function} subscriber 
      * @param {String} [event] 
      * @param {String} [scope='default'] 
      * @param {Object} [option] 
      * @param {String} [option.event] 
      * @param {String} [option.scope] 
      * @param {Number} [option.index]
-     * @param {Array} [option.rows]
+     * @param {Array<any>} [option.rows]
      * @return {Observer} self-reference
      */
-    add(subscriber, event, scope = 'default', option = null) {
-        option = option || { event, scope };
-        option.event = event;
-        option.scope = scope;
+    add(subscriber, event, scope = 'default', option = {}) {
+        option = { ...option, event, scope };
         if (Array.isArray(subscriber)) {
             for (let listener of subscriber) {
                 delete option['index'];
@@ -95,17 +100,17 @@ class Observer {
 
     /**
      * @description alias for add an event on scope
-     * @param {Array|Object|Function} subscriber 
+     * @param {Array<any>|Object|Function} subscriber 
      * @param {String} [event] 
      * @param {String} [scope='default'] 
      * @param {Object} [option] 
      * @param {String} [option.event] 
      * @param {String} [option.scope] 
      * @param {Number} [option.index]
-     * @param {Array} [option.rows]
+     * @param {Array<any>} [option.rows]
      * @return {Observer} self-reference
      */
-    subscribe(subscriber, event, scope = 'default', option = null) {
+    subscribe(subscriber, event, scope = 'default', option = {}) {
         return this.add(subscriber, event, scope, option);
     }
 
@@ -118,10 +123,10 @@ class Observer {
      * @param {String} [option.event] 
      * @param {String} [option.scope] 
      * @param {Number} [option.count] 
-     * @param {Array} [option.rows] 
+     * @param {Array<any>} [option.rows] 
      * @return {Observer} self-reference
      */
-    unsubscribe(event, scope = 'default', option = null) {
+    unsubscribe(event, scope = 'default', option = {}) {
         return this.del(event, scope, option);
     }
 
@@ -134,10 +139,10 @@ class Observer {
      * @param {String} [option.event] 
      * @param {String} [option.scope] 
      * @param {Number} [option.count] 
-     * @param {Array} [option.rows] 
+     * @param {Array<any>} [option.rows] 
      * @return {Observer} self-reference
      */
-    del(event, scope = 'default', option = null) {
+    del(event, scope = 'default', option = {}) {
         option = option || { event, scope };
         option.event = event;
         option.scope = scope;
@@ -156,7 +161,7 @@ class Observer {
      * @description emit an event on a scope with a params list
      * @param {String} event 
      * @param {String} scope 
-     * @param {Array} params 
+     * @param {Array<any>} params 
      * @return {Observer} self-reference
      */
     emit(event, scope = "default", params = []) {
@@ -174,7 +179,7 @@ class Observer {
      * @description process an event on a scope
      * @param {*} subscriber 
      * @param {String} event 
-     * @param {Array} params 
+     * @param {Array<any>} params 
      * @returns {*} target
      */
     process(subscriber, event, params = []) {

@@ -16,14 +16,19 @@ const _path = require('path');
  * @property {String} [type] - Strategy Key Type.
  * @property {String} [path] - Strategy Key Path.
  * @property {String} [name] - Strategy Key Name.
- * @property {Array} [params] - Single param for Strategy constructor.
+ * @property {Array<any>} [params] - Single param for Strategy constructor.
  * @property {Boolean|Number} [safe] - Single param for Strategy constructor.
  * @property {*} [target] - Class or Object
  */
 class StrategyAsync {
 
+    /**
+     * @param {*} payload 
+     */
     constructor(payload) {
+        /** @type {any} **/
         this.ctrl = {};
+        /** @type {Array<any>} **/
         this.params = [];
         this.path = '.';
         this.default = 'default';
@@ -36,7 +41,7 @@ class StrategyAsync {
      * @param {Object} [payload] The input data.
      * @param {String} [payload.name='Default'] Strategy Key Name
      * @param {String} [payload.default='Default'] Strategy Key Name
-     * @param {Object} [payload.params]  
+     * @param {Array<any>} [payload.params]  
      * @param {Console} [payload.logger]  
      * @param {String} [payload.path]  
      * @return {StrategyAsync} self
@@ -60,7 +65,7 @@ class StrategyAsync {
     /**
       * @description Get strategy Instance
       * @param {(String|StrategyOption)} payload
-      * @return {Promise<Object>} Strategy Instance
+      * @return {Promise<Object|null>} Strategy Instance
       */
     async #getOne(payload = {}) {
         try {
@@ -93,7 +98,7 @@ class StrategyAsync {
      * @description Get strategy Instance
      * @param {(String|String[]|StrategyOption|Array<StrategyOption>)} payload
      * @param {(String|String[]|StrategyOption|Array<StrategyOption>)|null} [alt]
-     * @return {Promise<Object|Array<Object>>} Strategy Instance
+     * @return {Promise<Object|Array<Object>|null>} Strategy Instance
      */
     async get(payload = {}, alt = null) {
         try {
@@ -124,7 +129,7 @@ class StrategyAsync {
      * @description Set strategy
      * @param {StrategyOption|Array<StrategyOption>} payload 
      * @param {String} [alias='']
-     * @return {Promise<Object|Array<Object>>} Strategy Instance
+     * @return {Promise<Object|Array<Object>|null>} Strategy Instance
      */
     async set(payload = {}, alias = '') {
         try {
