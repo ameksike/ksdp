@@ -6,7 +6,7 @@ const _fs = require('fs');
 class Loader {
 
     /**
-     * @type {Object}
+     * @type {any}
      */
     cache;
 
@@ -15,6 +15,9 @@ class Loader {
      */
     files;
 
+    /**
+     * @param {*} payload 
+     */
     constructor(payload) {
         this.cache = {};
         this.files = ['index.js', 'index.mjs', 'index.cjs'];
@@ -23,7 +26,7 @@ class Loader {
 
     /**
      * @description load Node.Js modules (CJS, EMS)
-     * @param {String} mod - module name or path
+     * @param {String|URL} mod - module name or path
      * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
@@ -31,11 +34,15 @@ class Loader {
         option = option || {};
         option.retry = option.retry === undefined ? 1 : option.retry;
         try {
+            mod = typeof mod === "string" ? mod : mod.toString();
             option.force = option.force ?? option.mode === 'transient';
             if (option.force) {
                 delete this.cache[mod];
             }
             let key = this.getKey(mod, option);
+            if(!key) {
+                throw new Error('Invalid key module');
+            }
             if (!this.cache[key]) {
                 let tmp = await import(mod);
                 if (tmp.default?.name && (option.fill || option.fill === undefined)) {
@@ -66,7 +73,7 @@ class Loader {
      * @description load Node.Js CJS module
      * @param {String} module - module name or path
      * @param {TLoaderOption} [option] - configuration options
-     * @returns {Object} module
+     * @returns {Object|null} module
      */
     loadSync(module, option = {}) {
         option = option || {};
@@ -75,6 +82,9 @@ class Loader {
                 throw new Error('EMS modules are not supported: ' + module)
             }
             let key = this.getKey(module, option);
+            if(!key) {
+                throw new Error('Invalid key module');
+            }
             if (option.force) {
                 delete this.cache[key];
                 delete require.cache[require.resolve(module)];
@@ -90,11 +100,18 @@ class Loader {
         }
         catch (error) {
             this.logger?.warn instanceof Function && this.logger.warn({ src: 'KsDp:Loader:loadSync', error });
-            option.error = error;
+            option && error && (option.error = error);
             return option.default || null;
         }
     }
 
+    /**
+     * @param {Object} tmp 
+     * @param {Object} tmp.prototype 
+     * @param {Object} option 
+     * @param {Object} [option.strict] 
+     * @returns {Boolean} 
+     */
     isValid(tmp, option) {
         try {
             if (!tmp) {
@@ -112,29 +129,31 @@ class Loader {
 
     /**
      * @description retry loading the module looking for an alternative path
-     * @param {String} module - module name or path
+     * @param {String|URL} module - module name or path
      * @param {TLoaderOption} [option] - configuration options
      * @returns {Promise<Object|null>} module
      */
     async retry(module, option) {
         option = option || {};
         option.strict = true;
+        module = typeof module === "string" ? module : module.toString();
         let mod = this.loadSync(module, option);
         if (mod) {
             option.type = 'cjs';
             return mod;
         }
-        mod = await this.resolve(module);
-        if (mod) {
+        let res = await this.resolve(module);
+        if (res) {
             option.type = 'mjs';
-            return this.load(mod, option);
+            return this.load(res, option);
         }
+        return null;
     }
 
     /**
      * @description search for an alternative module path
      * @param {String} module - module name or path
-     * @returns {Promise<URL>} module
+     * @returns {Promise<URL|null>} module
      */
     async resolve(module) {
         try {
@@ -144,14 +163,14 @@ class Loader {
         }
         catch (error) {
             this.logger?.warn instanceof Function && this.logger.warn({ src: 'KsDp:Loader:resolve', error });
-            return error
+            return null
         }
     }
 
     /**
      * @description find the main module file
      * @param {String} module - module name or path
-     * @returns {Promise<String>} filepath
+     * @returns {Promise<String|null>} filepath
      */
     async getFile(module) {
         let path = _path.resolve(module);
@@ -191,9 +210,9 @@ class Loader {
 
     /**
      * @description get the cache index key 
-     * @param {Object|String} module 
-     * @param {Object} option 
-     * @returns {String} key
+     * @param {{pathname: String}|String} module 
+     * @param {any} option 
+     * @returns {String|null} key
      */
     getKey(module, option) {
         if (option.key) {
