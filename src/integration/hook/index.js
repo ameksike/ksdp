@@ -16,6 +16,10 @@ const IocNotifier = require("./notifier/Ioc");
  * @typedef {import('./types').TEvent} TEvent 
  * @typedef {import('./types').TSubscription} TSubscription 
  * @typedef {import('./types').TList} TList 
+ * @typedef {import('./types').TTarget} TTarget 
+ * @typedef {import('./types').TSubscriber} TSubscriber 
+ * @typedef {import('./types').TProcessor} TProcessor 
+ * @typedef {import('./types').TResult} TResult 
  * @typedef {Object<string, Promise<any[]>>|{}} TListEmitted
  */
 class Hook {
@@ -83,13 +87,14 @@ class Hook {
      * @return {TListEmitted} 
      */
     trigger(payload) {
+        /** @type {*} **/
         const out = {};
         if (Array.isArray(payload.subscriber)) {
-            for (const i of payload.subscriber) {
+            for (let i of payload.subscriber) {
                 out[i] = this.run(payload, i);
             }
         } else {
-            out[payload.subscriber] = this.run(payload, payload.subscriber || 'Memory');
+            payload?.subscriber && (out[payload.subscriber] = this.run(payload, payload.subscriber || 'Memory'));
         }
         return out;
     }
@@ -98,9 +103,10 @@ class Hook {
      * @description trigger hooks notification by subscriber
      * @param {TSubscription} payload 
      * @param {String} [name=Memory]
-     * @return {Promise<Array>} 
+     * @return {Promise<Array<any>>} 
      */
     async run(payload, name = "Memory") {
+        /** @type {*} **/
         let subscriber = this.subscriber.get(name);
         if (!subscriber) {
             return Promise.reject('There are no subscribers available with name: ' + name);
@@ -118,15 +124,17 @@ class Hook {
 
     /**
      * @description Process a subscription 
-     * @param {Object} target 
+     * @param {TTarget} target 
+     * @param {TSubscriber} subscriber 
      * @param {Object} payload 
      * @returns {*}
      */
     process(target, subscriber, payload) {
         try {
             // Load the notifier
-            let notifier = this.notifier.get(target?.notifier || target?.target);
-            let param = payload.target?.param;
+            let tmpnotif = this.notifier.get(target?.notifier || target?.target);
+            let notifier = Array.isArray(tmpnotif) ? tmpnotif[0] : tmpnotif;
+            let param = target?.param;
             // Check the notifier
             if (!notifier) {
                 this.logger?.warn({
@@ -140,16 +148,22 @@ class Hook {
                 });
                 return null;
             }
-            // Define the custom data for the event processing 
-            let pld = { scope: null, ...payload, target, date: Date.now(), hook: this };
+            /**
+             * @description Define the custom data for the event processing 
+             * @type {TSubscription}
+             */
+            let pld = { data: {}, scope: null, ...payload, target, date: Date.now(), hook: this, mode: 1 };
             pld.data = pld.data || {};
-            pld.mode = 1;
             // Evaluate the expression
             if (pld?.target?.expression && pld.target.processor) {
+                /** @type {any} **/
                 let opts = {};
-                let processor = this.processor.get(pld.target.processor);
+                let tmpprs = this.processor.get(pld.target.processor);
+                /** @type {TProcessor} **/
+                let processor = Array.isArray(tmpprs) ? tmpprs[0] : tmpprs;
                 // Check the expression based on the processor
                 if (processor) {
+                    /** @type {TResult} **/
                     let resprd = this.cmd?.run(processor?.run, [pld?.target?.expression, pld.data, opts], processor);
                     let error = resprd?.error || opts.error;
                     if (!resprd?.result) {
@@ -188,8 +202,12 @@ class Hook {
             }
             // Parameter mapping
             if (param) {
+                /** @type {any} **/
                 let opts = {};
-                let processor = this.processor.get(pld.target.processor || 'Native');
+                let tmpprs = this.processor.get(pld?.target?.processor || 'Native');
+                /** @type {TProcessor} **/
+                let processor = Array.isArray(tmpprs) ? tmpprs[0] : tmpprs;
+                /** @type {TResult} **/
                 let resprd = pld.data && this.cmd?.run(processor?.run, [param, pld.data, opts], processor);
                 let error = resprd?.error || opts.error;
                 resprd?.result && (pld.data = resprd?.result);
@@ -208,15 +226,18 @@ class Hook {
             notifier.hook = this;
             // Run notifier action 
             let predat = subscriber?.format instanceof Function ? subscriber.format(pld) : pld;
-            let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope);
+            /** @type {TResult} **/
+            let preres = this.cmd?.run(pld?.onPreTrigger, [predat], pld?.scope || {});
+            /** @type {TResult} **/
             let insres = this.cmd?.run(notifier?.run, [preres?.result || predat], notifier);
-            let posres = this.cmd?.run(pld?.onPosTrigger, [insres?.result], pld?.scope);
+            /** @type {TResult} **/
+            let posres = this.cmd?.run(pld?.onPosTrigger, [insres?.result], pld?.scope || {});
             return posres?.result || insres?.result;
         }
-        catch (error) {
+        catch (/** @type {any} */ error) {
             this.logger?.warn({
                 src: 'Ksdp:Hook:Process',
-                error: error.message,
+                error: error?.message,
                 data: {
                     event_id: target?.id,
                     event_name: target?.event,
@@ -231,11 +252,12 @@ class Hook {
     /**
      * @description Save subscription
      * @param {TSubscription} payload
-     * @returns {Promise<TSubscription>} subscribed
+     * @returns {Promise<TSubscription|null>} subscribed
      */
     async add(payload) {
         try {
-            const subscriber = this.subscriber.get(payload.subscriber);
+            const tmp = this.subscriber.get(payload.subscriber);
+            const subscriber = Array.isArray(tmp) ? tmp[0] : tmp;
             return await subscriber?.subscribe(payload);
         } catch (error) {
             this.logger?.error({
@@ -249,7 +271,7 @@ class Hook {
     /**
      * @description Save subscription
      * @param {TSubscription|Array<TSubscription>} payload
-     * @returns {Promise<TSubscription[]>} subscribed
+     * @returns {Promise<Array<TSubscription|null>>} subscribed
      */
     async subscribe(payload) {
         if (Array.isArray(payload)) {
@@ -265,13 +287,14 @@ class Hook {
     /**
      * @description Remove subscription
      * @param {TSubscription} payload
-     * @returns {Promise<TSubscription>} unsubscription
+     * @returns {Promise<TSubscription|null>} unsubscription
      */
     async remove(payload) {
         try {
             payload = payload || { event: 'Memory' };
-            payload.subscriber = payload.subscriber || 'Memory'
-            const subscriber = this.subscriber.get(payload.subscriber);
+            payload.subscriber = payload.subscriber || 'Memory';
+            const tmp = this.subscriber.get(payload.subscriber);
+            const subscriber = Array.isArray(tmp) ? tmp[0] : tmp;
             return await subscriber?.unsubscribe(payload);
         } catch (error) {
             this.logger?.error({
@@ -285,7 +308,7 @@ class Hook {
     /**
      * @description Remove subscription
      * @param {TSubscription|Array<TSubscription>} payload
-     * @returns {Promise<TSubscription[]>} unsubscriptions
+     * @returns {Promise<Array<TSubscription|null>>} unsubscriptions
      */
     async unsubscribe(payload) {
         if (Array.isArray(payload)) {
@@ -307,7 +330,8 @@ class Hook {
         try {
             payload = payload || { event: 'Memory' };
             payload.subscriber = payload.subscriber || 'Memory';
-            const subscriber = this.subscriber.get(payload.subscriber);
+            const tmp = this.subscriber.get(payload.subscriber);
+            const subscriber = Array.isArray(tmp) ? tmp[0] : tmp;
             return await subscriber?.subscriptions(payload);
         } catch (error) {
             this.logger?.error({
@@ -327,7 +351,8 @@ class Hook {
         try {
             payload = payload || {};
             payload.subscriber = payload.subscriber || 'Memory';
-            const subscriber = this.subscriber.get(payload.subscriber);
+            const tmp = this.subscriber.get(payload.subscriber);
+            const subscriber = Array.isArray(tmp) ? tmp[0] : tmp;
             return await subscriber?.events(payload);
         } catch (error) {
             return [];
