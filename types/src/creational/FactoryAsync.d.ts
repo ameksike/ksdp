@@ -7,11 +7,11 @@ export = FactoryAsync;
 declare class FactoryAsync {
     /**
      * @param {Object} [payload]
-     * @param {Console} [payload.logger]
+     * @param {Console|null} [payload.logger]
      * @param {Loader} [payload.loader]
      */
     constructor(payload?: {
-        logger?: Console;
+        logger?: Console | null;
         loader?: Loader;
     });
     /**

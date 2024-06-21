@@ -59,11 +59,12 @@ class Native {
 
     /**
      * @param {TIoC|null} [ioc] 
+     * @param {Object|null} [logger] 
      */
-    constructor(ioc = null) {
+    constructor(ioc = null, logger = null) {
         this.#ioc = ioc;
         this.#inherit = Inherit;
-        this.#factory = new Factory();
+        this.#factory = new Factory({ logger });
     }
 
     /**
@@ -77,7 +78,7 @@ class Native {
         let dirPack = (/** @type {String} */ name) => require?.resolve && _path.dirname(require.resolve(name));
         switch (opt.type) {
             case 'module':
-                opt.file = opt.file || (this.ioc?.opt?.path && _path.join(this.ioc.opt.path, opt.name));
+                opt.file = opt.file || _path.join(this.ioc?.opt?.path || '', opt.name);
                 out = this.instance(opt);
                 out && (out._ = { type: 'module', path: _path.resolve(opt.file) });
                 break;
@@ -156,18 +157,18 @@ class Native {
      */
     instance(opt) {
         try {
+            /** @type {any} */
             let obj = this.factory.get({
                 name: opt.name,
                 file: opt.file,
                 params: opt.options || opt.params
             });
             if (!obj) return null;
-            /** @type {any} */
-            let _obj = obj && this.setDI(obj, opt);
-            if (_obj.init) {
-                _obj.init();
+            obj = obj && this.setDI(obj, opt);
+            if (obj?.init instanceof Function) {
+                obj.init();
             }
-            return _obj;
+            return obj;
         } catch (error) {
             if (this.ioc?.error?.on instanceof Function) {
                 this.ioc.error.on(error);

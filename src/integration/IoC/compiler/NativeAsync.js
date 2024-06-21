@@ -45,12 +45,12 @@ class NativeAsync {
     }
 
     /**
-     * @type {TIoC}
+     * @type {TIoC|null}
      */
     #ioc;
 
     /**
-     * @returns {TIoC}
+     * @returns {TIoC|null}
      */
     get ioc() {
         return this.#ioc;
@@ -58,7 +58,7 @@ class NativeAsync {
 
     /**
      * @param {TIoC|null} [ioc] 
-     * @param {Object|null} [logger] 
+     * @param {Console|null} [logger] 
      */
     constructor(ioc = null, logger = null) {
         this.#ioc = ioc;
@@ -68,7 +68,7 @@ class NativeAsync {
 
     /**
      * @description Service Locator Pattern (SL)
-     * @param {Object} opt 
+     * @param {any} opt 
      * @returns result
      */
     async run(opt) {
@@ -80,7 +80,7 @@ class NativeAsync {
                 break;
 
             case 'module':
-                opt.file = opt.file || _path.join(this.ioc?.opt?.path, opt.name);
+                opt.file = opt.file || _path.join(this.ioc?.opt?.path || '', opt.name);
                 out = await this.instance(opt);
                 break;
 
@@ -100,10 +100,12 @@ class NativeAsync {
 
             default:
                 path = this.ioc?.opt?.path;
-                path = opt.module ? _path.join(path, opt.module) : path;
-                path = opt.path ? _path.join(path, opt.path) : path;
-                opt.file = opt.file || _path.join(path, opt.name);
-                out = this[opt.type] ? await this[opt.type](opt) : null;
+                path = opt.module ? _path.join(path || '', opt.module) : path;
+                path = opt.path ? _path.join(path || '', opt.path) : path;
+                opt.file = opt.file || _path.join(path || '', opt.name);
+                /** @type {any} */
+                let _this = this;
+                out = _this[opt.type] ? await _this[opt.type](opt) : null;
                 break;
         }
         return out;
@@ -112,7 +114,12 @@ class NativeAsync {
     /**
      * @description Factory Pattern
      * @param {Object} opt 
-     * @returns {Promise<Object>} result
+     * @param {String} [opt.name] 
+     * @param {String} [opt.file] 
+     * @param {any} [opt.params] 
+     * @param {any} [opt.options]
+     * @param {any} [opt.dependency] 
+     * @returns {Promise<any>} result
      */
     async instance(opt) {
         try {
@@ -121,10 +128,11 @@ class NativeAsync {
                 opt.file = _path.resolve(opt.file);
             }
             opt.params = opt.options || opt.params;
+            /** @type {any} */
             let obj = await this.factory.get(opt);
             if (!obj) return null;
             obj = await this.setDI(obj, opt);
-            if (obj.init instanceof Function) {
+            if (obj?.init instanceof Function) {
                 await obj.init();
             }
             return obj;
@@ -139,6 +147,8 @@ class NativeAsync {
     /**
      * @description excecute action from object
      * @param {Object} opt 
+     * @param {String} opt.action 
+     * @param {any} opt.params 
      * @returns {Promise<any>}
      */
     async action(opt) {
@@ -150,7 +160,7 @@ class NativeAsync {
     /**
      * @description get dependency 
      * @param {Object} opt 
-     * @returns {Promise<Object>} result
+     * @returns {Promise<Object|null>} result
      */
     async dependency(opt) {
         try {
@@ -165,9 +175,10 @@ class NativeAsync {
 
     /**
      * @description Dependency Injection Pattern (DI)
-     * @param {Object} obj 
-     * @param {Object} opt 
-     * @returns {Promise<Object>} result
+     * @param {any} obj 
+     * @param {Object} [opt] 
+     * @param {import('../../../types').TList} [opt.dependency] 
+     * @returns {Promise<any>} result
      */
     async setDI(obj, opt) {
         if (!opt?.dependency) {
