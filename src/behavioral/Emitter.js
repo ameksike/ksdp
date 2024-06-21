@@ -133,7 +133,7 @@ class Emitter extends EventEmitter {
     /**
      * @description alias for subscribe a listener to an event
      * @param {String|symbol} [event] 
-     * @param {Array<any>|Object|Function|null} subscriber 
+     * @param {Array<any>|Object|Function|null} [subscriber] 
      * @param {Object} [option] 
      * @param {Array<any>} [option.rows] 
      * @param {String|symbol} [option.event] 
@@ -141,14 +141,14 @@ class Emitter extends EventEmitter {
      * @param {Number} [option.count] 
      * @returns {Emitter} self
      */
-    unsubscribe(event = 'default', subscriber = null, option = {}) {
+    unsubscribe(event = 'default', subscriber, option) {
         return this.del(event, subscriber, option);
     }
 
     /**
      * @description remove a subscriber from an event or clean an event
      * @param {String|symbol} [event] 
-     * @param {Array<any>|Object|Function|null} subscriber 
+     * @param {Array<any>|Object|Function|null} [subscriber] 
      * @param {Object} [option] 
      * @param {Array<any>} [option.rows] 
      * @param {String|symbol} [option.event] 
@@ -156,7 +156,7 @@ class Emitter extends EventEmitter {
      * @param {Number} [option.count] 
      * @returns {Emitter} self
      */
-    del(event = 'default', subscriber = null, option = {}) {
+    del(event = 'default', subscriber, option) {
         if (event && !subscriber && (option === undefined || option === null)) {
             this.removeAllListeners(event);
             return this;
