@@ -3,7 +3,7 @@ declare class Loader {
     /**
      * @param {*} payload
      */
-    constructor(payload: any);
+    constructor(payload?: any);
     /**
      * @type {any}
      */

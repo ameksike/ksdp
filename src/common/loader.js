@@ -18,7 +18,7 @@ class Loader {
     /**
      * @param {*} payload 
      */
-    constructor(payload) {
+    constructor(payload = {}) {
         this.cache = {};
         this.files = ['index.js', 'index.mjs', 'index.cjs'];
         this.logger = payload?.logger;
@@ -40,7 +40,7 @@ class Loader {
                 delete this.cache[mod];
             }
             let key = this.getKey(mod, option);
-            if(!key) {
+            if (!key) {
                 throw new Error('Invalid key module');
             }
             if (!this.cache[key]) {
@@ -82,7 +82,7 @@ class Loader {
                 throw new Error('EMS modules are not supported: ' + module)
             }
             let key = this.getKey(module, option);
-            if(!key) {
+            if (!key) {
                 throw new Error('Invalid key module');
             }
             if (option.force) {

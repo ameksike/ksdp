@@ -14,24 +14,24 @@ const Loader = require("../common/loader");
 /**
  * @typedef {Object} BuildOption
  * @property {*} cls - taget Class.
- * @property {Array} params - params for taget constructor.
+ * @property {Array<any>} params - params for taget constructor.
  */
 class FactoryAsync {
 
     /**
-     * @type {Object}
+     * @type {Loader}
      */
     loader;
 
     /**
-     * @type {Object}
+     * @type {Console}
      */
     logger;
 
     /**
      * @param {Object} [payload]
-     * @param {Object} [payload.logger] 
-     * @param {Object} [payload.loader] 
+     * @param {Console} [payload.logger] 
+     * @param {Loader} [payload.loader] 
      */
     constructor(payload) {
         this.logger = payload?.logger || console;
@@ -41,7 +41,7 @@ class FactoryAsync {
     /**
      * @description Get as array
      * @param {Object} payload The input data.
-     * @return {Array} 
+     * @return {Array<any>} 
      */
     asList(payload) {
         return (payload instanceof Array ? payload : [payload]);
@@ -60,13 +60,15 @@ class FactoryAsync {
     async load(payload) {
         try {
             let options = { mode: payload?.mode };
-            let content = await this.require(payload.file || payload.name, options);
+            let file = payload?.file || payload?.name;
+            /** @type {any} */
+            let content = file && await this.require(file, options);
             if (!content?.data) return null;
             let Src = content.data;
             if (Src?.type === 'mjs') {
                 Src = Src?.default || Src;
             }
-            return inherit.namespace(Src, payload.namespace || payload.name);
+            return inherit.namespace(Src, payload?.namespace || payload?.name);
         } catch (error) {
             this.log({
                 src: "ksdp:creational:FactoryAsync:load",
@@ -81,9 +83,7 @@ class FactoryAsync {
      * @description require a file or list of them
      * @param {String|Array<String>} file 
      * @param {Object} [option] 
-     * @returns {Promise<Object>} result - The output object.
-     * @property {Object} [result.data] - data content.
-     * @property {String} [result.file] - file path.
+     * @returns {Promise<{data:Object|null; file: String}|null>} result - The output object.
      */
     async require(file, option = undefined) {
         try {
@@ -95,11 +95,9 @@ class FactoryAsync {
                     }
                 }
             } else {
-                return {
-                    data: await this.loader?.load(file, option),
-                    file
-                };
+                return { data: await this.loader?.load(file, option), file };
             }
+            return null;
         }
         catch (error) {
             return null;
@@ -109,7 +107,7 @@ class FactoryAsync {
     /**
      * @description Get Instance
      * @param {BuildOption|*} payload taget Class
-     * @return {Object} Instance
+     * @return {Object|null} Instance
      * @example new (Function.prototype.bind.apply(Cls, Prm))
      */
     build(payload = null) {
@@ -144,9 +142,9 @@ class FactoryAsync {
      * @param {String} [payload.file] taget File Path
      * @param {Object} [payload.params] params for taget constructor
      * @param {*} [payload.cls] class or object
-     * @return {Promise<Object>} Instance
+     * @return {Promise<Object|null>} Instance
      */
-    async get(payload = null) {
+    async get(payload) {
         if (!payload) {
             return null;
         }
